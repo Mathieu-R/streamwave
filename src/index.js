@@ -8,10 +8,26 @@ const production = process.env.NODE_ENV === 'production';
 const store = production ? createStore(new storeWorker()) : devtools(createStore(new storeWorker()));
 store.subscribe(console.log);
 
-store.action('toastMessage')(['bloblboblbob', 'blbobbbl'])
-
 import './style/index.scss';
-import App from './components/app';
+import Main from './components/app';
+
+const App = connect('user, toast', {
+  toasting: 'toast',
+  register: 'register',
+  login: 'login',
+  getResetToken: 'getResetToken',
+  changePassword: 'changePassword'
+})(
+  ({
+    user,
+    toast,
+    toasting,
+    register,
+    login,
+    getResetToken,
+    changePassword
+  }) => <Main />
+);
 
 export default () => (
   <Provider store={store}>

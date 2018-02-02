@@ -13,7 +13,7 @@ class Login extends Component {
     const password = this.password.value;
 
     if (email === '' || password === '') {
-      this.email.classList.add('error');
+      this.props.toasting(['email ou/et mot de passe manquant.']);
     }
   }
 

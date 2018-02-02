@@ -15,7 +15,8 @@ class App extends Component {
 		this.currentUrl = e.url;
 	};
 
-	render() {
+	render(state, props) {
+    console.log(state, props);
 		return (
 			<div class="app">
 				<Router onChange={this.handleRoute}>

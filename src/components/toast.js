@@ -1,11 +1,11 @@
 import { Component } from 'preact';
 
 class Toast extends Component {
-  render () {
+  render ({}, {toast}) {
     return (
       <div class="toast-container">
         <div class="toast">
-          {messages.map((message, index) => (
+          {toast.messages.map((message, index) => (
             <p class="toast--content" key={index}>{message}</p>
           ))}
         </div>
