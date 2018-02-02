@@ -10,9 +10,6 @@
     "dev": "preact watch",
     "lint": "eslint src"
   },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
-  },
   "eslintIgnore": [
     "build/*"
   ],
@@ -24,7 +21,6 @@
   ],
   "devDependencies": {
     "eslint": "^4.9.0",
-    "eslint-config-synacor": "^2.0.2",
     "if-env": "^1.0.0",
     "node-sass": "^4.7.2",
     "preact-cli": "^2.0.1",
@@ -36,6 +32,7 @@
     "preact-router": "^2.5.7",
     "shaka-player": "^2.3.0",
     "stockroom": "^1.0.0",
-    "unistore": "^3.0.3"
+    "unistore": "^3.0.3",
+    "worker-loader": "^1.1.0"
   }
 }

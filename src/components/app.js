@@ -1,8 +1,9 @@
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
+import Auth from 'async!../routes/auth';
 
-export default class App extends Component {
-	
+class App extends Component {
+
 	handleRoute = e => {
 		this.currentUrl = e.url;
 	};
@@ -10,11 +11,12 @@ export default class App extends Component {
 	render() {
 		return (
 			<div id="app">
-				<Header />
 				<Router onChange={this.handleRoute}>
-					<Login path="/login"/>
+					<Auth path="/auth" />
 				</Router>
 			</div>
 		);
 	}
 }
+
+export default App;
