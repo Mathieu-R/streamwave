@@ -13,8 +13,8 @@ class Forgot extends Component {
   render () {
     return (
       <div class="forgot">
-      <form class="forgot-form" onSubmit={sendPasswordChangeEmail}>
-        <div class="forgot-form__email">
+      <form class="forgot-form" onSubmit={this.sendPasswordChangeEmail}>
+        <div class="forgot-form__email input-wrapper">
           <label for="email" class="forgot-form__email__label">E-mail</label>
           <input type="email" id="email" class="forgot-form__email__input"/>
         </div>

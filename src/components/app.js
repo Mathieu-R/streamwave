@@ -1,6 +1,8 @@
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
 
+import Toast from './toast';
+
 import Auth from 'async!../routes/auth';
 import Register from 'async!../routes/auth/register';
 import Login from 'async!../routes/auth/login'
@@ -20,8 +22,10 @@ class App extends Component {
           <Auth path="/auth" />
           <Register path="/auth/register" />
           <Login path="/auth/login" />
-          <reset path="/auth/reset" />
+          <Reset path="/auth/reset" />
+          <Register path="/auth/forgot" />
 				</Router>
+        <Toast />
 			</div>
 		);
 	}

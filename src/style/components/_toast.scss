@@ -1,0 +1,30 @@
+.air-toast {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  word-wrap: break-word;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  padding: 10px;
+  background: #FFF;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  transform: translateX(-50%);
+  will-change: opacity, transform;
+  opacity: 1;
+  z-index: 1;
+
+  &--content {
+    margin: 0;
+  }
+}
+.toast-animate-enter-active, .toast-animate-leave-active {
+  transition: opacity .3s cubic-bezier(0, 0, 0.3, 1),
+    transform .5s cubic-bezier(0, 0, 0.3, 1);
+}
+.toast-animate-enter, .toast-animate-leave-to {
+  transform: translateY(100px);
+  opacity: 0;
+}
