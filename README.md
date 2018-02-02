@@ -13,6 +13,8 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - Media Session API
 - Service Worker
 - Background Fetch
+- Background Sync
+- Socket Live Sync
 - Median Cut 
 - Elastic Search
 - ...

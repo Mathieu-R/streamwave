@@ -1,0 +1,68 @@
+.auth {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+
+  &-wrapper {
+    width: 100%;
+    max-width: $mobile;
+  }
+
+  .welcome-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 270px;
+  }
+
+  .welcome-title__main {
+    margin: 0;
+    font-size: 36px;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: flex;
+      height: 1px;
+      background: #FFF;
+      border: none;
+    }
+  }
+
+  .welcome-title__subtitle {
+    color: $welcome-subtitle-color;
+    font-size: 12px;
+    text-align: center;
+    margin: 2px 0;
+  }
+
+  .auth-buttons {
+    &__login, &__register, &__google {
+      height: 55px;
+      width: 100%;
+      margin: 17px 10px;
+      border-radius: 27px;
+    }
+
+    &__login, &__register {
+      background: $auth-button-color;
+    }
+
+    &__google {
+      background: $auth-google-button-color;
+    }
+
+    &__login__link, &__register__link {
+      color: #FFF;
+      font-size: 18px;
+    }
+  }
+
+  .auth__password-reset__link {
+    font-size: 12px;
+    text-decoration: underline;
+  }
+}
