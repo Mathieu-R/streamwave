@@ -15,18 +15,17 @@ class App extends Component {
 		this.currentUrl = e.url;
 	};
 
-	render(state, props) {
-    console.log(state, props);
+	render({user, toast, toasting, register, login, getResetToken, changePassword}) {
 		return (
 			<div class="app">
-				<Router onChange={this.handleRoute}>
+				<Router>
           <Auth path="/auth" />
           <Register path="/auth/register" />
           <Login path="/auth/login" />
           <Reset path="/auth/reset" />
           <Register path="/auth/forgot" />
 				</Router>
-        <Toast />
+        <Toast toast={toast} />
 			</div>
 		);
 	}

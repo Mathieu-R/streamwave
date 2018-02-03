@@ -17,17 +17,7 @@ const App = connect('user, toast', {
   login: 'login',
   getResetToken: 'getResetToken',
   changePassword: 'changePassword'
-})(
-  ({
-    user,
-    toast,
-    toasting,
-    register,
-    login,
-    getResetToken,
-    changePassword
-  }) => <Main />
-);
+})(Main);
 
 export default () => (
   <Provider store={store}>

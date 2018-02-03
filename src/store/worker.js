@@ -49,36 +49,6 @@ store.registerActions(store => ({
     // data.message
   },
 
-  async login ({user}, email, password) {
-    const response = await fetch(`${Constants.AUTH_URL}/local/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email, password
-      })
-    });
-
-    const data = await response.json();
-
-    // bad typing
-    if (response.status === 400) {
-      // data.error
-    }
-
-    // user does not exist
-    if (response.status === 204) {
-
-    }
-    login
-    // server error
-    if (response.status === 500) {
-      // data.error
-    }
-
-    // user logged, token received
-    // should save it into idb since localStore
-    // is unavailable in web workers
-  },
-
   async getResetToken (state, email) {
     const response = await fetch(`${Constants.AUTH_URL}/local/get-reset-token`, {
       method: 'POST',

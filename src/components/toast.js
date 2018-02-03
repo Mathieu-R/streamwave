@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 
 class Toast extends Component {
-  render ({}, {toast}) {
+  render ({toast}, {}) {
     return (
       <div class="toast-container">
         <div class="toast">

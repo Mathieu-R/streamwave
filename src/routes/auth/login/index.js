@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import workerize from 'workerize';
 
 class Login extends Component {
   constructor () {
@@ -15,6 +16,42 @@ class Login extends Component {
     if (email === '' || password === '') {
       this.props.toasting(['email ou/et mot de passe manquant.']);
     }
+
+    workerize(this.loginFetch)
+      .then(token => localStorage.setItem('streamwave-token', token))
+      .catch(err => console.error(err));
+  }
+
+  async loginFetch (email, password) {
+    const response = await fetch(`${Constants.AUTH_URL}/local/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email, password
+      })
+    });
+
+    const data = await response.json();
+
+    // bad typing
+    if (response.status === 400) {
+      // data.error
+    }
+
+    // user does not exist
+    if (response.status === 204) {
+
+    }
+
+    // server error
+    if (response.status === 500) {
+      // data.error
+    }
+
+    // user logged, token received
+    // should save it into idb since localStore
+    // is unavailable in web workers
+    // unless I do not use stockroom for that
+    return data.token
   }
 
   render () {
