@@ -35,6 +35,6 @@
     "stockroom": "^1.0.1",
     "unistore": "^3.0.4",
     "worker-loader": "^1.1.0",
-    "workerize": "^0.1.7"
+    "workerize-loader": "^1.0.1"
   }
 }

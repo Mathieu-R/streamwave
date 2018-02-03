@@ -20,10 +20,10 @@ class App extends Component {
 			<div class="app">
 				<Router>
           <Auth path="/auth" />
-          <Register path="/auth/register" />
-          <Login path="/auth/login" />
-          <Reset path="/auth/reset" />
-          <Register path="/auth/forgot" />
+          <Register path="/auth/register" toasting={toasting} />
+          <Login path="/auth/login" toasting={toasting} />
+          <Reset path="/auth/reset/:token" toasting={toasting} />
+          <Register path="/auth/forgot" toasting={toasting} />
 				</Router>
         <Toast toast={toast} />
 			</div>
