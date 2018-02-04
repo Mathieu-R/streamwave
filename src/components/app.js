@@ -15,17 +15,17 @@ class App extends Component {
 		this.currentUrl = e.url;
 	};
 
-	render({user, toast, toasting, register, login, getResetToken, changePassword}) {
+	render () {
 		return (
 			<div class="app">
 				<Router>
           <Auth path="/auth" />
-          <Register path="/auth/register" toasting={toasting} />
-          <Login path="/auth/login" toasting={toasting} />
-          <Reset path="/auth/reset/:token" toasting={toasting} />
-          <Register path="/auth/forgot" toasting={toasting} />
+          <Register path="/auth/register"  />
+          <Login path="/auth/login" />
+          <Reset path="/auth/reset/:token" />
+          <Forgot path="/auth/forgot"  />
 				</Router>
-        <Toast toast={toast} />
+        <Toast  />
 			</div>
 		);
 	}

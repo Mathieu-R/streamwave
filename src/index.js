@@ -11,16 +11,15 @@ store.subscribe(console.log);
 import './style/index.scss';
 import Main from './components/app';
 
-const App = connect('user, toast', {
-  toasting: 'toast',
-  register: 'register',
-  login: 'login',
-  getResetToken: 'getResetToken',
-  changePassword: 'changePassword'
-})(Main);
+//const propertiesMapping = ['user', 'toast'];
+/*const actionsMapping = {
+  toasting: 'toasting'
+};*/
+
+//const App = connect(propertiesMapping, actionsMapping)(Main);
 
 export default () => (
   <Provider store={store}>
-    <App />
+    <Main />
   </Provider>
 );

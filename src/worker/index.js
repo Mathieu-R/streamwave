@@ -1,3 +1,5 @@
+import Constants from '../constants';
+
 export async function login (email, password) {
   const response = await fetch(`${Constants.AUTH_URL}/local/login`, {
     method: 'POST',

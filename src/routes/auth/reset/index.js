@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import worker from 'workerize!../../../worker';
+//import worker from 'workerize!../../../worker';
 
 class Reset extends Component {
   constructor () {

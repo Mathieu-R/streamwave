@@ -1,9 +1,29 @@
 import { Component } from 'preact';
+import Constant from '../../constants';
 import '../../third_party/gapi';
 
 class Auth extends Component {
   constructor () {
     super();
+  }
+
+  googleLogin () {
+    let gid = '';
+    auth = gapi.auth2.getAuthInstance();
+    auth.signIn({
+      login_hint: gid || ''
+    }).then(profile => {
+      const token = profile.getAuthResponse().id_token;
+      console.log(token);
+      return fetch(`${Constant.AUTH_URL}/google/login`, {
+        method: 'POST',
+        headers: {
+          'authorization': `Bearer ${token}`
+        }
+      })
+    }).then(({token}) => {
+      console.log(token);
+    }).catch(err => console.error(err));
   }
 
   render () {
@@ -26,8 +46,8 @@ class Auth extends Component {
                 Créer un compte
               </a>
             </button>
-            <button class="auth-buttons__google">
-              Créer un compte
+            <button class="auth-buttons__google" onClick={this.googleLogin}>
+              Continuer avec google
             </button>
             <a href="/auth/forgot" native class="auth__password-reset__link">
               Mot de passe oublié ?
