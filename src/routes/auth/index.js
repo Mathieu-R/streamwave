@@ -7,9 +7,56 @@ class Auth extends Component {
     super();
   }
 
-  googleLogin () {
+  componentDidMount () {
+    gapi.load('auth2', () => {
+      gapi.auth2.init({
+        client_id: '518872171102-tpqle4q49rihv2atopm4c0uvnumochtd.apps.googleusercontent.com'
+      }).then(() => {
+        console.log('gapi init.');
+        this.autoSignOnConnect()
+          .catch(err => console.error(err));
+      });
+    });
+  }
+
+  async autoSignOnConnect () {
+    if (Constant.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+      const credentials = await navigator.credentials.get({
+        password: true,
+        federated: {
+          providers: ['https://accounts.google.com']
+        },
+        //mediation: 'silent' // prevent browser to show account choser
+      });
+
+      if (!credentials) return;
+      if (credentials.type === 'password') {
+        const response = await fetch(`${Constant.AUTH_URL}/local/login`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: credentials.id,
+            password: credentials.password
+          })
+        });
+        return;
+      }
+
+      if (credentials.type === 'federated') {
+        const response = await fetch(`${Constant.AUTH_URL}/google/login`, {
+          method: 'POST'
+        });
+        return;
+      }
+    }
+  }
+
+  googleLogin (evt) {
     let gid = '';
     auth = gapi.auth2.getAuthInstance();
+    console.log(auth);
     auth.signIn({
       login_hint: gid || ''
     }).then(profile => {

@@ -52,6 +52,14 @@
       color: #FFF;
       font-size: 18px;
     }
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .auth__password-reset__link {

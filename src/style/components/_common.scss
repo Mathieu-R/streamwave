@@ -15,19 +15,11 @@
 }
 
 .register-button, .login-button, .forgot-button, .reset-button {
-  font-size: 22px;
+  font-size: 20px;
   height: 55px;
   background: $auth-button-color;
   margin-top: 17px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-
-  a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-  }
 }
 
 .input-wrapper {

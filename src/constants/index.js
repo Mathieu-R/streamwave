@@ -12,6 +12,10 @@ class Constants {
       production ? 'https://api.streamwave.be/v1' : 'http://localhost:5000'
     );
   }
+
+  static get SUPPORT_CREDENTIALS_MANAGEMENT_API () {
+    return (navigator.credentials && navigator.credentials.preventSilentAccess);
+  }
 }
 
 export default Constants;
