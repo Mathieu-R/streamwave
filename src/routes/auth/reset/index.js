@@ -34,11 +34,11 @@ class Reset extends Component {
         <form class="reset-form" onSubmit={this.reset}>
           <div class="reset-form__password input-wrapper">
             <label for="password" class="reset-form__password__label">Nouveau mot de passe</label>
-            <input ref={input => this.password = input} type="password" id="password" class="reset-form__password__input"/>
+            <input ref={input => this.password = input} type="password" id="password" class="reset-form__password__input" autocomplete="new-password"/>
           </div>
           <div class="reset-form__password-confirm input-wrapper">
             <label for="password-confirm" class="reset-form__password-confirm__label">Confirmation du nouveau mot de passe</label>
-            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="reset-form__password-confirm__input"/>
+            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="reset-form__password-confirm__input" autocomplete="new-password"/>
           </div>
           <button type="submit" class="reset-button">
             Créer un compte
