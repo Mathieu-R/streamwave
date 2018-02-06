@@ -1,12 +1,10 @@
 import createStore from 'stockroom';
-import storeWorker from 'worker-loader!./store/worker';
+import storeWorker from 'workerize-loader!./store/worker';
 import { Provider, connect } from 'unistore/preact';
 import devtools from 'unistore/devtools';
 
 const production = process.env.NODE_ENV === 'production';
-
-const store = production ? createStore(new storeWorker()) : devtools(createStore(new storeWorker()));
-store.subscribe(console.log);
+const store = production ? createStore(storeWorker()) : devtools(createStore(storeWorker()));
 
 import './style/index.scss';
 import Main from './components/app';

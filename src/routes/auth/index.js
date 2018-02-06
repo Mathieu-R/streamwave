@@ -13,8 +13,8 @@ class Auth extends Component {
         client_id: '518872171102-tpqle4q49rihv2atopm4c0uvnumochtd.apps.googleusercontent.com'
       }).then(() => {
         console.log('gapi init.');
-        this.autoSignOnConnect()
-          .catch(err => console.error(err));
+        /*this.autoSignOnConnect()
+          .catch(err => console.error(err));*/
       });
     });
   }
@@ -55,8 +55,7 @@ class Auth extends Component {
 
   googleLogin (evt) {
     let gid = '';
-    auth = gapi.auth2.getAuthInstance();
-    console.log(auth);
+    const auth = gapi.auth2.getAuthInstance();
     auth.signIn({
       login_hint: gid || ''
     }).then(profile => {
@@ -68,7 +67,9 @@ class Auth extends Component {
           'authorization': `Bearer ${token}`
         }
       })
-    }).then(({token}) => {
+    }).then(response => response.json())
+    .then(({token}) => {
+      localStorage.setItem('streamwave-token', token);
       console.log(token);
     }).catch(err => console.error(err));
   }
