@@ -16,6 +16,22 @@ class Constants {
   static get SUPPORT_CREDENTIALS_MANAGEMENT_API () {
     return (navigator.credentials && navigator.credentials.preventSilentAccess);
   }
+
+  static get SUPPORT_MEDIA_SESSION_API () {
+    return navigator.mediaSession;
+  }
+
+  static SUPPORT_SERVICE_WORKER () {
+    return navigator.serviceWorker;
+  }
+
+  static get SUPPORT_BACKGROUND_SYNC () {
+    return (navigator.serviceWorker && navigator.SyncManager);
+  }
+
+  static get SUPPORT_BACKGROUND_FETCH () {
+    return;
+  }
 }
 
 export default Constants;

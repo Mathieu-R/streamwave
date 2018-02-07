@@ -20,9 +20,9 @@ class Toast extends Component {
         {state => (
         <div class={`toast toast-${state}`}>
             <p class="toast__content">Hello, super message from toast.</p>
-            {/*toast.messages.map((message, index) => (
+            {toast && toast.messages.map((message, index) => (
               <p class="toast--content" key={index}>{message}</p>
-            ))*/}
+            ))}
           </div>
         )}
         </Transition>

@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-//import worker from 'workerize!../../../worker';
+import Constants from '../../constants';
 
 class Reset extends Component {
   constructor () {
@@ -23,9 +23,37 @@ class Reset extends Component {
       return;
     }
 
-    worker().changePassword(password, token)
-      .then(message => this.props.toasting([message]))
+    this.performReset(password, token)
       .catch(err => console.error(err));
+  }
+
+  async performReset () {
+    const response = await fetch(`${Constants.AUTH_URL}/local/account/reset/reset-password?token=${token}`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        password
+      })
+    });
+
+    // server error
+    if (response.status === 500) {
+      this.props.toasting(['Erreur lors du changement de mot de passe.']);
+      return;
+    }
+
+    const data = await response.json();
+
+    // token invalid or expired
+    if (response.status === 400) {
+      this.props.toasting(data.error);
+      return;
+    }
+
+    // password changed
+    this.props.toasting(data.message);
   }
 
   render () {

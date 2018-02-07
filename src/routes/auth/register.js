@@ -1,5 +1,6 @@
 import { Component } from 'preact';
-import worker from 'workerize-loader!../../../worker';
+import { worker } from '../../index';
+import Constants from '../../constants';
 
 class Register extends Component {
   constructor () {
@@ -24,9 +25,38 @@ class Register extends Component {
       return;
     }
 
-    worker().register(email, password)
-      .then(message => this.props.toasting([message]))
+    this.performRegister(email, password)
       .catch(err => console.error(err));
+  }
+
+  async performRegister (email, password) {
+    const response = await fetch(`${Constants.AUTH_URL}/local/register`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        email, password
+      })
+    });
+
+    const data = await response.json();
+
+    // bad typing, password not strong enough or email already used
+    if (response.status === 400) {
+      const errors = data.error.map(err => err.msg);
+      this.props.toasting(errors);
+      return;
+    }
+
+    // server error
+    if (response.status === 500) {
+      this.props.toasting(['Erreur lors de la création du compte.']);
+      return;
+    }
+
+    // user created, mail sent
+    this.props.toasting(data.message);
   }
 
   render () {

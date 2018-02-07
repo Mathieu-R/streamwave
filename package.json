@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "idb-keyval": "^2.3.0",
+    "jwt-decode": "^2.2.0",
     "preact": "^8.2.6",
     "preact-compat": "^3.18.0",
     "preact-router": "^2.5.7",

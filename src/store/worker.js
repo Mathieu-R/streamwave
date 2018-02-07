@@ -1,6 +1,6 @@
 import createStore from 'stockroom/worker';
-import idbKeyVal from 'idb-keyval';
 import Constants from '../constants';
+import decode from 'jwt-decode';
 
 const store = createStore({
   user: {
@@ -16,12 +16,21 @@ const store = createStore({
 
 // globally available actions
 store.registerActions(store => ({
-  toasting ({toast}, messages) {
-    return {
+  toasting (state, messages, duration = 3000) {
+    store.setState({
       toast: {
         messages,
         show: true
       }
-    };
+    });
+    setTimeout(() => store.setState({toast: {show: false}}, duration));
+  },
+
+  storeUser (state, token) {
+    return store.setState({
+      user: {
+        ...decode(token)
+      }
+    })
   }
 }));

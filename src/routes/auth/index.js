@@ -1,7 +1,9 @@
 import { Component } from 'preact';
-import Constant from '../../constants';
+import { connect } from 'unistore/preact';
+import Constants from '../../constants';
 import '../../third_party/gapi';
 
+@connect(['user'], { storeUser: 'storeUser'})
 class Auth extends Component {
   constructor () {
     super();
@@ -20,7 +22,7 @@ class Auth extends Component {
   }
 
   async autoSignOnConnect () {
-    if (Constant.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
       const credentials = await navigator.credentials.get({
         password: true,
         federated: {
@@ -31,7 +33,7 @@ class Auth extends Component {
 
       if (!credentials) return;
       if (credentials.type === 'password') {
-        const response = await fetch(`${Constant.AUTH_URL}/local/login`, {
+        const response = await fetch(`${Constants.AUTH_URL}/local/login`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json'
@@ -45,7 +47,7 @@ class Auth extends Component {
       }
 
       if (credentials.type === 'federated') {
-        const response = await fetch(`${Constant.AUTH_URL}/google/login`, {
+        const response = await fetch(`${Constants.AUTH_URL}/google/login`, {
           method: 'POST'
         });
         return;
@@ -60,16 +62,37 @@ class Auth extends Component {
       login_hint: gid || ''
     }).then(profile => {
       const token = profile.getAuthResponse().id_token;
-      return fetch(`${Constant.AUTH_URL}/google/login`, {
+      return fetch(`${Constants.AUTH_URL}/google/login`, {
         method: 'POST',
         headers: {
           'authorization': `Bearer ${token}`
         }
-      })
-    }).then(response => response.json())
+      });
+    })
+    .then(response => response.json())
     .then(({token}) => {
       localStorage.setItem('streamwave-token', token);
-    }).catch(err => console.error(err));
+      return this.props.storeUser(token);
+    })
+    .then(stuff => {
+      console.log(stuff);
+      return storeFederatedCredentials(this.props.user);
+    })
+    .catch(err => console.error(err));
+  }
+
+  async storeFederatedCredentials (profile) {
+    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+      const credentials = await navigator.credentials.create({
+        federated: {
+          id: profile.id,
+          provider: 'https://accounts.google.com',
+          name: profile.name,
+          iconURL: profile.iconURL
+        }
+      });
+      return navigator.credentials.store(credentials);
+    }
   }
 
   render () {

@@ -2,6 +2,7 @@ import createStore from 'stockroom';
 import storeWorker from 'workerize-loader!./store/worker';
 import { Provider, connect } from 'unistore/preact';
 import devtools from 'unistore/devtools';
+import mainWorker from 'workerize-loader!./worker';
 
 const production = process.env.NODE_ENV === 'production';
 const store = production ? createStore(storeWorker()) : devtools(createStore(storeWorker()));
@@ -15,6 +16,8 @@ import Main from './components/app';
 };*/
 
 //const App = connect(propertiesMapping, actionsMapping)(Main);
+
+export const worker = mainWorker();
 
 export default () => (
   <Provider store={store}>
