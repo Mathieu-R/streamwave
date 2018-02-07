@@ -60,7 +60,6 @@ class Auth extends Component {
       login_hint: gid || ''
     }).then(profile => {
       const token = profile.getAuthResponse().id_token;
-      console.log(token);
       return fetch(`${Constant.AUTH_URL}/google/login`, {
         method: 'POST',
         headers: {
@@ -70,7 +69,6 @@ class Auth extends Component {
     }).then(response => response.json())
     .then(({token}) => {
       localStorage.setItem('streamwave-token', token);
-      console.log(token);
     }).catch(err => console.error(err));
   }
 

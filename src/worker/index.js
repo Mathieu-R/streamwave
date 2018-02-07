@@ -1,8 +1,13 @@
 import Constants from '../constants';
 
 export async function login (email, password) {
+  console.log(navigator.credentials && navigator.credentials.preventSilentAccess);
+  return;
   const response = await fetch(`${Constants.AUTH_URL}/local/login`, {
     method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
     body: JSON.stringify({
       email, password
     })
@@ -25,16 +30,21 @@ export async function login (email, password) {
     return data.error
   }
 
+  const credentials
+
   // user logged, token received
   // should save it into idb since localStore
   // is unavailable in web workers
-  // unless I do not use stockroom for that
+  // unless I do not use worker for that
   return data.token;
 }
 
 export async function getResetToken (email) {
   const response = await fetch(`${Constants.AUTH_URL}/local/get-reset-token`, {
     method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
     body: JSON.stringify({
       email
     })
@@ -59,6 +69,9 @@ export async function getResetToken (email) {
 export async function register (email, password) {
   const response = await fetch(`${Constants.AUTH_URL}/local/register`, {
     method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
     body: JSON.stringify({
       email, password
     })
@@ -83,6 +96,9 @@ export async function register (email, password) {
 export async function changePassword (password, token) {
   const response = await fetch(`${Constants.AUTH_URL}/local/reset-password?token=${token}`, {
     method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
     body: JSON.stringify({
       password
     })

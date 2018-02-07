@@ -1,17 +1,31 @@
 import { Component } from 'preact';
 import { connect } from 'unistore/preact';
+import Transition from 'react-transition-group/Transition';
 
 @connect(['toast'])
 class Toast extends Component {
-  render ({toast}, {}) {
+  constructor () {
+    super();
+    this.state = {
+      timeout: 300,
+      show: true
+    }
+  }
+
+  render ({toast}, {timeout, show}) {
     console.log(toast);
     return (
       <div class="toast-container">
-        <div class="toast">
-          {/*toast.messages.map((message, index) => (
-            <p class="toast--content" key={index}>{message}</p>
-          ))*/}
-        </div>
+        <Transition in={show} timeout={timeout}>
+        {state => (
+        <div class={`toast toast-${state}`}>
+            <p class="toast__content">Hello, super message from toast.</p>
+            {/*toast.messages.map((message, index) => (
+              <p class="toast--content" key={index}>{message}</p>
+            ))*/}
+          </div>
+        )}
+        </Transition>
       </div>
     )
   }
