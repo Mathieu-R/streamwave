@@ -19,9 +19,8 @@ class Toast extends Component {
         <Transition in={show} timeout={timeout}>
         {state => (
         <div class={`toast toast-${state}`}>
-            <p class="toast__content">Hello, super message from toast.</p>
             {toast && toast.messages.map((message, index) => (
-              <p class="toast--content" key={index}>{message}</p>
+              <p class="toast__content" key={index}>{message}</p>
             ))}
           </div>
         )}

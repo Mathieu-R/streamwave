@@ -1,6 +1,5 @@
 import createStore from 'stockroom/worker';
 import Constants from '../constants';
-import decode from 'jwt-decode';
 
 const store = createStore({
   user: {
@@ -26,11 +25,9 @@ store.registerActions(store => ({
     setTimeout(() => store.setState({toast: {show: false}}, duration));
   },
 
-  storeUser (state, token) {
-    return store.setState({
-      user: {
-        ...decode(token)
-      }
-    })
+  storeUser (state, user) {
+    return {
+      user
+    }
   }
 }));

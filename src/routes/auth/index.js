@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'unistore/preact';
+import decode from 'jwt-decode';
 import Constants from '../../constants';
 import '../../third_party/gapi';
 
@@ -7,16 +8,19 @@ import '../../third_party/gapi';
 class Auth extends Component {
   constructor () {
     super();
+
+    this.GOOGLE_CLIENT_ID = '518872171102-tpqle4q49rihv2atopm4c0uvnumochtd.apps.googleusercontent.com';
+    this.googleLogin = this.googleLogin.bind(this);
   }
 
   componentDidMount () {
     gapi.load('auth2', () => {
       gapi.auth2.init({
-        client_id: '518872171102-tpqle4q49rihv2atopm4c0uvnumochtd.apps.googleusercontent.com'
+        client_id: this.GOOGLE_CLIENT_ID
       }).then(() => {
-        console.log('gapi init.');
-        /*this.autoSignOnConnect()
-          .catch(err => console.error(err));*/
+        console.log('[OAUTH2] gapi init.');
+        this.autoSignOnConnect()
+          .catch(err => console.error(err));
       });
     });
   }
@@ -30,6 +34,8 @@ class Auth extends Component {
         },
         //mediation: 'silent' // prevent browser to show account choser
       });
+
+      console.log(credentials);
 
       if (!credentials) return;
       if (credentials.type === 'password') {
@@ -47,9 +53,7 @@ class Auth extends Component {
       }
 
       if (credentials.type === 'federated') {
-        const response = await fetch(`${Constants.AUTH_URL}/google/login`, {
-          method: 'POST'
-        });
+        this.googleLogin().catch(err => console.error(err));
         return;
       }
     }
@@ -72,11 +76,11 @@ class Auth extends Component {
     .then(response => response.json())
     .then(({token}) => {
       localStorage.setItem('streamwave-token', token);
-      return this.props.storeUser(token);
+      return decode(token);
     })
-    .then(stuff => {
-      console.log(stuff);
-      return storeFederatedCredentials(this.props.user);
+    .then(user => {
+      this.props.storeUser(user);
+      return this.storeFederatedCredentials(user);
     })
     .catch(err => console.error(err));
   }
@@ -87,8 +91,8 @@ class Auth extends Component {
         federated: {
           id: profile.id,
           provider: 'https://accounts.google.com',
-          name: profile.name,
-          iconURL: profile.iconURL
+          name: profile.username,
+          iconURL: profile.avatar
         }
       });
       return navigator.credentials.store(credentials);

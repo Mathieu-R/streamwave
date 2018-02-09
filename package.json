@@ -34,6 +34,7 @@
     "preact": "^8.2.6",
     "preact-compat": "^3.18.0",
     "preact-router": "^2.5.7",
+    "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1",
     "shaka-player": "^2.3.2",
     "stockroom": "^1.0.1",
