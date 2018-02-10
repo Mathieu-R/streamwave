@@ -7,16 +7,15 @@ class Toast extends Component {
   constructor () {
     super();
     this.state = {
-      timeout: 300,
-      show: true
+      timeout: 300
     }
   }
 
-  render ({toast}, {timeout, show}) {
+  render ({toast}, {timeout}) {
     console.log(toast);
     return (
       <div class="toast-container">
-        <Transition in={show} timeout={timeout}>
+        <Transition in={toast && toast.show} timeout={timeout}>
         {state => (
         <div class={`toast toast-${state}`}>
             {toast && toast.messages.map((message, index) => (

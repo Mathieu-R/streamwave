@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'unistore/preact';
+import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
 import Constants from '../../constants';
 import '../../third_party/gapi';
@@ -109,22 +110,21 @@ class Auth extends Component {
           </section>
           <section class="auth-buttons">
             <button class="auth-buttons__login">
-              {/* https://github.com/developit/preact-router#default-link-behavior */}
-              <a href="/auth/login" native class="auth-buttons__login__link">
+              <Link to="/auth/login" class="auth-buttons__login__link">
                 Se connecter
-              </a>
+              </Link>
             </button>
             <button class="auth-buttons__register">
-              <a href="/auth/register" native class="auth-buttons__register__link">
+              <Link to="/auth/register" class="auth-buttons__register__link">
                 Créer un compte
-              </a>
+              </Link>
             </button>
             <button class="auth-buttons__google" onClick={this.googleLogin}>
               Continuer avec google
             </button>
-            <a href="/auth/forgot" native class="auth__password-reset__link">
+            <Link to="/auth/forgot" class="auth__password-reset__link">
               Mot de passe oublié ?
-            </a>
+            </Link>
           </section>
         </section>
       </div>

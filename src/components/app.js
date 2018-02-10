@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Private } from '../guard/private-route';
 
 import Toast from './toast';
