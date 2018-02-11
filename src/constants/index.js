@@ -13,6 +13,12 @@ class Constants {
     );
   }
 
+  static get CDN_URL () {
+    return (
+      'https://cdn.streamwave.be'
+    );
+  }
+
   static get SUPPORT_CREDENTIALS_MANAGEMENT_API () {
     return (navigator.credentials && navigator.credentials.preventSilentAccess);
   }
