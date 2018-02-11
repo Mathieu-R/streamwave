@@ -9,7 +9,7 @@ class TopBarBack extends Component {
   render () {
     return (
       <div class="topbar--back">
-        <div class="topbar--back__back-button"></div>
+        <div class="topbar--back__button"></div>
         <div className="topbar--back__title">
           Streamwave
         </div>

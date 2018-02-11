@@ -26,7 +26,8 @@
     "if-env": "^1.0.4",
     "node-sass": "^4.7.2",
     "preact-cli": "^2.0.1",
-    "sass-loader": "^6.0.6"
+    "sass-loader": "^6.0.6",
+    "svg-inline-loader": "^0.8.0"
   },
   "dependencies": {
     "idb-keyval": "^2.3.0",
