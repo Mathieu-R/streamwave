@@ -14,13 +14,13 @@ class Library extends Component {
   }
 
   componentDidMount () {
-    fetch(`${Constants.API_URL}/`, {
+    fetch(`${Constants.API_URL}/library`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
     })
     .then(response => response.json())
-    .then(response => this.setState(response))
+    .then(response => this.setState({albums: response}))
     .catch(err => console.error(err));
   }
 

@@ -18,6 +18,7 @@ class App extends Component {
 			<div class="app">
         <Switch>
           <Route exact path="/" component={Library} />
+          <Route exact path="/album/:id" component={Album} />
           <Route exact path="/auth" component={Auth} />
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/login" component={Login} />
