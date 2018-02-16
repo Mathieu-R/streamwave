@@ -11,6 +11,7 @@ import Forgot from '../routes/auth/forgot';
 import Reset from '../routes/auth/reset';
 
 import Library from 'async!../routes/library';
+import Album from 'async!../routes/album';
 
 class App extends Component {
 	render () {

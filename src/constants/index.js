@@ -23,6 +23,10 @@ class Constants {
     return (navigator.credentials && navigator.credentials.preventSilentAccess);
   }
 
+  static get SUPPORT_INTERSECTION_OBSERVER () {
+    return 'intersectionObserver' in window;
+  }
+
   static get SUPPORT_MEDIA_SESSION_API () {
     return navigator.mediaSession;
   }
