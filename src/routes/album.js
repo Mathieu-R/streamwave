@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import Constants from '../constants';
 import Track from '../components/track';
 
 const mapStateToProps = state => ({
@@ -7,31 +8,36 @@ const mapStateToProps = state => ({
 });
 
 class Album extends Component {
-  componentDidMount () {
+  componentWillMount () {
     const id = this.props.match.params.id;
-    const album = this.props.library.find(album => album._id === id);
-    console.log(album);
-    this.setState({...album});
+    fetch(`${Constants.API_URL}/album/${id}`, {
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
+      }
+    })
+      .then(response => response.json())
+      .then(response => this.setState({...response}));
   }
 
   render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
-    console.log(this.state, tracks);
     return (
-      <div className="album">
-        <div className="album__info-block">
-          <h1 className="album__title">{title}</h1>
-          <h2 className="album__artist">{artist}</h2>
-          <div className="album__download-container">
+      <div class="album">
+        <div class="album__info-block">
+          <h1 class="album__title">{title}</h1>
+          <h2 class="album__artist">{artist}</h2>
+          <div class="album__download-container">
             <div class="album__download-container__progress"></div>
-            <div className="album__download-container__toggle">
-              <input type="checkbox" className="album__download-container__toggle-checkbox" />
-              <div className="album__download-container__toggle-label"></div>
+            <div class="album__download-container__toggle">
+              <input type="checkbox" class="album__download-container__toggle-checkbox" id="toggle-download" />
+              <label class="album__download-container__toggle-label" for="toggle-download">Télécharger</label>
             </div>
           </div>
         </div>
-        {tracks.map(track => (
-          <Track {...track} />
-        ))}
+        <div className="album-tracks">
+          {tracks && tracks.map(track => (
+            <Track {...track} />
+          ))}
+        </div>
       </div>
     );
   }
