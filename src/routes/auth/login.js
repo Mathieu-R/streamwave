@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import Constants from '../../constants';
 
 import {
@@ -65,6 +66,7 @@ class Login extends Component {
 
     localStorage.setItem('streamwave-token', data.token);
     const credentials = await this.storeCredentials(email, password);
+    return <Redirect to="/" />
   }
 
   async storeCredentials (email, password) {

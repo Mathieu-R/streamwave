@@ -31,8 +31,12 @@ class Constants {
     return navigator.mediaSession;
   }
 
-  static SUPPORT_SERVICE_WORKER () {
+  static get SUPPORT_SERVICE_WORKER () {
     return navigator.serviceWorker;
+  }
+
+  static get SUPPORT_CACHE_API () {
+    return self in 'caches';
   }
 
   static get SUPPORT_BACKGROUND_SYNC () {

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Constants from '../constants';
 import Cover from '../components/cover';
 import TopBarHamburger from '../components/topbar-hamburger';
-import Navbar from '../components/navbar';
 
 import {
   storeLibrary
@@ -87,7 +86,6 @@ class Library extends Component {
             <Cover {...album} />
           ))}
         </section>
-        <Navbar />
       </div>
     );
   }

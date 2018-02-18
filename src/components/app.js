@@ -10,16 +10,14 @@ import Login from '../routes/auth/login'
 import Forgot from '../routes/auth/forgot';
 import Reset from '../routes/auth/reset';
 
-import Library from 'async!../routes/library';
-import Album from 'async!../routes/album';
+import Home from '../routes/home';
 
 class App extends Component {
 	render () {
 		return (
 			<div class="app">
         <Switch>
-          <Route exact path="/" component={Library} />
-          <Route exact path="/album/:id" component={Album} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/auth" component={Auth} />
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/login" component={Login} />

@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
 import Constants from '../../constants';
 import '../../third_party/gapi';
@@ -93,7 +93,8 @@ class Auth extends Component {
     })
     .then(user => {
       this.props.storeUser(user);
-      return this.storeFederatedCredentials(user);
+      this.storeFederatedCredentials(user);
+      return <Redirect to="/" />
     })
     .catch(err => console.error(err));
   }
