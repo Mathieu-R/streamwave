@@ -1,11 +1,11 @@
 import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 
-import Player from 'async!../components/player';
+import Player from '../components/player';
 import NavBar from '../components/navbar';
 
-import Library from 'async!./library';
-import Album from 'async!./album';
+import Library from './library';
+import Album from './album';
 
 
 class Home extends Component {
@@ -22,3 +22,5 @@ class Home extends Component {
     );
   }
 }
+
+export default Home;
