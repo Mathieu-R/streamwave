@@ -1,8 +1,11 @@
 import { Component } from 'preact';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 
-@connect(['toast'])
+const mapStateToProps = state => ({
+  toast: state.toast
+});
+
 class Toast extends Component {
   constructor () {
     super();
@@ -29,4 +32,4 @@ class Toast extends Component {
   }
 }
 
-export default Toast;
+export default connect()(Toast);

@@ -1,12 +1,23 @@
 import { Component } from 'preact';
 import { Link } from 'react-router-dom';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import Constants from '../constants';
 import Cover from '../components/cover';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Navbar from '../components/navbar';
 
-@connect(['library'], {storeLibrary: 'storeLibrary'})
+import {
+  storeLibrary
+} from '../store/library';
+
+const mapStateToProps = state => ({
+  library: state.library
+});
+
+const mapDispatchToProps = dispatch => ({
+  storeLibrary: albums => dispatch(storeLibrary(albums))
+});
+
 class Library extends Component {
   constructor () {
     super();
@@ -82,4 +93,4 @@ class Library extends Component {
   }
 }
 
-export default Library;
+export default connect(mapStateToProps, mapDispatchToProps)(Library);

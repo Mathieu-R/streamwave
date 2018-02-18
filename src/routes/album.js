@@ -1,8 +1,11 @@
 import { Component } from 'preact';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import Track from '../components/track';
 
-@connect(['library'])
+const mapStateToProps = state => ({
+  library: state.library
+});
+
 class Album extends Component {
   componentDidMount () {
     const id = this.props.match.params.id;
@@ -34,4 +37,4 @@ class Album extends Component {
   }
 }
 
-export default Album;
+export default connect(mapStateToProps)(Album);

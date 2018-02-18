@@ -1,11 +1,14 @@
 import { combineReducers } from 'redux';
 
-import toastReducers from './toast';
-import userReducers from './user';
-import libraryReducers from './library';
+import toast from './toast';
+import user from './user';
+import library from './library';
 
+// the name of reducers here
+// define the name of the properties
+// in the store
 export default combineReducers({
-  toastReducers,
-  userReducers,
-  libraryReducers
+  toast,
+  user,
+  library
 });

@@ -1,9 +1,21 @@
 import { Component } from 'preact';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
 import Constants from '../../constants';
 import '../../third_party/gapi';
+
+import {
+  storeUser
+} from '../../store/user';
+
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+const mapDispatchToProps = dispatch => ({
+  storeUser: user => dispatch(storeUser(user))
+});
 
 @connect(['user'], { storeUser: 'storeUser'})
 class Auth extends Component {
@@ -132,4 +144,4 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

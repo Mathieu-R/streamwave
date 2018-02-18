@@ -1,11 +1,18 @@
 // https://tylermcginnis.com/react-router-protected-routes-authentication/
 import { Component } from 'preact';
 import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import authenticated from './authenticated';
 
-//has the same api as <Route />
-@connect([], {storeUser: 'storeUser'})
+import {
+  storeUser
+} from '../store/user';
+
+const mapDispatchToProps = dispatch => ({
+  storeUser: user => dispatch(storeUser(user))
+});
+
+// has the same api as <Route />
 class Private extends Component {
   render ({component: Component, storeUser, ...props}) {
     // renders a route and pass all the props
@@ -23,4 +30,4 @@ class Private extends Component {
 //   })} />
 // )
 
-export default Private;
+export default connect(null, mapDispatchToProps)(Private);

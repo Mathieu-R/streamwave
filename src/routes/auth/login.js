@@ -1,8 +1,15 @@
 import { Component } from 'preact';
-import { connect } from 'unistore/preact';
+import { connect } from 'react-redux';
 import Constants from '../../constants';
 
-@connect(null, { toasting: 'toasting' })
+import {
+  toasting
+} from '../../store/toast';
+
+const mapDispatchToProps = dispatch => ({
+  toasting: (messages, duration) => dispatch(toasting(messages, duration))
+});
+
 class Login extends Component {
   constructor () {
     super();
@@ -93,4 +100,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);
