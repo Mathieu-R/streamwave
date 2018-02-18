@@ -1,0 +1,62 @@
+.album {
+  &__info-block {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  &__artist {
+    font-weight: 18px;
+    color: #7C7C7C;
+  }
+
+  &__download-container {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+
+    &__progress {
+      color: #7C7C7C;
+    }
+
+    &__toggle {
+      &-checkbox {
+        position: absolute;
+        opacity: 0;
+      }
+
+      &-label::before {
+        content: '';
+        position: absolute;
+        width: 40px;
+        height: 14px;
+        display: block;
+        background: #1870D7;
+        transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+        top: 50%;
+        right: 50%;
+        transform: translateY(-50%);
+
+      }
+
+      &-label::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        transform: translate(0px, -50px);
+        border-radius: 50%;
+        background: #FFF;
+        transition: transform .3s cubic-bezier(0, 0, 0.3, 1);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}

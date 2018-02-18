@@ -1,3 +1,7 @@
+// OLD STORE WORKING WITH STOCKROOM
+// STOCKROOM IS TOO YOUNG TO BE USED IN PRODUCTION
+// THAT'S ONLY MY OPINION BTW
+
 import createStore from 'stockroom/worker';
 import Constants from '../constants';
 
@@ -7,6 +11,7 @@ const store = createStore({
     email: '',
     avatar: ''
   },
+  library: [],
   toast: {
     messages: [],
     show: false
@@ -28,6 +33,12 @@ store.registerActions(store => ({
   storeUser (state, user) {
     return {
       user
+    }
+  },
+
+  storeLibrary (state, library) {
+    return {
+      library
     }
   }
 }));

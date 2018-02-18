@@ -36,12 +36,13 @@
     "preact-compat": "^3.18.0",
     "preact-router": "^2.5.7",
     "prop-types": "^15.6.0",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "shaka-player": "^2.3.2",
-    "stockroom": "^1.0.1",
-    "unistore": "^3.0.4",
     "workerize-loader": "^1.0.1"
   }
 }

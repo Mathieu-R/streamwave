@@ -1,13 +1,16 @@
 import { Component } from 'preact';
 import { Link } from 'react-router-dom';
+import { connect } from 'unistore/preact';
 import Constants from '../constants';
 import Cover from '../components/cover';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Navbar from '../components/navbar';
 
+@connect(['library'], {storeLibrary: 'storeLibrary'})
 class Library extends Component {
   constructor () {
     super();
+    this.observer = null;
     this.state = {
       albums: []
     }
@@ -20,16 +23,56 @@ class Library extends Component {
       }
     })
     .then(response => response.json())
-    .then(response => this.setState({albums: response}))
+    .then(response => this.props.storeLibrary(response))
+    .then(_ => this.lazyLoadArtworks())
     .catch(err => console.error(err));
   }
 
-  render ({}, {albums}) {
+  lazyLoadArtworks () {
+    // 1. select all images to lazy-load
+    const artworks = Array.from(this.gallery.querySelectorAll('.cover__artworks'));
+
+    // 2. detect IO feature
+    if (Constants.SUPPORT_INTERSECTION_OBSERVER) {
+      const config = {
+        rootMargin: '50px 0px',
+        treshold: 0.01
+      };
+
+      // 3. create a new observer
+      this.observer = new IntersectionObserver(this.onIntersection, config);
+
+      // 4. observe
+      artworks.forEach(artwork => this.observer.observe(artwork));
+    } else {
+      artworks.forEach(artwork => this.preloadImage(artwork));
+    }
+  }
+
+  onIntersection (entries) {
+    console.log(entries);
+    // Loop all entries
+    entries.forEach(entry => {
+      // If we are in viewport
+      if (entry.intersectionRatio > 0) {
+        // stop observe and load image
+        observer.unobserve(entry);
+        this.preloadImage(entry.target);
+      }
+    });
+  }
+
+  preloadImage (target) {
+    const src = target.dataset.src;
+    target.src = src;
+  }
+
+  render ({library}, {}) {
     return (
       <div class="library">
         <TopBarHamburger />
-        <section class="library__gallery">
-          {albums.map(album => (
+        <section ref={gallery => this.gallery = gallery} class="library__gallery" >
+          {library && library.map(album => (
             <Cover {...album} />
           ))}
         </section>

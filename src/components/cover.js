@@ -7,7 +7,7 @@ class Cover extends Component {
     return (
       <div class="cover">
         <Link to={`/album/${_id}`} class="cover__link">
-          <img class="cover__artwork" src={`${Constants.CDN_URL}/${coverURL}`}/>
+          <img class="cover__artwork" data-src={`${Constants.CDN_URL}/${coverURL}`}/>
           <span class="cover__artist">{artist}</span>
           <span class="cover__album-title">{title}</span>
         </Link>

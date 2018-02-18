@@ -1,5 +1,7 @@
 .cover {
   display: flex;
+  justify-content: center;
+  align-items: center;
 
   &__link {
     display: flex;
@@ -10,11 +12,12 @@
   }
 
   &__artwork {
-
+    max-height: 250px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
   &__artist {
-
+    font-weight: bold;
   }
 
   &__title {

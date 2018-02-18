@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import { connect } from 'unistore/preact';
 import Constants from '../../constants';
 
-@connect(null, { toasting: 'toasting' })
+@connect(null, {toasting: 'toasting'})
 class Forgot extends Component {
   constructor () {
     super();
