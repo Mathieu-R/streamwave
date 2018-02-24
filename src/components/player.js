@@ -73,11 +73,6 @@ class Player extends Component {
           <button className="player__controls-chromecast">
           </button>
         </div>
-        <audio
-          ref={audio => this.audioElement = audio}
-          preload="metadata"
-        >
-        </audio>
       </div>
     );
   }

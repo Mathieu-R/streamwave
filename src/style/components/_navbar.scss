@@ -1,12 +1,16 @@
 .navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 55px;
+  height: $navbar-height;
   width: 100%;
   max-width: 500px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   background: $navbar-background-color;
+  transform: translateX(-50%);
 
   &-link {
     display: flex;

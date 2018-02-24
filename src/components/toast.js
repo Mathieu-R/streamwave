@@ -32,4 +32,4 @@ class Toast extends Component {
   }
 }
 
-export default connect()(Toast);
+export default connect(mapStateToProps)(Toast);

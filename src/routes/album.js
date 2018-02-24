@@ -2,13 +2,24 @@ import { Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../constants';
 import Track from '../components/track';
+import Player from '../player';
+
+import {
+  setTrack
+} from '../store/player';
 
 const mapStateToProps = state => ({
   library: state.library
 });
 
+const mapDispatchToProps = dispatch => ({
+  setTrack: (music) => dispatch(setTrack(music))
+});
+
 class Album extends Component {
   componentWillMount () {
+    this.player = new Player();
+
     const id = this.props.match.params.id;
     fetch(`${Constants.API_URL}/album/${id}`, {
       headers: {
@@ -19,7 +30,20 @@ class Album extends Component {
       .then(response => this.setState({...response}));
   }
 
+  listenToTrack (artist, coverURL, track) {
+    const {manifestURL, playlistHLSURL} = track;
+    console.log(artist, coverURL, track);
+    this.props.setTrack({
+      artist,
+      coverURL,
+      track
+    });
+
+    this.player.listen(manifestURL, playlistHLSURL);
+  }
+
   render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
+    console.log(this.state);
     return (
       <div class="album">
         <div class="album__info-block">
@@ -35,7 +59,9 @@ class Album extends Component {
         </div>
         <div className="album-tracks">
           {tracks && tracks.map(track => (
-            <Track {...track} />
+            <Track
+              {...track}
+              onClick={evt => this.listenToTrack(artist, coverURL, track)}/>
           ))}
         </div>
       </div>
@@ -43,4 +69,4 @@ class Album extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Album);
+export default connect(mapStateToProps, mapDispatchToProps)(Album);

@@ -8,7 +8,15 @@ const middlewares = compose(
 );
 
 const initialState = {
-
+  toast: {
+    show: false,
+    messages: []
+  },
+  player: {
+    track: null,
+    playing: false,
+    chromecasting: false
+  }
 };
 
 const store = createStore(

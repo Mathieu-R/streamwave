@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg width="37px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
     <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -17,8 +16,7 @@
           35.0315223,7 33.7875009,7 C32.5434794,7 31.5350008,8.00847863 31.5350008,9.25250006
           L31.5350008,15.0036284 L31.5350008,15.0036284 Z"
           transform="translate(18.020000, 17.699375) scale(-1, 1) translate(-18.020000, -17.699375) "
-        >
-        </path>
+        />
       </g>
     </g>
   </g>

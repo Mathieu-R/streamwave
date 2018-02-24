@@ -1,6 +1,7 @@
 import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 
+import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';
 import NavBar from '../components/navbar';
 
@@ -16,8 +17,14 @@ class Home extends Component {
           <Route exact path="/" component={Library} />
           <Route path="/album/:id" component={Album} player={this.player}/>
         </Switch>
+        <MiniPlayer />
         <NavBar />
-        <Player ref={player => this.player = player} />
+        {/*<Player ref={player => this.player = player} />*/}
+        <audio
+          ref={audio => this.audioElement = audio}
+          preload="metadata"
+        >
+        </audio>
       </div>
     );
   }

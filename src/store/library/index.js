@@ -15,7 +15,6 @@ export default (state = [], action) => {
   switch (type) {
     case STORE_LIBRARY:
       return [
-        ...state,
         ...albums
       ]
     default:
