@@ -24,7 +24,7 @@ class Constants {
   }
 
   static get SUPPORT_INTERSECTION_OBSERVER () {
-    return 'intersectionObserver' in window;
+    return 'IntersectionObserver' in window;
   }
 
   static get SUPPORT_MEDIA_SESSION_API () {

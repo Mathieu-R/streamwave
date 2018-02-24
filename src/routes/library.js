@@ -20,6 +20,8 @@ const mapDispatchToProps = dispatch => ({
 class Library extends Component {
   constructor () {
     super();
+    this.onIntersection = this.onIntersection.bind(this);
+
     this.observer = null;
     this.state = {
       albums: []
@@ -41,7 +43,6 @@ class Library extends Component {
   lazyLoadArtworks () {
     // 1. select all images to lazy-load
     const artworks = Array.from(this.gallery.querySelectorAll('.cover__artwork'));
-    console.log(artworks, this.gallery);
 
     // 2. detect IO feature
     if (Constants.SUPPORT_INTERSECTION_OBSERVER) {
@@ -52,6 +53,7 @@ class Library extends Component {
 
       // 3. create a new observer
       this.observer = new IntersectionObserver(this.onIntersection, config);
+      console.log(this.observer);
 
       // 4. observe
       artworks.forEach(artwork => this.observer.observe(artwork));
@@ -66,8 +68,9 @@ class Library extends Component {
     entries.forEach(entry => {
       // If we are in viewport
       if (entry.intersectionRatio > 0) {
+        console.dir(entry);
         // stop observe and load image
-        observer.unobserve(entry);
+        this.observer.unobserve(entry.target);
         this.preloadImage(entry.target);
       }
     });
