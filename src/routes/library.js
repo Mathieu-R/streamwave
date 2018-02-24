@@ -40,7 +40,8 @@ class Library extends Component {
 
   lazyLoadArtworks () {
     // 1. select all images to lazy-load
-    const artworks = Array.from(this.gallery.querySelectorAll('.cover__artworks'));
+    const artworks = Array.from(this.gallery.querySelectorAll('.cover__artwork'));
+    console.log(artworks, this.gallery);
 
     // 2. detect IO feature
     if (Constants.SUPPORT_INTERSECTION_OBSERVER) {

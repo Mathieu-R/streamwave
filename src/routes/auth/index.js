@@ -17,7 +17,6 @@ const mapDispatchToProps = dispatch => ({
   storeUser: user => dispatch(storeUser(user))
 });
 
-@connect(['user'], { storeUser: 'storeUser'})
 class Auth extends Component {
   constructor () {
     super();
