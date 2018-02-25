@@ -14,7 +14,7 @@ class Home extends Component {
     return (
       <div class="home">
         <Switch>
-          <Route exact path="/" component={Library} />
+          <Route path="/home" component={Library} />
           <Route path="/album/:id" component={Album} player={this.player}/>
         </Switch>
         <MiniPlayer />

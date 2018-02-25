@@ -25,7 +25,6 @@ class MiniPlayer extends Component {
     playing, chromecasting, onClick
   }) {
     //const {title, duration} = track;
-    console.log(artist, coverURL, track)
     return (
         <div class='mini-player'>
           <div class="progress-container">

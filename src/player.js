@@ -42,6 +42,7 @@ class Player {
   listen (manifest, m3u8playlist) {
     // load the player
     player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
+      this.audio.play();
       console.log(`[shaka-player] Music loaded: ${manifest}`);
     }).catch(err => {
       console.error(err);
@@ -53,6 +54,7 @@ class Player {
   fallbackToHLS (m3u8playlist) {
     // simply put it in src attribute
     this.audio.src = `${Constants.CDN_URL}/${m3u8playlist}`;
+    this.audio.play();
   }
 }
 

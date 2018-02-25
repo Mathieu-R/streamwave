@@ -32,7 +32,7 @@ class Album extends Component {
 
   listenToTrack (artist, coverURL, track) {
     const {manifestURL, playlistHLSURL} = track;
-    console.log(artist, coverURL, track);
+
     this.props.setTrack({
       artist,
       coverURL,
@@ -43,7 +43,6 @@ class Album extends Component {
   }
 
   render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
-    console.log(this.state);
     return (
       <div class="album">
         <div class="album__info-block">
