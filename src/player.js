@@ -9,6 +9,7 @@ class Player {
     this.init = false;
 
     this.initShakaPlayer();
+    this.initMediaSession();
   }
 
   initShakaPlayer () {
@@ -39,22 +40,81 @@ class Player {
     this.init = true
   }
 
-  listen (manifest, m3u8playlist) {
+  initMediaSession () {
+    if (this.init) {
+      return;
+    }
+
+    if (!Constants.SUPPORT_MEDIA_SESSION_API) {
+      return;
+    }
+
+    navigator.mediaSession.setActionHandler('play', this.onPlay);
+    navigator.mediaSession.setActionHandler('pause', this.onPause);
+    navigator.mediaSession.setActionHandler('seekbackward', this.onSeekBackward);
+    navigator.mediaSession.setActionHandler('seekforward', this.onSeekForward);
+    navigator.mediaSession.setActionHandler('previoustrack', this.onSetPreviousTrack);
+    navigator.mediaSession.setActionHandler('nexttrack', this.onSetNextTrack);
+  }
+
+  listen (manifest, m3u8playlist, track) {
     // load the player
     player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
-      this.audio.play();
       console.log(`[shaka-player] Music loaded: ${manifest}`);
-    }).catch(err => {
+      return this.audio.play();
+    }).then(() => this.setMediaNotifications(track))
+    .catch(err => {
       console.error(err);
       // if fail, fallback to HLS format (safari mobile)
-      player.unload().then(_ => this.fallbackToHLS(m3u8playlist))
+      player.unload().then(_ => this.fallbackToHLS(m3u8playlist, track))
     });
   }
 
-  fallbackToHLS (m3u8playlist) {
+  fallbackToHLS (m3u8playlist, music) {
     // simply put it in src attribute
     this.audio.src = `${Constants.CDN_URL}/${m3u8playlist}`;
+    this.audio.play().then(() => this.setMediaNotifications(track));
+  }
+
+  setMediaNotifications ({title, artist, album, coverURL}) {
+    if (!Constants.SUPPORT_MEDIA_SESSION_API) {
+      return;
+    }
+
+    navigator.mediaSession.metadata = new MediaSession({
+      title,
+      artist,
+      album,
+      artwork: [
+        {src: `${Constants.CDN_URL}/${coverURL}`, sizes: '256x256', type: 'image/png'},
+        {src: `${Constants.CDN_URL}/${coverURL}`, sizes: '512x512', type: 'image/png'}
+      ]
+    });
+  }
+
+
+  onPlay (evt) {
     this.audio.play();
+  }
+
+  onPause (evt) {
+    this.audio.pause();
+  }
+
+  onSeekBackward (evt) {
+    console.log(evt);
+  }
+
+  onSeekForward (evt) {
+
+  }
+
+  onSetPreviousTrack () {
+
+  }
+
+  onSetNextTrack () {
+
   }
 }
 

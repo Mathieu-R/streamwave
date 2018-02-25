@@ -17,7 +17,12 @@ class Home extends Component {
           <Route path="/home" component={Library} />
           <Route path="/album/:id" component={Album} player={this.player}/>
         </Switch>
-        <MiniPlayer />
+        <MiniPlayer
+          onPrevClick={}
+          onNextClick={}
+          onPlayClick={}
+          onChromecastClick={}
+        />
         <NavBar />
         {/*<Player ref={player => this.player = player} />*/}
         <audio

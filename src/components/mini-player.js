@@ -22,7 +22,9 @@ const mapStateToProps = state => ({
 class MiniPlayer extends Component {
   render ({
     coverURL, artist, track,
-    playing, chromecasting, onClick
+    playing, chromecasting,
+    onPrevClick, onNextClick, onPlayClick,
+    onChromecastClick
   }) {
     //const {title, duration} = track;
     return (
@@ -44,7 +46,7 @@ class MiniPlayer extends Component {
           </div>
 
           <div className="mini-player__controls">
-            <button className="mini-player__controls-prev">
+            <button className="mini-player__controls-prev" onClick={onPrevClick}>
               <svg width="37px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -69,7 +71,7 @@ class MiniPlayer extends Component {
                 </g>
               </svg>
             </button>
-            <button className="mini-player__controls-play" onClick={onClick}>
+            <button className="mini-player__controls-play" onClick={onPlayClick}>
               {
                 playing ?
                 <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +91,7 @@ class MiniPlayer extends Component {
                 </svg>
               }
             </button>
-            <button className="mini-player__controls-next">
+            <button className="mini-player__controls-next" onClick={onNextClick}>
               <svg width="36px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                   <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -111,7 +113,7 @@ class MiniPlayer extends Component {
                 </g>
               </svg>
             </button>
-            <button className="mini-player__controls-chromecast">
+            <button className="mini-player__controls-chromecast" onClick={onChromecastClick}>
             {
               chromecasting ?
               <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
