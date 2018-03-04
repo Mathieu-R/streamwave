@@ -2,29 +2,58 @@ import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 
 import MiniPlayer from '../components/mini-player';
-import Player from '../components/player';
+import PlayerCP from '../components/player';
 import NavBar from '../components/navbar';
 
 import Library from './library';
 import Album from './album';
 
+import Player from '../player';
+
 
 class Home extends Component {
+  constructor () {
+    super();
+
+    this.onPrevClick = this.onPrevClick.bind(this);
+    this.onNextClick = this.onNextClick.bind(this);
+    this.onPlayClick = this.onPlayClick.bind(this);
+    this.onChromecastClick = this.onChromecastClick.bind(this);
+
+    const player = new Player();
+  }
+
+  onPrevClick (evt) {
+
+  }
+
+  onNextClick (evt) {
+
+  }
+
+  onPlayClick (evt) {
+
+  }
+
+  onChromecastClick (evt) {
+    this.player.remote();
+  }
+
   render () {
     return (
       <div class="home">
         <Switch>
           <Route path="/home" component={Library} />
-          <Route path="/album/:id" component={Album} player={this.player}/>
+          <Route path="/album/:id" component={Album} player={this.player} />
         </Switch>
         <MiniPlayer
-          onPrevClick={}
-          onNextClick={}
-          onPlayClick={}
-          onChromecastClick={}
+          onPrevClick={this.onPrevClick}
+          onNextClick={this.onNextClick}
+          onPlayClick={this.onPlayClick}
+          onChromecastClick={this.onChromecastClick}
         />
         <NavBar />
-        {/*<Player ref={player => this.player = player} />*/}
+        {/*<PlayerCP ref={player => this.player = player} />*/}
         <audio
           ref={audio => this.audioElement = audio}
           preload="metadata"

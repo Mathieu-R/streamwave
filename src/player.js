@@ -38,6 +38,11 @@ class Player {
 
     // player is init
     this.init = true
+
+    // listen to remote playback api event
+    //this.audio.remote.onconnecting =
+    //this.audio.remote.onconnect =
+    //this.audio.remote.ondisconnect =
   }
 
   initMediaSession () {
@@ -115,6 +120,25 @@ class Player {
 
   onSetNextTrack () {
 
+  }
+
+  watchRemoteAvailability () {
+    if (!this.audio) {
+      return;
+    }
+
+    return new Promise(resolve => {
+      return this.audio.remote.watchAvailability(available => resolve(available));
+    });
+  }
+
+  remote () {
+    if (!this.audio) {
+      return;
+    }
+
+    return this.audio.remote()
+      .then((evt) => console.log(evt));
   }
 }
 
