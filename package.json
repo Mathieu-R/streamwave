@@ -43,6 +43,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "shaka-player": "^2.3.2",
+    "styled-components": "^3.1.6",
     "workerize-loader": "^1.0.1"
   }
 }

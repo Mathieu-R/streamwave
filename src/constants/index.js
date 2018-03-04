@@ -31,6 +31,10 @@ class Constants {
     return navigator.mediaSession;
   }
 
+  static get SUPPORT_REMOTE_PLAYBACK_API () {
+    return 'remote' in HTMLMediaElement.prototype
+  }
+
   static get SUPPORT_SERVICE_WORKER () {
     return navigator.serviceWorker;
   }

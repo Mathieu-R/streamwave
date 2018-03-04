@@ -64,10 +64,11 @@ class Player {
 
   listen (manifest, m3u8playlist, track) {
     // load the player
-    player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
+    return player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
       return this.audio.play();
-    }).then(() => this.setMediaNotifications(track))
+    })
+    .then(_ => this.setMediaNotifications(track))
     .catch(err => {
       console.error(err);
       // if fail, fallback to HLS format (safari mobile)
@@ -75,7 +76,7 @@ class Player {
     });
   }
 
-  fallbackToHLS (m3u8playlist, music) {
+  fallbackToHLS (m3u8playlist, track) {
     // simply put it in src attribute
     this.audio.src = `${Constants.CDN_URL}/${m3u8playlist}`;
     this.audio.play().then(() => this.setMediaNotifications(track));
@@ -127,6 +128,8 @@ class Player {
       return;
     }
 
+    console.log(this.audio)
+
     return new Promise(resolve => {
       return this.audio.remote.watchAvailability(available => resolve(available));
     });
@@ -137,7 +140,9 @@ class Player {
       return;
     }
 
-    return this.audio.remote()
+    console.log(this.audio);
+
+    return this.audio.remote.prompt()
       .then((evt) => console.log(evt));
   }
 }

@@ -17,6 +17,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Album extends Component {
+  constructor () {
+    super();
+
+    this.handleTrackClick = this.handleTrackClick.bind(this);
+    this.listenToTrack = this.listenToTrack.bind(this);
+  }
+
   componentWillMount () {
     this.player = new Player();
 
@@ -30,6 +37,11 @@ class Album extends Component {
       .then(response => this.setState({...response}));
   }
 
+  handleTrackClick () {
+    //const {artist, coverURL, track} = this.props;
+    //this.listenToTrack()
+  }
+
   listenToTrack (artist, coverURL, track) {
     const {manifestURL, playlistHLSURL} = track;
 
@@ -39,7 +51,8 @@ class Album extends Component {
       track
     });
 
-    this.player.listen(manifestURL, playlistHLSURL);
+    this.player.listen(manifestURL, playlistHLSURL, track);
+    this.player.watchRemoteAvailability();
   }
 
   render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
@@ -60,7 +73,7 @@ class Album extends Component {
           {tracks && tracks.map(track => (
             <Track
               {...track}
-              onClick={evt => this.listenToTrack(artist, coverURL, track)}/>
+              onClick={_ => this.listenToTrack(artist, coverURL, track)}/>
           ))}
         </div>
       </div>

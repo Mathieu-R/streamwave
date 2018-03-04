@@ -23,7 +23,7 @@ class Home extends Component {
 
   componentDidMount () {
     // wait for audio element to be available
-    const player = new Player();
+    this.player = new Player();
   }
 
   onPrevClick (evt) {
@@ -46,7 +46,7 @@ class Home extends Component {
     return (
       <div class="home">
         <Switch>
-          <Route exact path="/home" component={Library} />
+          <Route exact path="/" component={Library} />
           <Route exact path="/album/:id" component={Album} player={this.player} />
         </Switch>
         <MiniPlayer

@@ -53,7 +53,7 @@ class Library extends Component {
 
       // 3. create a new observer
       this.observer = new IntersectionObserver(this.onIntersection, config);
-      console.log(this.observer);
+      //console.log(this.observer);
 
       // 4. observe
       artworks.forEach(artwork => this.observer.observe(artwork));
@@ -63,12 +63,12 @@ class Library extends Component {
   }
 
   onIntersection (entries) {
-    console.log(entries);
+    //console.log(entries);
     // Loop all entries
     entries.forEach(entry => {
       // If we are in viewport
       if (entry.intersectionRatio > 0) {
-        console.dir(entry);
+        //console.dir(entry);
         // stop observe and load image
         this.observer.unobserve(entry.target);
         this.preloadImage(entry.target);
