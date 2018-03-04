@@ -19,7 +19,10 @@ class Home extends Component {
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onChromecastClick = this.onChromecastClick.bind(this);
+  }
 
+  componentDidMount () {
+    // wait for audio element to be available
     const player = new Player();
   }
 
@@ -43,8 +46,8 @@ class Home extends Component {
     return (
       <div class="home">
         <Switch>
-          <Route path="/home" component={Library} />
-          <Route path="/album/:id" component={Album} player={this.player} />
+          <Route exact path="/home" component={Library} />
+          <Route exact path="/album/:id" component={Album} player={this.player} />
         </Switch>
         <MiniPlayer
           onPrevClick={this.onPrevClick}

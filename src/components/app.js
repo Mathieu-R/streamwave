@@ -17,12 +17,12 @@ class App extends Component {
 		return (
 			<div class="app">
         <Switch>
-          <Route path="/" component={Home} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/auth" component={Auth} />
-          <Route path="/auth/register" component={Register} />
-          <Route path="/auth/login" component={Login} />
-          <Route path="/auth/reset/:token" component={Reset} />
-          <Route path="/auth/forgot" component={Forgot} />
+          <Route exact path="/auth/register" component={Register} />
+          <Route exact path="/auth/login" component={Login} />
+          <Route exact path="/auth/reset/:token" component={Reset} />
+          <Route exact path="/auth/forgot" component={Forgot} />
         </Switch>
         <Toast />
 			</div>
