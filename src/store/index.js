@@ -15,6 +15,7 @@ const initialState = {
   },
   player: {
     track: null,
+    currentTime: null,
     playing: false,
     chromecasting: false
   }

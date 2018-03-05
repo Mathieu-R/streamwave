@@ -1,6 +1,9 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
+import styled from 'styled-components';
+import ProgressBar from '../components/progress-bar';
+import Player from '../player';
 import Constants from '../constants';
 
 import {
@@ -8,8 +11,76 @@ import {
   getArtist,
   getTrack,
   isMusicPlaying,
-  isMusicChromecasting
+  isMusicChromecasting,
+  switchPlayingStatus
 } from '../store/player';
+
+const progressBarHeight = 5;
+
+const Container = styled.div`
+  position: fixed;
+  bottom: ${props => props.theme.navbar.height};
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: ${props => props.theme.miniPlayer.height};
+  width: 100%;
+  max-width: 500px;
+  background: ${props => props.theme.miniPlayer.background};
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+  will-change: opacity;
+`;
+
+const ProgressContainer = styled.div`
+  position: absolute;
+  top: ${-progressBarHeight}px;
+  width: 100%;
+  left: 0;
+  height: ${progressBarHeight}px;
+`;
+
+const MiniCoverContainer = styled.div`
+  height: 100%;
+  margin-right: 10px;
+`;
+
+const MiniCoverArtwork = styled.img`
+  height: 100%;
+  max-width: 100%;
+`;
+
+const MusicInfosContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
+const Artist = styled.div`
+  font-size: 12px;
+`;
+
+const Title = styled.div`
+  font-size: 14px;
+`;
+
+const ControlsContainer = styled.div`
+  height: 100%;
+  min-width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  border: none;
+  background: none;
+`;
 
 const mapStateToProps = state => ({
   coverURL: getCoverURL(state),
@@ -19,34 +90,57 @@ const mapStateToProps = state => ({
   chromecasting: isMusicChromecasting(state)
 });
 
+const mapDispatchToProps = dispatch => ({
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
+});
+
 class MiniPlayer extends Component {
+  constructor () {
+    super();
+    this.onPlayClick = this.onPlayClick.bind(this);
+  }
+
+  componentDidMount () {
+    this.player = new Player();
+  }
+
+  onPrevClick () {
+
+  }
+
+  onPlayClick () {
+    // get last status
+    const playing = this.props.playing;
+    // switch status in store
+    this.props.switchPlayingStatus();
+    // update audio
+    playing ? this.player.pause() : this.player.play();
+  }
+
   render ({
     coverURL, artist, track,
     playing, chromecasting,
     onPrevClick, onNextClick, onPlayClick,
-    onChromecastClick
+    onChromecastClick, switchPlayingStatus
   }) {
     //const {title, duration} = track;
     return (
-        <div class='mini-player'>
-          <div class="progress-container">
-            <div class="progress-bar-container">
-              <div class="progress-track"></div>
-              <div class="progress-round"></div>
-            </div>
-          </div>
+        <Container>
+          <ProgressContainer>
+            <ProgressBar />
+          </ProgressContainer>
 
-          <div class="mini-cover">
-            <img class="mini-cover__artwork" src={coverURL && `${Constants.CDN_URL}/${coverURL}`}/>
-          </div>
+          <MiniCoverContainer>
+            <MiniCoverArtwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`}/>
+          </MiniCoverContainer>
 
-          <div className="music-infos">
-            <div className="music-infos__artist">{artist}</div>
-            <div className="music-infos__title">{track && track.title}</div>
-          </div>
+          <MusicInfosContainer>
+            <Artist>{artist}</Artist>
+            <Title>{track && track.title}</Title>
+          </MusicInfosContainer>
 
-          <div className="mini-player__controls">
-            <button className="mini-player__controls-prev" onClick={onPrevClick}>
+          <ControlsContainer>
+            <Button onClick={onPrevClick}>
               <svg width="37px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -70,8 +164,8 @@ class MiniPlayer extends Component {
                   </g>
                 </g>
               </svg>
-            </button>
-            <button className="mini-player__controls-play" onClick={onPlayClick}>
+            </Button>
+            <Button onClick={this.onPlayClick}>
               {
                 playing ?
                 <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -90,8 +184,8 @@ class MiniPlayer extends Component {
                   />
                 </svg>
               }
-            </button>
-            <button className="mini-player__controls-next" onClick={onNextClick}>
+            </Button>
+            <Button onClick={onNextClick}>
               <svg width="36px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                   <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -112,8 +206,8 @@ class MiniPlayer extends Component {
                   </g>
                 </g>
               </svg>
-            </button>
-            <button className="mini-player__controls-chromecast" onClick={onChromecastClick}>
+            </Button>
+            <Button onClick={onChromecastClick}>
             {
               chromecasting ?
               <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +217,7 @@ class MiniPlayer extends Component {
                   d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24
                     5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09
                     4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9
-                    9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2
+                    9h2c0-6.08-4div class='mini-player'.93-11-11-11zm20-7H3c-1.1 0-2 .9-2
                     2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                 />
               </svg>
@@ -138,9 +232,9 @@ class MiniPlayer extends Component {
                 />
               </svg>
             }
-            </button>
-          </div>
-        </div>
+            </Button>
+          </ControlsContainer>
+        </Container>
     );
   }
 }
@@ -150,4 +244,4 @@ MiniPlayer.defaultProps = {
   chromecasting: false
 }
 
-export default connect(mapStateToProps)(MiniPlayer);
+export default connect(mapStateToProps, mapDispatchToProps)(MiniPlayer);

@@ -2,8 +2,9 @@
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
 const SET_TRACK = 'SET_TRACK';
-const SET_PLAYING_STATUS = 'SET_PLAYING_STATUS';
+const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
+const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 
 // actions
 export function setArtist (artist) {
@@ -29,10 +30,9 @@ export function setTrack ({artist, coverURL, track}) {
   }
 }
 
-export function setPlayingStatus (status) {
+export function switchPlayingStatus () {
   return {
-    type: SET_PLAYING_STATUS,
-    status
+    type: SWITCH_PLAYING_STATUS
   }
 }
 
@@ -43,12 +43,21 @@ export function setChromecastStatus (status) {
   }
 }
 
+export function setCurrentTime (time) {
+  return {
+    type: SET_CURRENT_TIME,
+    time
+  }
+}
+
 // selectors
 export const getCoverURL = state => state.player.coverURL;
 export const getArtist = state => state.player.artist;
 export const getTrack = state => state.player.track;
 export const isMusicPlaying = state => state.player.playing;
 export const isMusicChromecasting = state => state.player.chromecasting;
+export const getDuration = state => getTrack(state) && getTrack(state).duration;
+export const getCurrentTime = state => state.player.currentTime;
 
 
 // reducers
@@ -68,7 +77,6 @@ export default (state = {}, action) => {
       }
 
     case SET_TRACK:
-      console.log(action);
       return {
         ...state,
         playing: true,
@@ -77,16 +85,22 @@ export default (state = {}, action) => {
         track: action.track
       }
 
-    case SET_PLAYING_STATUS:
+    case SWITCH_PLAYING_STATUS:
       return {
         ...state,
-        playing: action.status
+        playing: !state.playing
       }
 
     case SET_CHROMECAST_STATUS:
       return {
         ...state,
         chromecasting: action.status
+      }
+
+    case SET_CURRENT_TIME:
+      return {
+        ...state,
+        currentTime: action.time
       }
 
     default:

@@ -54,8 +54,8 @@ class Player {
       return;
     }
 
-    navigator.mediaSession.setActionHandler('play', this.onPlay);
-    navigator.mediaSession.setActionHandler('pause', this.onPause);
+    navigator.mediaSession.setActionHandler('play', this.play);
+    navigator.mediaSession.setActionHandler('pause', this.pause);
     navigator.mediaSession.setActionHandler('seekbackward', this.onSeekBackward);
     navigator.mediaSession.setActionHandler('seekforward', this.onSeekForward);
     navigator.mediaSession.setActionHandler('previoustrack', this.onSetPreviousTrack);
@@ -99,11 +99,11 @@ class Player {
   }
 
 
-  onPlay (evt) {
+  play (evt) {
     this.audio.play();
   }
 
-  onPause (evt) {
+  pause (evt) {
     this.audio.pause();
   }
 

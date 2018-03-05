@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
-import Private from '../guard/private-route';
+import { ThemeProvider } from 'styled-components';
+import PrivateRoute from '../guard/private-route';
 
 import Toast from './toast';
 
@@ -9,14 +10,29 @@ import Auth from '../routes/auth';
 
 class App extends Component {
 	render () {
+    const theme = {
+      mobile: '530px',
+      background: '#161C36',
+      miniPlayer: {
+        height: '45px',
+        background: '#212121',
+      },
+      navbar: {
+        height: '55px',
+        background: '#222223'
+      }
+    }
+
 		return (
-			<div class="app">
-        <Switch>
-          <Route path="/auth" component={Auth} />
-          <Route path="/" component={Home} />
-        </Switch>
-        <Toast />
-			</div>
+      <ThemeProvider theme={theme}>
+        <div class="app">
+          <Switch>
+            <Route path="/auth" component={Auth} />
+            <PrivateRoute path="/" component={Home} />
+          </Switch>
+          <Toast />
+        </div>
+      </ThemeProvider>
 		);
 	}
 }
