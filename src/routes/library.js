@@ -68,6 +68,7 @@ class Library extends Component {
     entries.forEach(entry => {
       // If we are in viewport
       if (entry.intersectionRatio > 0) {
+        console.log(entry)
         //console.dir(entry);
         // stop observe and load image
         this.observer.unobserve(entry.target);

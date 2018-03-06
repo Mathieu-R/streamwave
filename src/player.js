@@ -87,7 +87,7 @@ class Player {
       return;
     }
 
-    navigator.mediaSession.metadata = new MediaSession({
+    navigator.mediaSession.metadata = new MediaMetadata({
       title,
       artist,
       album,
@@ -144,6 +144,10 @@ class Player {
 
     return this.audio.remote.prompt()
       .then((evt) => console.log(evt));
+  }
+
+  trackDownload () {
+
   }
 }
 

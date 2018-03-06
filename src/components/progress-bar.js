@@ -25,15 +25,31 @@ const ProgressBarContainer = styled.div`
   background: rgba(255,255,255,0.5);
 `;
 
-const ProgressTrack = styled.div`
+const ProgressTrack = styled.div.attrs({
+  style: props => ({
+    transform: `translate(0, -50%) scaleX(${props.position})`
+  })
+})`
   position: absolute;
   top: 50%;
   left: 0;
   width: 100%;
   height: 100%;
   background: #FFF;
-  transform: translate(0, -50%) scale(0);
-  will-change: transform;
+  transform-origin: 0 50%;
+`;
+
+const ProgressRoundContainer = styled.div.attrs({
+  style: props => ({
+    transform: `translateX(${props.position * 100}%)`
+  })
+})`
+  position: relative;
+  width: 100%;
+  background: 0 0;
+  border: none;
+  outline: none;
+  pointer-events: none;
 `;
 
 const ProgressRound = styled.div`
@@ -44,9 +60,8 @@ const ProgressRound = styled.div`
   width: 15px;
   border-radius: 50%;
   background: #FFF;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  transform: translate(0, -50%);
-  will-change: transform;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(-50%);
 `;
 
 class ProgressBar extends Component {
@@ -65,6 +80,12 @@ class ProgressBar extends Component {
   }
 
   componentDidMount () {
+    document.addEventListener('touchstart', this.onSwipeStart);
+    document.addEventListener('touchmove', this.onSwipeMove);
+    document.addEventListener('touchend', this.onSwipeEnd);
+    document.addEventListener('mousedown', this.onSwipeStart);
+    document.addEventListener('mousemove', this.onSwipeMove);
+    document.addEventListener('mouseleave', this.onSwipeEnd);
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -107,6 +128,8 @@ class ProgressBar extends Component {
   }
 
   onSwipeStart (evt) {
+    console.log(evt.target.classList);
+    if (!(evt.target.classList.contains('progress-bar'))) return;
     this.setState({dragging: true});
   }
 
@@ -132,20 +155,21 @@ class ProgressBar extends Component {
     if (!duration && !currentTime) return null;
 
     const clampedPosition = currentTime / duration;
-    console.log(clampedPosition);
 
     return (
       <ProgressBarContainer
         innerRef={container => this.container = container}
-        onTouchStart={this.onSwipeStart}
-        onTouchMove={this.onSwipeMove}
-        onTouchEnd={this.onSwipeEnd}
-        onMouseDown={this.onSwipeStart}
-        onMouseMove={this.onSwipeMove}
-        onMouseLeave={this.onSwipeEnd}
+        // onTouchStart={this.onSwipeStart}
+        // onTouchMove={this.onSwipeMove}
+        // onTouchEnd={this.onSwipeEnd}
+        // onMouseDown={this.onSwipeStart}
+        // onMouseMove={this.onSwipeMove}
+        // onMouseLeave={this.onSwipeEnd}
       >
-        <ProgressTrack style={{transform: `scale${clampedPosition}`}}/>
-        <ProgressRound style={{transform: `transform(${clampedPosition * 100}%, -50%)`}}/>
+        <ProgressTrack position={clampedPosition}/>
+        <ProgressRoundContainer position={clampedPosition}>
+          <ProgressRound className="progress-bar"/>
+        </ProgressRoundContainer>
       </ProgressBarContainer>
     )
   }

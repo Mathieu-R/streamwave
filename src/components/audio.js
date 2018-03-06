@@ -1,5 +1,7 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import shaka from 'shaka-player';
+import Constants from '../constants';
 
 import {
   setCurrentTime
@@ -13,10 +15,52 @@ class Audio extends Component {
   constructor () {
     super();
 
+    this.player = null;
     this.onPlay = this.onPlay.bind(this);
     this.onPause = this.onPause.bind(this);
     this.onTimeUpdate = this.onTimeUpdate.bind(this);
     this.onLoadedMetadata = this.onLoadedMetadata.bind(this);
+  }
+
+  componentDidMount () {
+    this.initShakaPlayer();
+  }
+
+  initShakaPlayer () {
+    // install shaka player polyfills
+    shaka.polyfill.installAll();
+
+    if (!shaka.Player.isBrowserSupported()) {
+      console.error('Browser not supported by shaka-player...');
+      return;
+    }
+
+    this.player = new shaka.Player(this.audio);
+
+    // put it in window so it's easy to access
+    // even in console.
+    window.player = this.player;
+
+    // listen to errors
+    this.player.addEventListener('error', err => console.error(err));
+
+    // listen to remote playback api event
+    //this.audio.remote.onconnecting =
+    //this.audio.remote.onconnect =
+    //this.audio.remote.ondisconnect =
+  }
+
+  initMediaSession () {
+    if (!Constants.SUPPORT_MEDIA_SESSION_API) {
+      return;
+    }
+
+    navigator.mediaSession.setActionHandler('play', this.play);
+    navigator.mediaSession.setActionHandler('pause', this.pause);
+    navigator.mediaSession.setActionHandler('seekbackward', this.onSeekBackward);
+    navigator.mediaSession.setActionHandler('seekforward', this.onSeekForward);
+    navigator.mediaSession.setActionHandler('previoustrack', this.onSetPreviousTrack);
+    navigator.mediaSession.setActionHandler('nexttrack', this.onSetNextTrack);
   }
 
   onPlay (evt) {
