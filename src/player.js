@@ -146,8 +146,28 @@ class Player {
       .then((evt) => console.log(evt));
   }
 
-  trackDownload () {
+  static trackDownload (responses) {
+    let totalDownload, downloaded = 0;
 
+    totalDownload = responses.reduce((total, response) => {
+      const contentLength = parseInt(response.headers.get('content-length'), 10);
+      return total += contentLength;
+    }, 0);
+
+    responses.map(response => {
+      // response has been consumed
+      // by cache api
+      const cloned = response.clone();
+      const onStream = ({done, value}) => {
+        if (done) return;
+
+        downloaded += value.length;
+        return reader.read().then(onStream);
+      }
+
+      const reader = cloned.body.getReader();
+      reader.read().then(onStream);
+    });
   }
 }
 
