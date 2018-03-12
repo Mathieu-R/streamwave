@@ -17,6 +17,10 @@ class Home extends Component {
     super();
   }
 
+  componentDidMount () {
+    console.log(this.audio);
+  }
+
   render () {
     return (
       <div class="home">
@@ -24,11 +28,11 @@ class Home extends Component {
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id" component={Album} player={this.player} />
         </Switch>
-        <MiniPlayer />
+        <MiniPlayer audio={this.audio} />
         <NavBar />
         {/*<PlayerCP ref={player => this.player = player} />*/}
         <Audio
-          ref={audio => this.audioElement = audio}
+          ref={audio => this.audio = audio}
           preload="metadata"
         />
       </div>

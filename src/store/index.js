@@ -15,8 +15,11 @@ const initialState = {
   },
   player: {
     track: null,
+    queue: [],
     currentTime: null,
     playing: false,
+    repeat: false,
+    shuffle: false,
     chromecasting: false
   }
 };

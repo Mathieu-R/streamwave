@@ -2,7 +2,10 @@
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
 const SET_TRACK = 'SET_TRACK';
+const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
+const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
+const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 
@@ -30,9 +33,28 @@ export function setTrack ({artist, coverURL, track}) {
   }
 }
 
+export function setQueue (queue) {
+  return {
+    type: SET_QUEUE,
+    queue
+  }
+}
+
 export function switchPlayingStatus () {
   return {
     type: SWITCH_PLAYING_STATUS
+  }
+}
+
+export function switchRepeatStatus () {
+  return {
+    type: SWITCH_REPEAT_STATUS
+  }
+}
+
+export function switchSuffleStatus () {
+  return {
+    type: SWITCH_SHUFFLE_STATUS
   }
 }
 
@@ -85,10 +107,28 @@ export default (state = {}, action) => {
         track: action.track
       }
 
+    case SET_QUEUE:
+      return {
+        ...state,
+        queue: action.queue
+      }
+
     case SWITCH_PLAYING_STATUS:
       return {
         ...state,
         playing: !state.playing
+      }
+
+    case SWITCH_REPEAT_STATUS:
+      return {
+        ...state,
+        repeat: !state.repeat
+      }
+
+    case SWITCH_SHUFFLE_STATUS:
+      return {
+        ...state,
+        shuffle: !state.shuffle
       }
 
     case SET_CHROMECAST_STATUS:

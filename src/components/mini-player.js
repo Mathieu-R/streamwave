@@ -101,6 +101,7 @@ class MiniPlayer extends Component {
   }
 
   componentDidMount () {
+    console.log(this.props);
     this.player = new Player();
   }
 
@@ -109,6 +110,7 @@ class MiniPlayer extends Component {
   }
 
   onPlayClick () {
+    console.log(this.props.audio);
     // get last status
     const playing = this.props.playing;
     // switch status in store

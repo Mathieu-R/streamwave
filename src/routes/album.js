@@ -3,17 +3,21 @@ import { connect } from 'react-redux';
 import Constants from '../constants';
 import Track from '../components/track';
 import Player from '../player';
+import { shuffle, cutList } from '../utils';
 
 import {
-  setTrack
+  setTrack,
+  setQueue
 } from '../store/player';
 
 const mapStateToProps = state => ({
-  library: state.library
+  library: state.library,
+  shuffle: state.shuffle
 });
 
 const mapDispatchToProps = dispatch => ({
-  setTrack: (music) => dispatch(setTrack(music))
+  setTrack: (music) => dispatch(setTrack(music)),
+  setQueue: (queue) => dispatch(setQueue(queue))
 });
 
 class Album extends Component {
@@ -43,8 +47,13 @@ class Album extends Component {
   }
 
   listenToTrack (artist, coverURL, track) {
+    const {tracks} = this.state;
     const {manifestURL, playlistHLSURL} = track;
 
+    const queue =
+      this.props.shuffle ? shuffle(tracks) : cutList(tracks, track);
+
+    this.props.setQueue(queue);
     this.props.setTrack({
       artist,
       coverURL,

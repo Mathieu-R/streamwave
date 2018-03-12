@@ -4,11 +4,13 @@ import shaka from 'shaka-player';
 import Constants from '../constants';
 
 import {
-  setCurrentTime
+  setCurrentTime, setTrack, setQueue
 } from '../store/player';
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentTime: time => dispatch(setCurrentTime(time))
+  setCurrentTime: time => dispatch(setCurrentTime(time)),
+  setTrack: music => dispatch(setTrack(music)),
+  setQueue: queue => dispatch(setQueue(queue))
 });
 
 class Audio extends Component {
@@ -102,6 +104,20 @@ class Audio extends Component {
 
   }
 
+  onEnded (evt) {
+    console.log(evt);
+    const {queue} = this.props;
+    const {artist, coverURL, track} = queue[0];
+
+    this.props.setTrack({
+      artist,
+      coverURL,
+      track
+    });
+
+    this.props.setQueue([...queue.slice(1)]);
+  }
+
   onTimeUpdate (evt) {
     const {duration, currentTime} = this.audio;
     // onTimeUpdate fires up even when no audio is played.
@@ -121,6 +137,7 @@ class Audio extends Component {
         preload="metadata"
         onTimeUpdate={this.onTimeUpdate}
         onLoadedMetadata={this.onLoadedMetadata}
+        onEnded={this.onEnded}
       />
     );
   }
