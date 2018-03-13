@@ -14,9 +14,17 @@ const initialState = {
     messages: []
   },
   player: {
+    // current track
     track: null,
+    // all the tracks of album or playlist
+    // needed to handle next/prev
+    tracks: [],
+    // queue (shuffle or not)
+    // needed to handle continuous play
     queue: [],
+    // current time of the track
     currentTime: null,
+    // is the track playing
     playing: false,
     repeat: false,
     shuffle: false,

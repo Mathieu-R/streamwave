@@ -2,6 +2,7 @@
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
 const SET_TRACK = 'SET_TRACK';
+const SET_TRACKS = 'SET_TRACKS';
 const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
@@ -30,6 +31,13 @@ export function setTrack ({artist, coverURL, track}) {
     artist,
     coverURL,
     track
+  }
+}
+
+export function setTracks (tracks) {
+  return {
+    type: SET_TRACKS,
+    tracks
   }
 }
 
@@ -105,6 +113,12 @@ export default (state = {}, action) => {
         artist: action.artist,
         coverURL: action.coverURL,
         track: action.track
+      }
+
+    case SET_TRACKS:
+      return {
+        ...state,
+        tracks: action.tracks
       }
 
     case SET_QUEUE:

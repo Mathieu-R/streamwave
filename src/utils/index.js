@@ -11,7 +11,7 @@ export function shuffle ([...array]) {
     const index = Math.floor(Math.random() * length--);
     [array[length], array[index]] = [array[index], array[length]];
   }
-  return arr;
+  return array;
 }
 
 export function cutList (tracks, currentTrack) {

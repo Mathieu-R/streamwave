@@ -86,11 +86,11 @@ class Audio extends Component {
   }
 
   setPreviousTrack () {
-
+    this.props.setPreviousTrack();
   }
 
   setNextTrack () {
-
+    this.props.setNextTrack();
   }
 
   onPlay (evt) {
