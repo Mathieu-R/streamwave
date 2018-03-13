@@ -1,4 +1,5 @@
 import shaka from 'shaka-player';
+import idbKeyVal from 'idb-keyval';
 import Constants from './constants';
 
 class Player {
@@ -144,6 +145,42 @@ class Player {
 
     return this.audio.remote.prompt()
       .then((evt) => console.log(evt));
+  }
+
+  static cacheTrackList (tracklist) {
+    if (!Constants.SUPPORT_CACHE_API) {
+      throw new Error('Cache API is not supported.');
+      // toast...
+    }
+
+    const qualities = {
+      '128': 'audio128URL',
+      '192': 'audio192URL',
+      '256': 'audio256URL'
+    };
+
+    idbKeyVal.get('quality').then(quality => {
+      tracklist.map(track => {
+        const url = track[qualities[quality]];
+        const {manifest, m3u8} = track;
+      });
+    });
+
+
+
+    const files = [src, manifest, m3u8].map(request => ({request, response: fetch(request)}));
+    const queue = Promise.all(files.map(file => file.response));
+
+    queue.then(responses => {
+      Player.trackDownload(responses);
+      caches.open('audio').then(cache => {
+        files.map(file => {
+          file.response.then(response => {
+            cache.put(file.request, response);
+          })
+        })
+      })
+    });
   }
 
   static trackDownload (responses) {

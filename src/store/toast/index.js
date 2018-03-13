@@ -18,8 +18,8 @@ export function stopToastMessage () {
 
 export function toasting (messages, duration = 3000) {
   return (dispatch) => {
-    dispatch(postMessage(messages, duration));
-    setTimeout(() => dispatch(stopToastMessage), duration)
+    dispatch(postToastMessage(messages, duration));
+    setTimeout(() => dispatch(stopToastMessage()), duration)
   }
 }
 
@@ -36,7 +36,7 @@ export default (state = {}, action) => {
     case STOP_TOAST:
       return {
         ...state,
-        messages: [],
+        //messages: [],
         show: false
       }
     default:
