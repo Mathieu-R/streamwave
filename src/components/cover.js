@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import { Link } from 'react-router-dom';
 import Constants from '../constants';
 
-const Cover = styled.div`
+const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => ({
   setTrack: music => dispatch(setTrack(music)),
   setQueue: queue => dispatch(setQueue(queue)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
-  setNextTrack: _ => dispatch(setNextTrack())
+  setNextTrack: payload => dispatch(setNextTrack(payload))
 });
 
 class Audio extends Component {
@@ -32,6 +32,7 @@ class Audio extends Component {
 
   componentDidMount () {
     this.initShakaPlayer();
+    this.initMediaSession();
   }
 
   initShakaPlayer () {
@@ -71,6 +72,42 @@ class Audio extends Component {
     navigator.mediaSession.setActionHandler('nexttrack', this.setNextTrack);
   }
 
+  listen (manifest, m3u8playlist, track) {
+    // load the player
+    return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
+      console.log(`[shaka-player] Music loaded: ${manifest}`);
+      return this.audio.play();
+    })
+    .then(_ => this.setMediaNotifications(track))
+    .catch(err => {
+      console.error(err);
+      // if fail, fallback to HLS format (safari mobile)
+      this.player.unload().then(_ => this.fallbackToHLS(m3u8playlist, track))
+    });
+  }
+
+  fallbackToHLS (m3u8playlist, track) {
+    // simply put it in src attribute
+    this.audio.src = `${Constants.CDN_URL}/${m3u8playlist}`;
+    this.audio.play().then(_ => this.setMediaNotifications(track));
+  }
+
+  setMediaNotifications ({title, artist, album, coverURL}) {
+    if (!Constants.SUPPORT_MEDIA_SESSION_API) {
+      return;
+    }
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title,
+      artist,
+      album,
+      artwork: [
+        {src: `${Constants.CDN_URL}/${coverURL}`, sizes: '256x256', type: 'image/png'},
+        {src: `${Constants.CDN_URL}/${coverURL}`, sizes: '512x512', type: 'image/png'}
+      ]
+    });
+  }
+
   play () {
     this.audio.play();
   }
@@ -88,7 +125,7 @@ class Audio extends Component {
   }
 
   setPreviousTrack () {
-    this.props.setPreviousTrack({continuous: false});
+    this.props.setPrevTrack();
   }
 
   setNextTrack () {
