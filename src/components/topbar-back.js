@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { Link } from 'react-router-dom';
+import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 class TopBarBack extends Component {
   constructor () {
@@ -8,12 +9,12 @@ class TopBarBack extends Component {
 
   render () {
     return (
-      <div class="topbar--back">
-        <div class="topbar--back__button"></div>
-        <div className="topbar--back__title">
+      <TopBarContainer>
+        <TopBarButton></TopBarButton>
+        <TopBarTitle>
           Streamwave
-        </div>
-      </div>
+        </TopBarTitle>
+      </TopBarContainer>
     )
   }
 }

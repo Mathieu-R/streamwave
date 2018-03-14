@@ -2,6 +2,35 @@ import { Component } from 'preact';
 import { Link } from 'react-router-dom';
 import Constants from '../constants';
 
+const Cover = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CoverLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #FFF;
+  margin-bottom: 10px;
+`;
+
+const Artwork = styled.img`
+  max-height: 150px;
+  min-height: 100px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+`;
+
+const Artist = styled.span`
+  font-weight: bold;
+`;
+
+const Title = styled.span``;
+
+
 class Cover extends Component {
   render ({artist, title, coverURL, _id}) {
     return (

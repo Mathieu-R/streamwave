@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { Link } from 'react-router-dom';
+import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 class TopBarHamburger extends Component {
   constructor () {
@@ -8,12 +9,12 @@ class TopBarHamburger extends Component {
 
   render () {
     return (
-      <div class="topbar--hamburger">
-        <img class="topbar--hamburger__button" src="/assets/svg/ic_menu_white_24px.svg" />
-        <div className="topbar--hamburger__title">
+      <TopBarContainer>
+        <TopBarButton src="/assets/svg/ic_menu_white_24px.svg" />
+        <TopBarTitle>
           Streamwave
-        </div>
-      </div>
+        </TopBarTitle>
+      </TopBarContainer>
     )
   }
 }

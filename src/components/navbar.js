@@ -2,6 +2,49 @@ import { Component } from 'preact';
 import { Link } from 'react-router-dom';
 import LibraryIcon from '../assets/svg/library.svg';
 
+const Container = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: ${props => props.theme.navbar.height};
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  background: ${props => props.theme.navbar.background};
+  transform: translateX(-50%);
+`;
+
+const NavBarLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+`;
+
+const Button = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  background: none;
+  border-radius: none;
+`;
+
+const Icon = styled.div`
+  height: 25px;
+  width: 25px;
+`;
+
+const Title = styled.div`
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 5px;
+`;
+
 class Navbar extends Component {
   constructor () {
     super();

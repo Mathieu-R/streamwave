@@ -2,6 +2,8 @@
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
 const SET_TRACK = 'SET_TRACK';
+const SET_PREV_TRACK = 'SET_PREV_TRACK';
+const SET_NEXT_TRACK = 'SET_NEXT_TRACK';
 const SET_TRACKS = 'SET_TRACKS';
 const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
@@ -25,12 +27,43 @@ export function setCoverURL (cover) {
   }
 }
 
-export function setTrack ({artist, coverURL, track}) {
+export function setTrack ({artist, coverURL, track, index}) {
   return {
     type: SET_TRACK,
     artist,
     coverURL,
-    track
+    track,
+    index
+  }
+}
+
+export function setPrevTrack () {
+  return (dispatch, getState) => {
+    const {queue, currentIndex} = getState();
+    const index = Math.max(0, currentIndex - 1);
+    const {artist, coverURL, track} = queue[index];
+    dispatch({
+      type: SET_TRACK,
+      index,
+      artist,
+      coverURL,
+      track
+    });
+  }
+}
+
+export function setNextTrack ({continuous}) {
+  return (dispatch, getState) => {
+    const {queue, currentIndex} = getState();
+    const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
+    const {artist, coverURL, track} = queue[index];
+    dispatch({
+      type: SET_TRACK,
+      index,
+      artist,
+      coverURL,
+      track: (continuous && index === 0) ? null : track
+    });
   }
 }
 
@@ -112,8 +145,24 @@ export default (state = {}, action) => {
         playing: true,
         artist: action.artist,
         coverURL: action.coverURL,
-        track: action.track
+        track: action.track,
+        currentIndex: action.index
       }
+
+    // case SET_PREV_TRACK:
+    //   return {
+    //     ...state,
+    //     currentIndex: currentIndex - 1
+    //   }
+
+    // case SET_NEXT_TRACK:
+    //   return {
+    //     ...state,
+    //     artist: action.artist,
+    //     coverURL: action.coverURL,
+    //     track: action.track,
+    //     currentIndex: action.index
+    //   }
 
     case SET_TRACKS:
       return {

@@ -4,13 +4,15 @@ import shaka from 'shaka-player';
 import Constants from '../constants';
 
 import {
-  setCurrentTime, setTrack, setQueue
+  setCurrentTime, setTrack, setQueue, setPrevTrack, setNextTrack
 } from '../store/player';
 
 const mapDispatchToProps = dispatch => ({
   setCurrentTime: time => dispatch(setCurrentTime(time)),
   setTrack: music => dispatch(setTrack(music)),
-  setQueue: queue => dispatch(setQueue(queue))
+  setQueue: queue => dispatch(setQueue(queue)),
+  setPrevTrack: _ => dispatch(setPrevTrack()),
+  setNextTrack: _ => dispatch(setNextTrack())
 });
 
 class Audio extends Component {
@@ -86,11 +88,11 @@ class Audio extends Component {
   }
 
   setPreviousTrack () {
-    this.props.setPreviousTrack();
+    this.props.setPreviousTrack({continuous: false});
   }
 
   setNextTrack () {
-    this.props.setNextTrack();
+    this.props.setNextTrack({continuous: false});
   }
 
   onPlay (evt) {
@@ -106,16 +108,7 @@ class Audio extends Component {
 
   onEnded (evt) {
     console.log(evt);
-    const {queue} = this.props;
-    const {artist, coverURL, track} = queue[0];
-
-    this.props.setTrack({
-      artist,
-      coverURL,
-      track
-    });
-
-    this.props.setQueue([...queue.slice(1)]);
+    this.props.setNextTrack({continuous: true});
   }
 
   onTimeUpdate (evt) {
