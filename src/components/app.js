@@ -11,17 +11,60 @@ import Auth from '../routes/auth';
 class App extends Component {
 	render () {
     const theme = {
-      mobile: '530px',
+      auth: {
+        background: '#7C7C7C',
+        google: {
+          background: '#2962FF'
+        },
+        logout: {
+          background: '#1870D7'
+        }
+      },
       background: '#161C36',
+      menu: {
+        active: '#4A90E2'
+      },
       miniPlayer: {
         height: '45px',
         background: '#212121',
       },
+      mobile: '530px',
       navbar: {
         height: '55px',
         background: '#222223'
+      },
+      primaryColor: '#4A90E2',
+      slider: {
+        color: '#979797',
+        progress: {
+          color: '#4A90E2'
+        },
+        round: {
+          color: '#1870D7'
+        },
+        player: {
+          color: '#D8D8D8',
+          progress: {
+            color: '#FFF',
+          },
+          round: {
+            color: '#FFF'
+          }
+        }
+      },
+      switch: {
+        opacity: 0.3,
+        round: '#4A90E2'
+      },
+      track: {
+        active: '#4A90E2'
+      },
+      welcome: {
+        subtitle: {
+          color: '#D8D8D8'
+        }
       }
-    }
+    };
 
 		return (
       <ThemeProvider theme={theme}>

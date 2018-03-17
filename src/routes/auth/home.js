@@ -1,7 +1,9 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { LinkButton } from '../../components/ui';
 import decode from 'jwt-decode';
+import styled from 'styled-components';
 import Constants from '../../constants';
 import '../../third_party/gapi';
 
@@ -16,6 +18,72 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   storeUser: user => dispatch(storeUser(user))
 });
+
+const Welcome = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 270px;
+`;
+
+const Title = styled.h1`
+  margin: 0;
+  font-size: 36px;
+  text-align: center;
+
+  &::after {
+    content: '';
+    display: flex;
+    height: 1px;
+    background: #FFF;
+    border: none;
+  }
+`;
+
+const Subtitle = styled.span`
+  color: ${props => props.theme.welcome.subtitle.color};
+  font-size: 12px;
+  text-align: center;
+  margin: 2px 0;
+`;
+
+const ButtonsContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const Button = styled.button`
+  height: 55px;
+  width: 100%;
+  margin: 17px 0;
+  border-radius: 27px;
+`;
+
+const LoginButton = styled(Button)`
+  background: ${props => props.theme.auth.background};
+`;
+
+const RegisterButton = styled(Button)`
+  background: ${props => props.theme.auth.background};
+`;
+
+const GoogleButton = styled(Button)`
+  background: ${props => props.theme.auth.google.background};
+`;
+
+const AuthLink = styled(LinkButton)`
+  color: #FFF;
+  font-size: 18px;
+`;
+
+const PasswordResetLink = styled(LinkButton)`
+  font-size: 12px;
+  text-decoration: underline;
+  color: #FFF;
+  text-align: center;
+`;
 
 class Auth extends Component {
   constructor () {
@@ -117,28 +185,28 @@ class Auth extends Component {
     return (
       <div class="auth">
         <section class="auth-wrapper">
-          <section class="welcome-title">
-            <h1 class="welcome-title__main">Streamwave</h1>
-            <span class="welcome-title__subtitle">streaming music pwa</span>
-          </section>
-          <section class="auth-buttons">
-            <button class="auth-buttons__login">
-              <Link to="/auth/login" class="auth-buttons__login__link">
+          <Welcome>
+            <Title>Streamwave</Title>
+            <Subtitle>streaming music pwa</Subtitle>
+          </Welcome>
+          <ButtonsContainer>
+            <LoginButton>
+              <AuthLink to="/auth/login">
                 Se connecter
-              </Link>
-            </button>
-            <button class="auth-buttons__register">
-              <Link to="/auth/register" class="auth-buttons__register__link">
+              </AuthLink>
+            </LoginButton>
+            <RegisterButton>
+              <AuthLink to="/auth/register">
                 Créer un compte
-              </Link>
-            </button>
-            <button class="auth-buttons__google" onClick={this.googleLogin}>
+              </AuthLink>
+            </RegisterButton>
+            <GoogleButton onClick={this.googleLogin}>
               Continuer avec google
-            </button>
-            <Link to="/auth/forgot" class="auth__password-reset__link">
+            </GoogleButton>
+            <PasswordResetLink to="/auth/forgot">
               Mot de passe oublié ?
-            </Link>
-          </section>
+            </PasswordResetLink>
+          </ButtonsContainer>
         </section>
       </div>
     )

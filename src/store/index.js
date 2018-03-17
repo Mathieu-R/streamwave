@@ -13,9 +13,8 @@ const cache = getConfiguredCache({
 const persist = getPersistMiddleware({
   // function to call to persist store
   cacheFunction: cache.set,
-  logger: console.info,
-
-})
+  logger: console.info
+});
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

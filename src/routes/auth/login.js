@@ -66,7 +66,7 @@ class Login extends Component {
 
     localStorage.setItem('streamwave-token', data.token);
     const credentials = await this.storeCredentials(email, password);
-    return <Redirect to="/" />
+    this.props.history.push('/');
   }
 
   async storeCredentials (email, password) {

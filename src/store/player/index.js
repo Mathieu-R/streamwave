@@ -39,7 +39,7 @@ export function setTrack ({artist, coverURL, track, index}) {
 
 export function setPrevTrack () {
   return (dispatch, getState) => {
-    const {queue, currentIndex} = getState();
+    const {player: {queue, currentIndex}} = getState();
     const index = Math.max(0, currentIndex - 1);
     const {artist, coverURL, track} = queue[index];
     dispatch({
@@ -54,7 +54,7 @@ export function setPrevTrack () {
 
 export function setNextTrack ({continuous}) {
   return (dispatch, getState) => {
-    const {queue, currentIndex} = getState();
+    const {player: {queue, currentIndex}} = getState();
     const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
     const {artist, coverURL, track} = queue[index];
     dispatch({

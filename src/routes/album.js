@@ -2,6 +2,7 @@ import { Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../constants';
 import Track from '../components/track';
+import Switch from '../components/switch';
 import Player from '../player';
 import { shuffle } from '../utils';
 
@@ -73,10 +74,7 @@ class Album extends Component {
           <h2 class="album__artist">{artist}</h2>
           <div class="album__download-container">
             <div class="album__download-container__progress"></div>
-            <div class="album__download-container__toggle">
-              <input type="checkbox" class="album__download-container__toggle-checkbox" id="toggle-download" />
-              <label class="album__download-container__toggle-label" for="toggle-download">Télécharger</label>
-            </div>
+            <Switch label="Télécharger" />
           </div>
         </div>
         <div className="album-tracks">

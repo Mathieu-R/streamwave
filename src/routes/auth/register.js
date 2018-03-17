@@ -1,6 +1,12 @@
 import { Component } from 'preact';
-import { worker } from '../../index';
+import { connect } from 'react-redux';
 import Constants from '../../constants';
+
+import { toasting } from '../../store/toast';
+
+const mapDispatchToProps = dispatch => ({
+  toasting: (messages, duration) => dispatch(toasting(messages, duration))
+});
 
 class Register extends Component {
   constructor () {
@@ -88,4 +94,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default connect(null, mapDispatchToProps)(Register);

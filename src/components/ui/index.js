@@ -1,4 +1,21 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+export const Button = styled.button`
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  color: #FFF;
+`;
+
+export const LinkButton = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
 
 export const TopBarContainer = styled.div`
   position: relative;
