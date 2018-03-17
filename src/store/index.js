@@ -1,6 +1,21 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import getPersistMiddleware from 'redux-persist-middleware';
 import thunk from 'redux-thunk';
+import { getConfiguredCache } from 'money-clip';
 import reducers from './reducers';
+import { VERSION } from '../constants';
+
+const cache = getConfiguredCache({
+  version: VERSION,
+  maxAge: 365 * 24 * 60 * 60 * 1000
+});
+
+const persist = getPersistMiddleware({
+  // function to call to persist store
+  cacheFunction: cache.set,
+  logger: console.info,
+
+})
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

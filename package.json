@@ -32,6 +32,7 @@
   "dependencies": {
     "idb-keyval": "^2.3.0",
     "jwt-decode": "^2.2.0",
+    "money-clip": "^2.0.1",
     "preact": "^8.2.6",
     "preact-compat": "^3.18.0",
     "preact-router": "^2.5.7",
@@ -41,6 +42,7 @@
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1",
     "redux": "^3.7.2",
+    "redux-persist-middleware": "^1.0.1",
     "redux-thunk": "^2.2.0",
     "shaka-player": "^2.3.3",
     "styled-components": "^3.2.2",

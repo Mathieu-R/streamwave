@@ -40,8 +40,6 @@ class Register extends Component {
       })
     });
 
-    const data = await response.json();
-
     // bad typing, password not strong enough or email already used
     if (response.status === 400) {
       const errors = data.error.map(err => err.msg);
@@ -49,11 +47,17 @@ class Register extends Component {
       return;
     }
 
+    if (response.status === 204) {
+      this.props.toasting(['Cet utilisateur existe déjà...']);
+    }
+
     // server error
     if (response.status === 500) {
       this.props.toasting(['Erreur lors de la création du compte.']);
       return;
     }
+
+    const data = await response.json();
 
     // user created, mail sent
     this.props.toasting(data.message);

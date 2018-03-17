@@ -51,7 +51,7 @@ const mapStateToProps = state => ({
 });
 
 const Toast = ({toast}) => (
-  <Transition in={toast && toast.show} timeout={timeout}>
+  <Transition in={toast && toast.show} timeout={300}>
   {state => (
     <Inner state={state} className={state}>
       {toast && toast.messages.map((message, index) => (

@@ -4,8 +4,12 @@ import shaka from 'shaka-player';
 import Constants from '../constants';
 
 import {
-  setCurrentTime, setTrack, setQueue, setPrevTrack, setNextTrack
+  setCurrentTime, setTrack, setQueue, setPrevTrack, setNextTrack, getTrack
 } from '../store/player';
+
+const mapStateToProps = state => ({
+  track: getTrack(state)
+});
 
 const mapDispatchToProps = dispatch => ({
   setCurrentTime: time => dispatch(setCurrentTime(time)),
@@ -33,6 +37,10 @@ class Audio extends Component {
   componentDidMount () {
     this.initShakaPlayer();
     this.initMediaSession();
+  }
+
+  componentWillReceiveProps (props) {
+    console.log(props);
   }
 
   initShakaPlayer () {
@@ -173,4 +181,4 @@ class Audio extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Audio);
+export default connect(mapStateToProps, mapDispatchToProps)(Audio);

@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
 
 const Container = styled.div`
