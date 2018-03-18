@@ -6,12 +6,11 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
     "build": "preact build",
+    "build:noprerender": "preact build --no-prerender",
     "serve": "preact build && preact serve",
+    "serve:noprerender": "npm run build:noprerender && preact serve",
     "dev": "preact watch",
     "lint": "eslint src"
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
   },
   "eslintIgnore": [
     "build/*"
@@ -23,19 +22,31 @@
     }
   ],
   "devDependencies": {
-    "eslint": "^4.9.0",
-    "eslint-config-synacor": "^2.0.2",
-    "if-env": "^1.0.0",
-    "node-sass": "^4.7.2",
-    "preact-cli": "^2.0.1",
-    "sass-loader": "^6.0.6"
+    "eslint": "^4.18.2",
+    "if-env": "^1.0.4",
+    "node-sass": "^4.8.2",
+    "preact-cli": "^2.2.1",
+    "sass-loader": "^6.0.7",
+    "svg-inline-loader": "^0.8.0"
   },
   "dependencies": {
+    "idb-keyval": "^2.3.0",
+    "jwt-decode": "^2.2.0",
+    "money-clip": "^2.0.1",
     "preact": "^8.2.6",
-    "preact-compat": "^3.17.0",
+    "preact-compat": "^3.18.0",
     "preact-router": "^2.5.7",
-    "shaka-player": "^2.3.0",
-    "stockroom": "^1.0.0",
-    "unistore": "^3.0.3"
+    "prop-types": "^15.6.1",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-transition-group": "^2.2.1",
+    "redux": "^3.7.2",
+    "redux-persist-middleware": "^1.0.1",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
+    "shaka-player": "^2.3.3",
+    "styled-components": "^3.2.2",
+    "workerize-loader": "^1.0.2"
   }
 }

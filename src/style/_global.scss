@@ -1,0 +1,82 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium') url(http://fonts.gstatic.com/s/roboto/v15/OLffGBTaF0XFOW1gnuHF0YbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Roboto, sans-serif;
+  color: #FFF;
+  font-size: 15px;
+  /* Roboto Medium */
+  font-weight: 500;
+  height: 100vh;
+  @media screen and (max-width: $mobile) {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  color: #FFF;
+}
+
+button[disabled] {
+  opacity: 0.7;
+}
+
+input[type="email"], input[type="password"] {
+  height: 55px;
+  font-size: 16px;
+  padding-left: 10px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+
+  & .error {
+    border: 1px solid red;
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+.app {
+  min-height: 100vh;
+  background: $background-color;
+}
+
+.library {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}

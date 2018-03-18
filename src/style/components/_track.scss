@@ -1,0 +1,42 @@
+$padding: 5px;
+
+.track {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  grid-auto-flow: column;
+  height: 45px;
+  font-weight: bold;
+  grid-gap: 20px;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    background: #262D4D;
+  }
+
+  &__number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $padding;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    padding: $padding;
+  }
+
+  &__is-offline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $padding;
+  }
+
+  &__duration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $padding;
+  }
+}
