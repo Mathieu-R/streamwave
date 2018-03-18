@@ -4,11 +4,13 @@ import shaka from 'shaka-player';
 import Constants from '../constants';
 
 import {
-  setCurrentTime, setTrack, setQueue, setPrevTrack, setNextTrack, getTrack
+  setCurrentTime, setTrack, setQueue, setPrevTrack, setNextTrack, getTrack, getTrackInfos, isMusicPlaying
 } from '../store/player';
 
 const mapStateToProps = state => ({
-  track: getTrack(state)
+  trackInfos: getTrackInfos(state),
+  track: getTrack(state),
+  isMusicPlaying: isMusicPlaying(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -23,7 +25,14 @@ class Audio extends Component {
   constructor () {
     super();
 
+    this.audio = null;
     this.player = null;
+    this.currentTrack = null;
+    this.isPlaying = false;
+
+    this.play = this.play.bind(this);
+    this.pause = this.pause.bind(this);
+    this.listen = this.listen.bind(this);
     this.onPlay = this.onPlay.bind(this);
     this.onPause = this.onPause.bind(this);
     this.onTimeUpdate = this.onTimeUpdate.bind(this);
@@ -40,7 +49,26 @@ class Audio extends Component {
   }
 
   componentWillReceiveProps (props) {
-    console.log(props);
+    // compoare track id
+    if (props.track['_id'] !== this.currentTrack) {
+      this.currentTrack = props.track['_id'];
+      this.isPlaying = true;
+
+      const {manifestURL, playlistHLSURL} = props.track;
+      this.listen(manifestURL, playlistHLSURL, props.trackInfos);
+      return;
+    }
+
+    console.log(props.isMusicPlaying)
+
+    if (props.isMusicPlaying !== this.isPlaying) {
+      if (props.isMusicPlaying) {
+        this.audio.play();
+        return;
+      }
+
+      this.audio.pause();
+    }
   }
 
   initShakaPlayer () {
@@ -80,24 +108,24 @@ class Audio extends Component {
     navigator.mediaSession.setActionHandler('nexttrack', this.setNextTrack);
   }
 
-  listen (manifest, m3u8playlist, track) {
+  listen (manifest, m3u8playlist, trackInfos) {
     // load the player
     return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
       return this.audio.play();
     })
-    .then(_ => this.setMediaNotifications(track))
+    .then(_ => this.setMediaNotifications(trackInfos))
     .catch(err => {
       console.error(err);
       // if fail, fallback to HLS format (safari mobile)
-      this.player.unload().then(_ => this.fallbackToHLS(m3u8playlist, track))
+      this.player.unload().then(_ => this.fallbackToHLS(m3u8playlist, trackInfos))
     });
   }
 
-  fallbackToHLS (m3u8playlist, track) {
+  fallbackToHLS (m3u8playlist, trackInfos) {
     // simply put it in src attribute
     this.audio.src = `${Constants.CDN_URL}/${m3u8playlist}`;
-    this.audio.play().then(_ => this.setMediaNotifications(track));
+    this.audio.play().then(_ => this.setMediaNotifications(trackInfos));
   }
 
   setMediaNotifications ({title, artist, album, coverURL}) {

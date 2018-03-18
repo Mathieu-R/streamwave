@@ -30,7 +30,7 @@ class Album extends Component {
   }
 
   componentWillMount () {
-    this.player = new Player();
+    //this.player = new Player();
 
     const id = this.props.match.params.id;
     fetch(`${Constants.API_URL}/album/${id}`, {
@@ -47,7 +47,7 @@ class Album extends Component {
     //this.listenToTrack()
   }
 
-  listenToTrack (artist, coverURL, track) {
+  listenToTrack (artist, title, coverURL, track) {
     const {tracks} = this.state;
     const {manifestURL, playlistHLSURL} = track;
 
@@ -57,13 +57,17 @@ class Album extends Component {
     this.props.setQueue(queue);
     this.props.setTrack({
       artist,
+      album: title,
       coverURL,
       track,
       index
     });
 
-    this.player.listen(manifestURL, playlistHLSURL, track);
-    this.player.watchRemoteAvailability();
+    //console.log(this.props);
+
+    //this.props.audio['_component'].listen(manifestURL, playlistHLSURL, track);
+    //this.player.listen(manifestURL, playlistHLSURL, track);
+    //this.player.watchRemoteAvailability();
   }
 
   render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
@@ -81,7 +85,7 @@ class Album extends Component {
           {tracks && tracks.map(track => (
             <Track
               {...track}
-              onClick={_ => this.listenToTrack(artist, coverURL, track)}/>
+              onClick={_ => this.listenToTrack(artist, title, coverURL, track)}/>
           ))}
         </div>
       </div>

@@ -17,16 +17,12 @@ class Home extends Component {
     super();
   }
 
-  componentDidMount () {
-    console.log(this.audio);
-  }
-
   render () {
     return (
       <div class="home">
         <Switch>
           <Route exact path="/" component={Library} />
-          <Route exact path="/album/:id" component={Album} player={this.player} />
+          <Route exact path="/album/:id" component={Album} audio={this.audio} />
         </Switch>
         <MiniPlayer audio={this.audio} />
         <NavBar />

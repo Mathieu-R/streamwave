@@ -128,7 +128,7 @@ class ProgressBar extends Component {
   }
 
   onSwipeStart (evt) {
-    console.log(evt.target.classList);
+    //console.log(evt.target.classList);
     if (!(evt.target.classList.contains('progress-bar'))) return;
     this.setState({dragging: true});
   }

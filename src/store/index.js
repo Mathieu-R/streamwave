@@ -32,7 +32,7 @@ const initialState = {
     track: null,
     // all the tracks of album or playlist
     // needed to handle next/prev
-    tracks: [],
+    // tracks: [],
     // queue (shuffle or not)
     // needed to handle continuous play
     queue: [],

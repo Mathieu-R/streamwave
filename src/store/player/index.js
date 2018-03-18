@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 // types
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
@@ -27,10 +29,11 @@ export function setCoverURL (cover) {
   }
 }
 
-export function setTrack ({artist, coverURL, track, index}) {
+export function setTrack ({artist, album, coverURL, track, index}) {
   return {
     type: SET_TRACK,
     artist,
+    album,
     coverURL,
     track,
     index
@@ -39,13 +42,14 @@ export function setTrack ({artist, coverURL, track, index}) {
 
 export function setPrevTrack () {
   return (dispatch, getState) => {
-    const {player: {queue, currentIndex}} = getState();
+    const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
     const index = Math.max(0, currentIndex - 1);
-    const {artist, coverURL, track} = queue[index];
+    const track = queue[index];
     dispatch({
       type: SET_TRACK,
       index,
       artist,
+      album,
       coverURL,
       track
     });
@@ -54,13 +58,14 @@ export function setPrevTrack () {
 
 export function setNextTrack ({continuous}) {
   return (dispatch, getState) => {
-    const {player: {queue, currentIndex}} = getState();
+    const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
     const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
-    const {artist, coverURL, track} = queue[index];
+    const track = queue[index];
     dispatch({
       type: SET_TRACK,
       index,
       artist,
+      album,
       coverURL,
       track: (continuous && index === 0) ? null : track
     });
@@ -114,13 +119,23 @@ export function setCurrentTime (time) {
 }
 
 // selectors
-export const getCoverURL = state => state.player.coverURL;
-export const getArtist = state => state.player.artist;
 export const getTrack = state => state.player.track;
+export const getArtist = state => state.player.artist;
+export const getAlbum = state => state.player.album;
+export const getTrackName = state => getTrack(state) && getTrack(state).title;
+export const getCoverURL = state => state.player.coverURL;
 export const isMusicPlaying = state => state.player.playing;
 export const isMusicChromecasting = state => state.player.chromecasting;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
+
+export const getTrackInfos = createSelector(
+  getArtist,
+  getAlbum,
+  getTrackName,
+  getCoverURL,
+  (artist, album, title, coverURL) => ({artist, album, title, coverURL})
+);
 
 
 // reducers
@@ -144,6 +159,7 @@ export default (state = {}, action) => {
         ...state,
         playing: true,
         artist: action.artist,
+        album: action.album,
         coverURL: action.coverURL,
         track: action.track,
         currentIndex: action.index

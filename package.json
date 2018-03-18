@@ -44,6 +44,7 @@
     "redux": "^3.7.2",
     "redux-persist-middleware": "^1.0.1",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "shaka-player": "^2.3.3",
     "styled-components": "^3.2.2",
     "workerize-loader": "^1.0.2"

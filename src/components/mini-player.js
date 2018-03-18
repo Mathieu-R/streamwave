@@ -101,14 +101,10 @@ const mapDispatchToProps = dispatch => ({
 class MiniPlayer extends Component {
   constructor () {
     super();
+
     this.onPrevClick = this.onPrevClick.bind(this);
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
-  }
-
-  componentDidMount () {
-    console.log(this.props);
-    this.player = new Player();
   }
 
   onPrevClick () {
@@ -120,13 +116,12 @@ class MiniPlayer extends Component {
   }
 
   onPlayClick () {
-    console.log(this.props.audio);
     // get last status
     const playing = this.props.playing;
     // switch status in store
     this.props.switchPlayingStatus();
     // update audio
-    playing ? this.player.pause() : this.player.play();
+    //playing ? this.player.pause() : this.player.play();
   }
 
   onChromecastClick () {
