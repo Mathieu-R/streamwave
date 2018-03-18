@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
-import { TopBarHamburger } from '../components/topbar-hamburger';
+import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';
 import Switch from '../components/switch';
 import styled from 'styled-components';
@@ -41,7 +41,7 @@ class Settings extends Component {
         <TopBarHamburger />
         <Fade>
           <Label for="fade">Fondu enchainé</Label>
-          <Range />
+          <Range min={0} max={12} value={5} />
         </Fade>
         <EqualizeVolume>
           <Switch label="Egaliser le volume sonore"/>
@@ -52,7 +52,7 @@ class Settings extends Component {
         </DownloadQuality>
         <DataVolume>
           <Label for="data-volume">Volume de données maximale</Label>
-          <Range />
+          <Range min={0} max={2000} value={0}/>
           {/* SVG arc with data consumed until today */}
         </DataVolume>
         <Logout onClick={this.logout}>Déconnexion</Logout>
@@ -60,3 +60,5 @@ class Settings extends Component {
     )
   }
 }
+
+export default Settings;

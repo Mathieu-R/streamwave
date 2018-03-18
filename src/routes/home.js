@@ -8,6 +8,7 @@ import Audio from '../components/audio';
 
 import Library from './library';
 import Album from './album';
+import Settings from './settings';
 
 import Player from '../player';
 
@@ -23,6 +24,7 @@ class Home extends Component {
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id" component={Album} audio={this.audio} />
+          <Route exact path="/settings" component={Settings} />
         </Switch>
         <MiniPlayer audio={this.audio} />
         <NavBar />
