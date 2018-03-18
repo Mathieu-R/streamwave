@@ -41,6 +41,10 @@ class Constants {
     return 'remote' in HTMLMediaElement.prototype
   }
 
+  static get SUPPORT_PRESENTATION_API () {
+    return 'PresentationRequest' in window;
+  }
+
   static get SUPPORT_SERVICE_WORKER () {
     return navigator.serviceWorker;
   }

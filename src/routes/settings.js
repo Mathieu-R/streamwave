@@ -5,7 +5,13 @@ import Range from '../components/range';
 import Switch from '../components/switch';
 import styled from 'styled-components';
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0 10px;
+`;
 
 const Label = styled.label``;
 
@@ -41,7 +47,7 @@ class Settings extends Component {
         <TopBarHamburger />
         <Fade>
           <Label for="fade">Fondu enchainé</Label>
-          <Range min={0} max={12} value={5} />
+          <span>0</span><Range min={0} max={12} value={5} /><span>12</span>
         </Fade>
         <EqualizeVolume>
           <Switch label="Egaliser le volume sonore"/>

@@ -147,6 +147,15 @@ class Player {
       .then((evt) => console.log(evt));
   }
 
+  cast (url) {
+    const request = new presentationRequest([url]);
+    navigator.presentation.defaultRequest = request;
+
+    request.start()
+      .then(connection => console.log(connection))
+      .catch(err => console.error(err));
+  }
+
   static cacheTrackList (tracklist) {
     if (!Constants.SUPPORT_CACHE_API) {
       throw new Error('Cache API is not supported.');
