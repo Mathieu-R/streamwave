@@ -50,7 +50,7 @@ class Constants {
   }
 
   static get SUPPORT_CACHE_API () {
-    return self in 'caches';
+    return 'caches' in window;
   }
 
   static get SUPPORT_BACKGROUND_SYNC () {

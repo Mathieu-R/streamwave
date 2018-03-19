@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 import ProgressBar from '../components/progress-bar';
-import Player from '../player';
 import Constants from '../constants';
 
 import {
@@ -105,6 +104,7 @@ class MiniPlayer extends Component {
     this.onPrevClick = this.onPrevClick.bind(this);
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
+    this.onChromecastClick = this.onChromecastClick.bind(this);
   }
 
   onPrevClick () {
@@ -121,17 +121,22 @@ class MiniPlayer extends Component {
     // switch status in store
     this.props.switchPlayingStatus();
     // update audio
-    //playing ? this.player.pause() : this.player.play();
+    playing ? this.props.pause() : this.props.play();
   }
 
   onChromecastClick () {
+    console.log(this);
+    if (this.props.chromecasting) {
+      // stop chromecast
+      return;
+    }
 
+    this.props.chromecast();
   }
 
   render ({
     coverURL, artist, track,
-    playing, chromecasting,
-    onChromecastClick, switchPlayingStatus
+    playing, chromecasting
   }) {
     return (
       <Container>

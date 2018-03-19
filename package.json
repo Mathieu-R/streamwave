@@ -7,6 +7,7 @@
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
     "build": "preact build",
     "build:noprerender": "preact build --no-prerender",
+    "build:analyse": "preact build --no-prerender --json=true && webpack-bundle-analyzer stats.json",
     "serve": "preact build && preact serve",
     "serve:noprerender": "npm run build:noprerender && preact serve",
     "dev": "preact watch",
@@ -17,7 +18,11 @@
   ],
   "bundlesize": [
     {
-      "path": "./build/bundle.js",
+      "path": "./build/bundle.*.js",
+      "maxSize": "220kB"
+    },
+    {
+      "path": "./build/route-home.chunk.*.js",
       "maxSize": "220kB"
     }
   ],
@@ -26,6 +31,9 @@
     "if-env": "^1.0.4",
     "node-sass": "^4.8.2",
     "preact-cli": "^2.2.1",
+    "preact-cli-plugin-async": "^1.0.0",
+    "preact-cli-plugin-fast-async": "^1.0.1",
+    "preact-cli-workbox-plugin": "^1.0.0",
     "sass-loader": "^6.0.7",
     "svg-inline-loader": "^0.8.0"
   },
@@ -47,6 +55,7 @@
     "reselect": "^3.0.1",
     "shaka-player": "^2.3.3",
     "styled-components": "^3.2.2",
+    "window-or-global": "^1.0.1",
     "workerize-loader": "^1.0.2"
   }
 }

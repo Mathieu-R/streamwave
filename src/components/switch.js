@@ -52,9 +52,9 @@ const Label = styled.label`
   }
 `;
 
-const Switch = ({label}) => (
+const Switch = ({label, onChange}) => (
   <div>
-    <Input type="checkbox" id={label} />
+    <Input type="checkbox" id={label} onChange={onChange}/>
     {/* Little Hack => altough preact support "for" attribute, styled-components only accept "htmlFor" */}
     <Label htmlFor={label}>{label}</Label>
   </div>

@@ -13,6 +13,7 @@ const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
 const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
+const SET_DOWNLOAD_PERCENTAGE = 'SET_DOWNLOAD_PERCENTAGE';
 
 // actions
 export function setArtist (artist) {
@@ -42,32 +43,52 @@ export function setTrack ({artist, album, coverURL, track, index}) {
 
 export function setPrevTrack () {
   return (dispatch, getState) => {
-    const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
-    const index = Math.max(0, currentIndex - 1);
-    const track = queue[index];
-    dispatch({
-      type: SET_TRACK,
-      index,
-      artist,
-      album,
-      coverURL,
-      track
+    return new Promise((resolve) => {
+      const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
+      const index = Math.max(0, currentIndex - 1);
+      const track = queue[index];
+
+      dispatch({
+        type: SET_TRACK,
+        index,
+        artist,
+        album,
+        coverURL,
+        track
+      })
+
+      const {manifestURL, playlistHLSURL, title} = track;
+      resolve({
+        manifestURL,
+        playlistHLSURL,
+        trackInfos: {artist, album, title, coverURL}
+      });
     });
   }
 }
 
 export function setNextTrack ({continuous}) {
   return (dispatch, getState) => {
-    const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
-    const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
-    const track = queue[index];
-    dispatch({
-      type: SET_TRACK,
-      index,
-      artist,
-      album,
-      coverURL,
-      track: (continuous && index === 0) ? null : track
+    return new Promise((resolve) => {
+      const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
+      const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
+      const track = queue[index];
+
+      dispatch({
+        type: SET_TRACK,
+        index,
+        artist,
+        album,
+        coverURL,
+        track: (continuous && index === 0) ? null : track
+      });
+
+      const {manifestURL, playlistHLSURL, title} = track;
+      resolve({
+        manifestURL,
+        playlistHLSURL,
+        trackInfos: {artist, album, title, coverURL}
+      });
     });
   }
 }
@@ -118,6 +139,14 @@ export function setCurrentTime (time) {
   }
 }
 
+export function setDownloadPercentage ({id, percentage}) {
+  return {
+    type: SET_DOWNLOAD_PERCENTAGE,
+    id,
+    percentage
+  }
+}
+
 // selectors
 export const getTrack = state => state.player.track;
 export const getArtist = state => state.player.artist;
@@ -126,8 +155,11 @@ export const getTrackName = state => getTrack(state) && getTrack(state).title;
 export const getCoverURL = state => state.player.coverURL;
 export const isMusicPlaying = state => state.player.playing;
 export const isMusicChromecasting = state => state.player.chromecasting;
+export const isShuffle = state => state.player.shuffle;
+export const isRepeat = state => state.player.repeat;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
+export const getDownloads = state => state.player.downloads;
 
 export const getTrackInfos = createSelector(
   getArtist,
@@ -220,6 +252,15 @@ export default (state = {}, action) => {
       return {
         ...state,
         currentTime: action.time
+      }
+
+    case SET_DOWNLOAD_PERCENTAGE:
+      return {
+        ...state,
+        downloads: {
+          ...state.downloads,
+          [action.id]: action.percentage
+        }
       }
 
     default:
