@@ -3,20 +3,30 @@ import { connect } from 'react-redux';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
-import Player from '../player';
 import { shuffle } from '../utils';
+import { downloadTracklist, removeTracklistFromCache } from '../utils/download';
+import styled from 'styled-components';
 
 import {
   setTrack,
-  setQueue
+  setQueue,
+  isShuffle,
+  getDownloads
 } from '../store/player';
 
+import {
+  toasting
+} from '../store/toast';
+
+
+
 const mapStateToProps = state => ({
-  library: state.library,
-  shuffle: state.shuffle
+  shuffle: isShuffle(state),
+  downloads: getDownloads(state)
 });
 
 const mapDispatchToProps = dispatch => ({
+  toasting: (messages, duration) => dispatch(toasting(messages, duration)),
   setTrack: (music) => dispatch(setTrack(music)),
   setQueue: (queue) => dispatch(setQueue(queue))
 });
@@ -27,11 +37,10 @@ class Album extends Component {
 
     this.handleTrackClick = this.handleTrackClick.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
+    this.download = this.download.bind(this);
   }
 
   componentWillMount () {
-    //this.player = new Player();
-
     const id = this.props.match.params.id;
     fetch(`${Constants.API_URL}/album/${id}`, {
       headers: {
@@ -40,6 +49,21 @@ class Album extends Component {
     })
       .then(response => response.json())
       .then(response => this.setState({...response}));
+  }
+
+  download (evt) {
+    if (!Constants.SUPPORT_CACHE_API) {
+      this.props.toasting(['Votre navigateur ne supporte pas le téléchargement de musiques...']);
+      return;
+    }
+
+    const checked = evt.target.checked;
+    if (checked) {
+      // download the album
+      downloadTracklist(this.state.tracks, this.props.match.params.id);
+      return;
+    }
+    removeTracklistFromCache();
   }
 
   handleTrackClick () {
@@ -63,22 +87,22 @@ class Album extends Component {
       index
     });
 
-    //console.log(this.props);
-
-    //this.props.audio['_component'].listen(manifestURL, playlistHLSURL, track);
-    //this.player.listen(manifestURL, playlistHLSURL, track);
-    //this.player.watchRemoteAvailability();
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL});
   }
 
-  render ({}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
+  render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
     return (
       <div class="album">
         <div class="album__info-block">
           <h1 class="album__title">{title}</h1>
           <h2 class="album__artist">{artist}</h2>
           <div class="album__download-container">
-            <div class="album__download-container__progress"></div>
-            <Switch label="Télécharger" />
+            <div class="album__download-container__progress">
+            {
+              downloads[this.props.match.params.id] ? downloads[this.props.match.params.id] + '%' : ''
+            }
+            </div>
+            <Switch label="Télécharger" onChange={this.download} />
           </div>
         </div>
         <div className="album-tracks">

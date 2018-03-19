@@ -35,20 +35,20 @@ class App extends Component {
       },
       primaryColor: '#4A90E2',
       slider: {
-        color: '#979797',
+        background: '#979797',
         progress: {
           color: '#4A90E2'
         },
         round: {
-          color: '#1870D7'
+          background: '#1870D7'
         },
         player: {
-          color: '#D8D8D8',
+          background: '#D8D8D8',
           progress: {
-            color: '#FFF',
+            background: '#FFF',
           },
           round: {
-            color: '#FFF'
+            background: '#FFF'
           }
         }
       },

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Mathieu-R/streamwave.svg?branch=master)](https://travis-ci.org/Mathieu-R/streamwave)
+
 # streamwave
 TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mobile first.
 

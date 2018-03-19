@@ -18,3 +18,7 @@ export function cutList (tracks, currentTrack) {
   const index = tracks.findIndex(track => track.title === currentTrack.title) + 1;
   return index > tracks.length - 1 ? [] : [...tracks.slice(index)];
 }
+
+export function flatten(arr) {
+  return Array.prototype.concat.apply([], arr);
+}

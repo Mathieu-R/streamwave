@@ -41,12 +41,16 @@ class Constants {
     return 'remote' in HTMLMediaElement.prototype
   }
 
+  static get SUPPORT_PRESENTATION_API () {
+    return 'PresentationRequest' in window;
+  }
+
   static get SUPPORT_SERVICE_WORKER () {
     return navigator.serviceWorker;
   }
 
   static get SUPPORT_CACHE_API () {
-    return self in 'caches';
+    return 'caches' in window;
   }
 
   static get SUPPORT_BACKGROUND_SYNC () {
