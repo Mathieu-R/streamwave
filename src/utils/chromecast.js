@@ -11,7 +11,7 @@ export function remote (audio) {
 }
 
 export function cast (url) {
-  const request = new presentationRequest([url]);
+  const request = new PresentationRequest([url]);
   navigator.presentation.defaultRequest = request;
 
   return request.start();

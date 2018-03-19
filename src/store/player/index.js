@@ -140,6 +140,7 @@ export function setCurrentTime (time) {
 }
 
 export function setDownloadPercentage ({id, percentage}) {
+  console.log(id, percentage);
   return {
     type: SET_DOWNLOAD_PERCENTAGE,
     id,

@@ -5,6 +5,7 @@ import Track from '../components/track';
 import Switch from '../components/switch';
 import { shuffle } from '../utils';
 import { downloadTracklist, removeTracklistFromCache } from '../utils/download';
+import styled from 'styled-components';
 
 import {
   setTrack,
@@ -16,6 +17,8 @@ import {
 import {
   toasting
 } from '../store/toast';
+
+
 
 const mapStateToProps = state => ({
   shuffle: isShuffle(state),
@@ -57,7 +60,7 @@ class Album extends Component {
     const checked = evt.target.checked;
     if (checked) {
       // download the album
-      downloadTracklist(this.state.tracks);
+      downloadTracklist(this.state.tracks, this.props.match.params.id);
       return;
     }
     removeTracklistFromCache();
@@ -96,7 +99,7 @@ class Album extends Component {
           <div class="album__download-container">
             <div class="album__download-container__progress">
             {
-              downloads[this.props.matchparams.id] ? downloads[this.props.matchparams.id] + '%' : ''
+              downloads[this.props.match.params.id] ? downloads[this.props.match.params.id] + '%' : ''
             }
             </div>
             <Switch label="Télécharger" onChange={this.download} />

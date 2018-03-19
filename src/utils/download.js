@@ -30,7 +30,7 @@ export async function downloadTracklist (tracklist, tracklistId) {
   files.map(file => file.response.then(response => cache.put(file.request, response)));
 }
 
-export async function removeTracklist (tracklist) {
+export async function removeTracklistFromCache (tracklist) {
   const cache = await caches.open(MUSIC_CACHE_NAME);
   tracklist.map(([audio256URL, manifestURL, playlistHLSURL]) => {
     //cache.delete(audio256URL) // regex ?
@@ -55,15 +55,11 @@ export function track (responses, tracklistId) {
       if (done) return;
 
       downloaded += value.length;
-      store.dispatch(setDownloadPercentage({id: tracklistId, downloaded}));
+      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: Math.round((downloaded / totalDownload) * 100)}));
       return reader.read().then(onStream);
     }
 
     const reader = cloned.body.getReader();
     reader.read().then(onStream);
   });
-}
-
-export function removeTracklistFromCache () {
-
 }
