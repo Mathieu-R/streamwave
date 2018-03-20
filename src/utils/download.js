@@ -3,10 +3,9 @@ import store from '../store';
 import { flatten } from '../utils';
 import Constants from '../constants';
 
-import { setDownloadPercentage } from '../store/player';
+import { setDownloadPercentage, removeDownloadPercentage } from '../store/player';
 
 const MUSIC_CACHE_NAME = 'streamwave-music-cache';
-const RADIUS = 10;
 
 export async function downloadTracklist (tracklist, tracklistId) {
   const qualities = {
@@ -53,42 +52,17 @@ export function track (responses, tracklistId) {
     // by cache api
     const cloned = response.clone();
     const onStream = ({done, value}) => {
-      if (done) return;
+      if (done) {
+        store.dispatch(removeDownloadPercentage({id: tracklistId}));
+        return;
+      }
 
       downloaded += value.length;
-      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: Math.round((downloaded / totalDownload) * 100)}));
+      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
       return reader.read().then(onStream);
     }
 
     const reader = cloned.body.getReader();
     reader.read().then(onStream);
   });
-}
-
-export function renderProgress (progress) {
-  if (progress) {
-    const percentageToDeg = progress => progress * 360;
-    const degToRad = deg => deg * (Math.PI / 180);
-
-    const x = Math.cos(degToRad(percentageToDeg(progress)));
-    const y = Math.sin(degToRad(percentageToDeg(progress)));
-
-    return (
-      <svg>
-        <path
-          d={
-            `M 0 0
-             A ${RADIUS} ${RADIUS} 0 0 0 ${x} ${y}
-            `
-          }
-          stroke="#FFF"
-          storke-width="5"
-        >
-          {progress} + '%'
-        </path>
-      </svg>
-    );
-  }
-
-  return '';
 }

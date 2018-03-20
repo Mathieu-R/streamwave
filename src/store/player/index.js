@@ -11,6 +11,7 @@ const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
 const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
+const SET_PLAYING_STATUS = 'SET_PLAYING_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 const SET_DOWNLOAD_PERCENTAGE = 'SET_DOWNLOAD_PERCENTAGE';
@@ -126,10 +127,17 @@ export function switchSuffleStatus () {
   }
 }
 
-export function setChromecastStatus (status) {
+export function setPlayingStatus ({playing}) {
+  return {
+    type: SET_PLAYING_STATUS,
+    playing
+  }
+}
+
+export function setChromecastStatus ({chromecasting}) {
   return {
     type: SET_CHROMECAST_STATUS,
-    status
+    chromecasting
   }
 }
 
@@ -250,10 +258,17 @@ export default (state = {}, action) => {
         shuffle: !state.shuffle
       }
 
+    case SET_PLAYING_STATUS: {
+      return {
+        ...state,
+        playing: action.playing
+      }
+    }
+
     case SET_CHROMECAST_STATUS:
       return {
         ...state,
-        chromecasting: action.status
+        chromecasting: action.chromecasting
       }
 
     case SET_CURRENT_TIME:
@@ -275,7 +290,8 @@ export default (state = {}, action) => {
       return {
         ...state,
         downloads: {
-
+          ...State.downloads,
+          [action.id]: null
         }
       }
 

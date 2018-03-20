@@ -65,8 +65,14 @@ class Home extends Component {
       return;
     }
 
-    navigator.mediaSession.setActionHandler('play', this.play);
-    navigator.mediaSession.setActionHandler('pause', this.pause);
+    navigator.mediaSession.setActionHandler('play', evt => {
+      this.props.setPlayingStatus({playing: true});
+      this.play();
+    });
+    navigator.mediaSession.setActionHandler('pause', evt => {
+      this.props.setPlayingStatus({playing: false});
+      this.pause();
+    });
     navigator.mediaSession.setActionHandler('seekbackward', this.seekBackward);
     navigator.mediaSession.setActionHandler('seekforward', this.seekForward);
     navigator.mediaSession.setActionHandler('previoustrack', this.setPrevTrack);
@@ -127,11 +133,11 @@ class Home extends Component {
   }
 
   seekBackward () {
-    this.audio.base.currentTime = Math.max(0, this.audio.currentTime - this.skipTime);
+    this.audio.base.currentTime = Math.max(0, this.audio.base.currentTime - this.skipTime);
   }
 
   seekForward () {
-    this.audio.base.currentTime = Math.min(this.audio.duration, this.audio.currentTime + this.skipTime);
+    this.audio.base.currentTime = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
   }
 
   setPrevTrack () {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
+import ProgressRound from '../components/progress-round';
 import { shuffle } from '../utils';
 import { downloadTracklist, removeTracklistFromCache } from '../utils/download';
 import styled from 'styled-components';
@@ -59,11 +60,21 @@ class Album extends Component {
 
     const checked = evt.target.checked;
     if (checked) {
+      // prevent multiples downloads of the same album to happen at the same time.
+      if (this.isDownloading) {
+        return;
+      }
+
+      this.isDownloading = true
+
       // download the album
-      downloadTracklist(this.state.tracks, this.props.match.params.id);
+      downloadTracklist(this.state.tracks, this.props.match.params.id).then(_ => {
+        this.isDownloading = false
+      });
       return;
     }
-    removeTracklistFromCache();
+
+    removeTracklistFromCache(this.state.tracks);
   }
 
   handleTrackClick () {
@@ -99,7 +110,11 @@ class Album extends Component {
           <div class="album__download-container">
             <div class="album__download-container__progress">
             {
-              downloads[this.props.match.params.id] ? downloads[this.props.match.params.id] + '%' : ''
+              downloads[this.props.match.params.id] ?
+                <ProgressRound
+                  progress={(downloads[this.props.match.params.id])}
+                  value={Math.round((downloads[this.props.match.params.id]) * 100) + '%'}
+                /> : ''
             }
             </div>
             <Switch label="Télécharger" onChange={this.download} />
