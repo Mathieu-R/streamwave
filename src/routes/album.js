@@ -19,6 +19,41 @@ import {
   toasting
 } from '../store/toast';
 
+const Container = styled.div``;
+
+const Infos = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+`;
+
+const Title = styled.h1`
+  font-size: 22px;
+  font-weight: bold;
+  margin: 5px 0;
+`;
+
+const Artist = styled.h2`
+  font-weight: 18px;
+  color: #7C7C7C;
+  margin: 0;
+`;
+
+const Download = styled.div`
+  position: absolute;
+  bottom: 15px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Tracks = styled.section`
+  margin: 0 10px;
+`;
 
 
 const mapStateToProps = state => ({
@@ -103,12 +138,11 @@ class Album extends Component {
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
     return (
-      <div class="album">
-        <div class="album__info-block">
-          <h1 class="album__title">{title}</h1>
-          <h2 class="album__artist">{artist}</h2>
-          <div class="album__download-container">
-            <div class="album__download-container__progress">
+      <Container>
+        <Infos>
+          <Title>{title}</Title>
+          <Artist>{artist}</Artist>
+          <Download>
             {
               downloads[this.props.match.params.id] ?
                 <ProgressRound
@@ -116,18 +150,17 @@ class Album extends Component {
                   value={Math.round((downloads[this.props.match.params.id]) * 100) + '%'}
                 /> : ''
             }
-            </div>
             <Switch label="Télécharger" onChange={this.download} />
-          </div>
-        </div>
-        <div className="album-tracks">
+          </Download>
+        </Infos>
+        <Tracks>
           {tracks && tracks.map(track => (
             <Track
               {...track}
               onClick={_ => this.listenToTrack(artist, title, coverURL, track)}/>
           ))}
-        </div>
-      </div>
+        </Tracks>
+      </Container>
     );
   }
 }

@@ -92,9 +92,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  switchPlayingStatus: _ => dispatch(switchPlayingStatus()),
-  setPrevTrack: _ => dispatch(setPrevTrack()),
-  setNextTrack: payload => dispatch(setNextTrack(payload))
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
 });
 
 class MiniPlayer extends Component {
@@ -108,11 +106,11 @@ class MiniPlayer extends Component {
   }
 
   onPrevClick () {
-    this.props.setPrevTrack();
+    this.props.prev();
   }
 
   onNextClick () {
-    this.props.setNextTrack({continuous: false});
+    this.props.next({continuous: false});
   }
 
   onPlayClick () {
@@ -141,7 +139,7 @@ class MiniPlayer extends Component {
     return (
       <Container>
         <ProgressContainer>
-          <ProgressBar />
+          <ProgressBar seek={this.props.seek} />
         </ProgressContainer>
 
         <MiniCoverContainer>

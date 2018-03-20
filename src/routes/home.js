@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import shaka from 'shaka-player';
 import { cast } from '../utils/chromecast';
 import Constants from '../constants';
@@ -12,6 +13,18 @@ import Audio from '../components/audio';
 import Library from './library';
 import Album from './album';
 import Settings from './settings';
+
+import {
+  setPlayingStatus,
+  setPrevTrack,
+  setNextTrack
+} from '../store/player';
+
+const mapDispatchToProps = dispatch => ({
+  setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
+  setPrevTrack: _ => dispatch(setPrevTrack()),
+  setNextTrack: payload => dispatch(setNextTrack(payload))
+});
 
 class Home extends Component {
   constructor () {
@@ -29,6 +42,7 @@ class Home extends Component {
     this.setPrevTrack = this.setPrevTrack.bind(this);
     this.setNextTrack = this.setNextTrack.bind(this);
     this.chromecast = this.chromecast.bind(this);
+    this.seek = this.seek.bind(this);
   }
 
   componentDidMount () {
@@ -140,10 +154,14 @@ class Home extends Component {
     this.audio.base.currentTime = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
   }
 
+  seek (time) {
+    this.audio.base.currentTime = time
+  }
+
   setPrevTrack () {
     // update redux state, get new current track, play it
-    this.props.setPrevTrack().then((manifestURL, playlistHLSURL, trackInfos) => {
-      this.listen(manifestURL, m3u8playlist, trackInfos);
+    this.props.setPrevTrack().then(({manifestURL, playlistHLSURL, trackInfos}) => {
+      this.listen(manifestURL, playlistHLSURL, trackInfos);
     });
   }
 
@@ -155,10 +173,7 @@ class Home extends Component {
   }
 
   chromecast () {
-    const caster = new shaka.cast.CastProxy(this.audio.base, this.player);
-    caster.cast();
-    return;
-    const url = this.audio.base.src;
+    const url = '/player';
     cast(url)
       .then(connexion => console.log(connexion))
       .catch(err => console.error(err));
@@ -174,6 +189,14 @@ class Home extends Component {
           />
           <Route exact path="/settings" component={Settings} />
         </Switch>
+        <Player
+          play={this.play}
+          pause={this.pause}
+          prev={this.setPrevTrack}
+          next={this.setNextTrack}
+          chromecast={this.chromecast}
+          seek={this.seek}
+        />
         <MiniPlayer
           listen={this.listen}
           play={this.play}
@@ -181,16 +204,17 @@ class Home extends Component {
           prev={this.setPrevTrack}
           next={this.setNextTrack}
           chromecast={this.chromecast}
+          seek={this.seek}
         />
         <NavBar />
-        {/*<Player ref={player => this.player = player} />*/}
         <Audio
           ref={audio => this.audio = audio}
           preload="metadata"
+          next={this.setNextTrack}
         />
       </div>
     );
   }
 }
 
-export default Home;
+export default connect(null, mapDispatchToProps)(Home);

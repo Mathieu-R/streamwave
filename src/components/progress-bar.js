@@ -21,6 +21,7 @@ const ProgressBarContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
   height: 100%;
   background: rgba(255,255,255,0.5);
 `;
@@ -55,7 +56,7 @@ const ProgressRoundContainer = styled.div.attrs({
 const ProgressRound = styled.div`
   position: absolute;
   top: 50%;
-  left: 0;
+  left: -5px;
   height: 15px;
   width: 15px;
   border-radius: 50%;
@@ -80,18 +81,20 @@ class ProgressBar extends Component {
   }
 
   componentDidMount () {
-    document.addEventListener('touchstart', this.onSwipeStart);
     document.addEventListener('touchmove', this.onSwipeMove);
     document.addEventListener('touchend', this.onSwipeEnd);
-    document.addEventListener('mousedown', this.onSwipeStart);
     document.addEventListener('mousemove', this.onSwipeMove);
-    document.addEventListener('mouseleave', this.onSwipeEnd);
+    document.addEventListener('mouseup', this.onSwipeEnd);
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', this.onResize)
+    document.removeEventListener('touchmove', this.onSwipeMove);
+    document.removeEventListener('touchend', this.onSwipeEnd);
+    document.removeEventListener('mousemove', this.onSwipeMove);
+    document.removeEventListener('mouseup', this.onSwipeEnd);
+    window.removeEventListener('resize', this.onResize);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -125,11 +128,10 @@ class ProgressBar extends Component {
     const currentTime = clampedPosition * this.props.duration;
     this.props.setCurrentTime(currentTime);
     // should set the current time of audio element => this.audio.currentTime = currentTime
+    this.props.seek(currentTime);
   }
 
   onSwipeStart (evt) {
-    //console.log(evt.target.classList);
-    if (!(evt.target.classList.contains('progress-bar'))) return;
     this.setState({dragging: true});
   }
 
@@ -146,6 +148,8 @@ class ProgressBar extends Component {
       return;
     }
 
+    console.log('end');
+
     this.setState({dragging: false});
     this.updatePosition(evt);
   }
@@ -159,12 +163,8 @@ class ProgressBar extends Component {
     return (
       <ProgressBarContainer
         innerRef={container => this.container = container}
-        // onTouchStart={this.onSwipeStart}
-        // onTouchMove={this.onSwipeMove}
-        // onTouchEnd={this.onSwipeEnd}
-        // onMouseDown={this.onSwipeStart}
-        // onMouseMove={this.onSwipeMove}
-        // onMouseLeave={this.onSwipeEnd}
+        onTouchStart={this.onSwipeStart}
+        onMouseDown={this.onSwipeStart}
       >
         <ProgressTrack position={clampedPosition}/>
         <ProgressRoundContainer position={clampedPosition}>
