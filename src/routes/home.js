@@ -149,6 +149,9 @@ class Home extends Component {
   }
 
   chromecast () {
+    const caster = new shaka.cast.CastProxy(this.audio.base, this.player);
+    caster.cast();
+    return;
     const url = this.audio.base.src;
     cast(url)
       .then(connexion => console.log(connexion))

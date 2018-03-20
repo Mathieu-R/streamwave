@@ -14,6 +14,7 @@ const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 const SET_DOWNLOAD_PERCENTAGE = 'SET_DOWNLOAD_PERCENTAGE';
+const REMOVE_DOWNLOAD_PERCENTAGE = 'REMOVE_DOWNLOAD_PERCENTAGE';
 
 // actions
 export function setArtist (artist) {
@@ -140,11 +141,17 @@ export function setCurrentTime (time) {
 }
 
 export function setDownloadPercentage ({id, percentage}) {
-  console.log(id, percentage);
   return {
     type: SET_DOWNLOAD_PERCENTAGE,
     id,
     percentage
+  }
+}
+
+export function removeDownloadPercentage ({id}) {
+  return {
+    type: REMOVE_DOWNLOAD_PERCENTAGE,
+    id
   }
 }
 
@@ -261,6 +268,14 @@ export default (state = {}, action) => {
         downloads: {
           ...state.downloads,
           [action.id]: action.percentage
+        }
+      }
+
+    case REMOVE_DOWNLOAD_PERCENTAGE:
+      return {
+        ...state,
+        downloads: {
+
         }
       }
 
