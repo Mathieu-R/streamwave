@@ -23,7 +23,6 @@ const BaseCircle = styled.circle`
 const CircleProgress = styled.circle`
   stroke: #FFF;
   stroke-width: 3;
-  stroke-dasharray: 100;
   transition: stroke-dashoffset .1s linear;
 `;
 
@@ -44,7 +43,8 @@ const ProgressRound = ({progress, value, radius}) => {
           cx={radius}
           cy={radius}
           transform={`rotate(-90, ${radius}, ${radius})`}
-          strokeDashoffset={100 - (progress * 100)}
+          stroke-dasharray={`${progress * 100},100`}
+          strokeDasharray={`${progress * 100},100`}
           fill="none"
         />
       </svg>

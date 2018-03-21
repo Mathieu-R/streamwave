@@ -290,7 +290,7 @@ export default (state = {}, action) => {
       return {
         ...state,
         downloads: {
-          ...State.downloads,
+          ...state.downloads,
           [action.id]: null
         }
       }

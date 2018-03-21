@@ -66,3 +66,8 @@ export function track (responses, tracklistId) {
     reader.read().then(onStream);
   });
 }
+
+// uses background fetch which is for now only available in chrome canary
+export function downloadTracklistBackground () {
+
+}

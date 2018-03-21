@@ -58,7 +58,7 @@ class Constants {
   }
 
   static get SUPPORT_BACKGROUND_FETCH () {
-    return;
+    return 'BackgroundFetchManager' in window;
   }
 }
 

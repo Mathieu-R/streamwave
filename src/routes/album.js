@@ -44,11 +44,12 @@ const Artist = styled.h2`
 
 const Download = styled.div`
   position: absolute;
-  bottom: 15px;
+  bottom: 0;
   right: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 35px;
 `;
 
 const Tracks = styled.section`
