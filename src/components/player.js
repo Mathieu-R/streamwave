@@ -2,6 +2,7 @@ import { Component } from 'preact';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from './progress-bar';
+import { formatDuration, getRGBCssFromObject } from '../utils';
 import Constants from '../constants';
 
 import {
@@ -9,10 +10,14 @@ import {
   getArtist,
   getTrack,
   isMusicPlaying,
+  isShuffle,
+  isRepeat,
   isMusicChromecasting,
   switchPlayingStatus,
   setPrevTrack,
-  setNextTrack
+  setNextTrack,
+  getCurrentTime,
+  getDuration
 } from '../store/player';
 
 const Container = styled.div`
@@ -29,9 +34,9 @@ const Container = styled.div`
   overflow: hidden;
   z-index: 10000;
   opacity: ${props => props.show ? 1 : 0};
-  transform: translateY(${props => props.show ? '100%' : 0});
+  transform: translateY(${props => props.show ? 0 : '100%'});
   pointer-events: ${props => props.show ? 'auto' : 'none'};
-  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1) transform 0.5s cubic-bezier(0, 0, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
   will-change: transform, opacity;
 `;
 
@@ -62,14 +67,21 @@ const ProgressWrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 5px;
   width: 100%;
   max-width: 800px;
   margin: 25px;
 `;
 
-const CurrentTime = styled.span``;
+const CurrentTime = styled.span`
+  margin: 0 5px;
+  font-weight: bold;
+`;
 
-const TotalTime = styled.div``;
+const TotalTime = styled.div`
+  margin: 0 5px;
+  font-weight: bold;
+`;
 
 const Controls = styled.section`
   display: flex;
@@ -84,11 +96,23 @@ const Button = styled.button`
   background: none;
 `;
 
-const Shuffle = styled(Button)``;
-const Prev = styled(Button)``;
-const Play = styled(Button)``;
-const Next = styled(Button)``;
-const Repeat = styled(Button)``;
+const CenterControls = styled(Button)`
+  margin: 0 5px;
+`;
+
+const OutsideControls = styled(Button)`
+  margin: 0 10px;
+`;
+
+const Shuffle = styled(OutsideControls)``;
+const Prev = styled(CenterControls)``;
+const Play = styled(CenterControls)``;
+const Next = styled(CenterControls)``;
+const Repeat = styled(OutsideControls)``;
+
+const SVG = styled.svg`
+  stroke: ${props => props.active ? props.theme.primaryColor : '#FFF'};
+`;
 
 const Chromecast = styled(Button)`
   position: absolute;
@@ -101,21 +125,29 @@ const mapStateToProps = state => ({
   artist: getArtist(state),
   track: getTrack(state),
   playing: isMusicPlaying(state),
-  chromecasting: isMusicChromecasting(state)
+  shuffle: isShuffle(state),
+  repeat: isRepeat(state),
+  chromecasting: isMusicChromecasting(state),
+  currentTime: getCurrentTime(state),
+  totalTime: getDuration(state)
 });
 
 class Player extends Component {
-  render ({coverURL, artist, title, duration, playing, chromecasting}) {
+  render ({
+    coverURL, artist, title, duration,
+    playing, chromecasting, shuffle, repeat,
+    track, currentTime, totalTime, seek
+  }) {
     if (!coverURL) {
       return;
     }
 
     return (
-      <Container show={this.props.show}>
+      <Container show={true} primaryColor={track.primaryColor}>
         <Chromecast>
           {
             chromecasting ?
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
@@ -127,7 +159,7 @@ class Player extends Component {
               />
             </svg>
             :
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
@@ -149,13 +181,13 @@ class Player extends Component {
           </InfoContainer>
         </Cover>
         <ProgressWrapper>
-          <CurrentTime>2:41</CurrentTime>
-          <ProgressBar />
-          <TotalTime>3:12</TotalTime>
+          <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
+          <ProgressBar seek={seek} borderRadius={true} />
+          <TotalTime>{formatDuration(totalTime)}</TotalTime>
         </ProgressWrapper>
         <Controls>
           <Shuffle>
-            <svg width="36px" height="26px" viewBox="0 0 36 26" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg" active={shuffle}>
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill="#FFF">
                   <g id="Shuffle" transform="translate(105.000000, 279.000000)">
@@ -179,10 +211,10 @@ class Player extends Component {
                   </g>
                 </g>
               </g>
-            </svg>
+            </SVG>
           </Shuffle>
           <Prev>
-            <svg width="37px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
                   <g id="Previous" transform="translate(709.000000, 279.000000)">
@@ -206,10 +238,10 @@ class Player extends Component {
               </g>
             </svg>
           </Prev>
-          <Play onClick={evt => this.play(evt)}>
+          <Play>
           {
             playing ?
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
                 d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2
@@ -217,7 +249,7 @@ class Player extends Component {
               />
             </svg>
             :
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
                 d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48
@@ -227,7 +259,7 @@ class Player extends Component {
           }
           </Play>
           <Next>
-            <svg width="36px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                 <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
                   <g id="Next" transform="translate(558.000000, 279.000000)">
@@ -249,7 +281,7 @@ class Player extends Component {
             </svg>
           </Next>
           <Repeat>
-            <svg width="36px" height="30px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg" active={repeat}>
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill="#FFF">
                   <g id="Repeat" transform="translate(256.000000, 279.000000)">
@@ -265,7 +297,7 @@ class Player extends Component {
                   </g>
                 </g>
               </g>
-            </svg>
+            </SVG>
           </Repeat>
         </Controls>
       </Container>

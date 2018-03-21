@@ -1,6 +1,6 @@
 export function formatDuration (duration) {
   const min = Math.floor(duration / 60);
-  let sec = duration % 60;
+  let sec = Math.floor(duration % 60);
   sec = sec < 10 ? "0" + sec : sec;
   return `${min}:${sec}`;
 }
@@ -21,4 +21,8 @@ export function cutList (tracks, currentTrack) {
 
 export function flatten(arr) {
   return Array.prototype.concat.apply([], arr);
+}
+
+export function getRGBCssFromObject ({r, g, b}) {
+  return `rgb(${r}, ${g}, ${b})`;
 }

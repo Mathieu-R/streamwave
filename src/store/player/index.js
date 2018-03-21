@@ -57,7 +57,7 @@ export function setPrevTrack () {
         album,
         coverURL,
         track
-      })
+      });
 
       const {manifestURL, playlistHLSURL, title} = track;
       resolve({
@@ -175,6 +175,7 @@ export const isShuffle = state => state.player.shuffle;
 export const isRepeat = state => state.player.repeat;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
+export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
 export const getDownloads = state => state.player.downloads;
 
 export const getTrackInfos = createSelector(

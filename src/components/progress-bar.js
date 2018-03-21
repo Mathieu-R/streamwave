@@ -24,6 +24,7 @@ const ProgressBarContainer = styled.div`
   flex: 1;
   height: 100%;
   background: rgba(255,255,255,0.5);
+  border-radius: ${props => props.borderRadius ? '5px' : 0};
 `;
 
 const ProgressTrack = styled.div.attrs({
@@ -37,7 +38,9 @@ const ProgressTrack = styled.div.attrs({
   width: 100%;
   height: 100%;
   background: #FFF;
+  border-radius: ${props => props.borderRadius ? '5px' : 0};
   transform-origin: 0 50%;
+  will-change: transform;
 `;
 
 const ProgressRoundContainer = styled.div.attrs({
@@ -63,6 +66,7 @@ const ProgressRound = styled.div`
   background: #FFF;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
   transform: translateY(-50%);
+  will-change: transform;
 `;
 
 class ProgressBar extends Component {
@@ -165,8 +169,9 @@ class ProgressBar extends Component {
         innerRef={container => this.container = container}
         onTouchStart={this.onSwipeStart}
         onMouseDown={this.onSwipeStart}
+        borderRadius={this.props.borderRadius}
       >
-        <ProgressTrack position={clampedPosition}/>
+        <ProgressTrack position={clampedPosition} borderRadius={this.props.borderRadius} />
         <ProgressRoundContainer position={clampedPosition}>
           <ProgressRound className="progress-bar"/>
         </ProgressRoundContainer>

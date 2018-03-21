@@ -139,7 +139,7 @@ class MiniPlayer extends Component {
     return (
       <Container>
         <ProgressContainer>
-          <ProgressBar seek={this.props.seek} />
+          <ProgressBar seek={this.props.seek} borderRadius={false} />
         </ProgressContainer>
 
         <MiniCoverContainer>
