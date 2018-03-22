@@ -40,7 +40,6 @@ class Audio extends Component {
   }
 
   onEnded (evt) {
-    console.log(evt);
     this.props.next({continuous: true});
   }
 
@@ -49,6 +48,7 @@ class Audio extends Component {
       <audio
         ref={audio => this.audio = audio}
         preload="metadata"
+        //onCanPlayThrough={this.props.crossFade}
         onTimeUpdate={this.onTimeUpdate}
         onLoadedMetadata={this.onLoadedMetadata}
         onEnded={this.onEnded}

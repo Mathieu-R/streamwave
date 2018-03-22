@@ -134,7 +134,8 @@ class Album extends Component {
       index
     });
 
-    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL});
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL})
+      .then(_ => this.props.crossFade());
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {

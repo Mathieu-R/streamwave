@@ -43,6 +43,7 @@ class Home extends Component {
     this.setNextTrack = this.setNextTrack.bind(this);
     this.chromecast = this.chromecast.bind(this);
     this.seek = this.seek.bind(this);
+    this.crossFade = this.crossFade.bind(this);
   }
 
   componentDidMount () {
@@ -138,6 +139,32 @@ class Home extends Component {
     });
   }
 
+  crossFade () {
+    const FADE_TIME = 12;
+    const audio = this.audio.base;
+    // create a new audio context
+    const context = new (AudioContext || webkitAudioContext)();
+    // bind the context to our <audio /> element
+    const source = context.createMediaElementSource(audio);
+    // gain node
+    const gainNode = context.createGain();
+    // current time
+    const currentTime = audio.currentTime;
+    // duration
+    const duration = audio.duration;
+
+    // fade in launched track
+    gainNode.gain.linearRampToValueAtTime(0, currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
+
+    // fade out
+    gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
+    gainNode.gain.linearRampToValueAtTime(0, duration);
+
+    // call this function when current music is finished playing (next is playing so ;))
+    setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+  }
+
   play () {
     this.audio.base.play();
   }
@@ -167,7 +194,6 @@ class Home extends Component {
 
   setNextTrack (continuous) {
     this.props.setNextTrack(continuous).then(({manifestURL, playlistHLSURL, trackInfos}) => {
-      console.log('next');
       this.listen(manifestURL, playlistHLSURL, trackInfos);
     });
   }
@@ -185,7 +211,7 @@ class Home extends Component {
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
-            render={props => <Album listen={this.listen} {...props} />}
+            render={props => <Album listen={this.listen} crossFade={this.crossFade} {...props} />}
           />
           <Route exact path="/settings" component={Settings} />
         </Switch>
@@ -211,6 +237,7 @@ class Home extends Component {
           ref={audio => this.audio = audio}
           preload="metadata"
           next={this.setNextTrack}
+          crossFade={this.crossFade}
         />
       </div>
     );
