@@ -5,7 +5,10 @@ import ProgressBar from './progress-bar';
 import { formatDuration, getRGBCssFromObject } from '../utils';
 import Constants from '../constants';
 
+import closeIcon from '../assets/svg/close.svg';
+
 import {
+  getShowPlayer,
   getCoverURL,
   getArtist,
   getTrack,
@@ -17,7 +20,8 @@ import {
   setPrevTrack,
   setNextTrack,
   getCurrentTime,
-  getDuration
+  getDuration,
+  switchPlayerStatus
 } from '../store/player';
 
 const Container = styled.div`
@@ -40,7 +44,24 @@ const Container = styled.div`
   will-change: transform, opacity;
 `;
 
-const Cover = styled.section``;
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  border: none;
+  background: none;
+`;
+
+const Close = styled(Button)`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: ${closeIcon} no-repeat no-repeat;
+  background-size: 24px 24px;
+  width: 24px;
+  height: 24px;
+`;
+
+const Cover = styled.div``;
 
 const Artwork = styled.img``;
 
@@ -74,12 +95,12 @@ const ProgressWrapper = styled.section`
 `;
 
 const CurrentTime = styled.span`
-  margin: 0 5px;
+  margin: 0 10px;
   font-weight: bold;
 `;
 
 const TotalTime = styled.div`
-  margin: 0 5px;
+  margin: 0 10px;
   font-weight: bold;
 `;
 
@@ -87,13 +108,6 @@ const Controls = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  border: none;
-  background: none;
 `;
 
 const CenterControls = styled(Button)`
@@ -121,6 +135,7 @@ const Chromecast = styled(Button)`
 `;
 
 const mapStateToProps = state => ({
+  showPlayer: getShowPlayer(state),
   coverURL: getCoverURL(state),
   artist: getArtist(state),
   track: getTrack(state),
@@ -132,19 +147,54 @@ const mapStateToProps = state => ({
   totalTime: getDuration(state)
 });
 
+const mapDispatchToProps = dispatch => ({
+  switchPlayerStatus: payload => dispatch(switchPlayerStatus(payload))
+});
+
 class Player extends Component {
+  constructor () {
+    super();
+
+    this.closePlayer = this.closePlayer.bind(this);
+    this.onPrevClick = this.onPrevClick.bind(this);
+    this.onNextClick = this.onNextClick.bind(this);
+    this.onPlayClick = this.onPlayClick.bind(this);
+    this.onChromecastClick = this.onChromecastClick.bind(this);
+  }
+
+  closePlayer () {
+    this.props.switchPlayerStatus({show: false});
+  }
+
+  onPrevClick () {
+    this.props.prev();
+  }
+
+  onNextClick () {
+    this.props.next({continuous: false});
+  }
+
+  onPlayClick () {
+    // get last status
+    const playing = this.props.playing;
+    // switch status in store
+    this.props.onPlayClick({playing});
+  }
+
+  onChromecastClick () {
+    const {chromecasting} = this.props;
+    this.props.chromecast({chromecasting});
+  }
+
   render ({
-    coverURL, artist, title, duration,
+    showPlayer, coverURL, artist, title, duration,
     playing, chromecasting, shuffle, repeat,
     track, currentTime, totalTime, seek
   }) {
-    if (!coverURL) {
-      return;
-    }
-
     return (
-      <Container show={true} primaryColor={track.primaryColor}>
-        <Chromecast>
+      <Container show={showPlayer} primaryColor={track && track.primaryColor}>
+        <Close onClick={this.closePlayer} />
+        <Chromecast onClick={this.onChromecastClick}>
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
@@ -174,8 +224,8 @@ class Player extends Component {
           <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} />
           <InfoContainer>
             <Infos>
-              <Artist>Samuel Medas</Artist>
-              <Title>Not My Will</Title>
+              <Artist>{artist && artist}</Artist>
+              <Title>{track && track.title}</Title>
             </Infos>
             <AddToPlaylist></AddToPlaylist>
           </InfoContainer>
@@ -186,7 +236,7 @@ class Player extends Component {
           <TotalTime>{formatDuration(totalTime)}</TotalTime>
         </ProgressWrapper>
         <Controls>
-          <Shuffle>
+          <Shuffle onClick={this.onShuffleClick}>
             <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg" active={shuffle}>
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill="#FFF">
@@ -213,7 +263,7 @@ class Player extends Component {
               </g>
             </SVG>
           </Shuffle>
-          <Prev>
+          <Prev onClick={this.onPrevClick}>
             <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -238,10 +288,10 @@ class Player extends Component {
               </g>
             </svg>
           </Prev>
-          <Play>
+          <Play onClick={this.onPlayClick}>
           {
             playing ?
-            <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
                 d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2
@@ -249,7 +299,7 @@ class Player extends Component {
               />
             </svg>
             :
-            <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
                 d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48
@@ -258,7 +308,7 @@ class Player extends Component {
             </svg>
           }
           </Play>
-          <Next>
+          <Next onClick={this.onNextClick}>
             <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                 <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -281,19 +331,19 @@ class Player extends Component {
             </svg>
           </Next>
           <Repeat>
-            <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg" active={repeat}>
+            <SVG width="28px" height="22px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill="#FFF">
                   <g id="Repeat" transform="translate(256.000000, 279.000000)">
                     <path
-                      d="M8.64,25.9710983 L19.2030566,25.9710983 C28.1531421,25.9710983
-                      .16,22.7468816 32.16,16 L36,16 C36,25.2145828 30.0888956,29.9710983
-                      19.2030566,29.9710983 L8.64,29.9710983 L8.64,33 L5.68434189e-14,28
-                      L8.64,23 L8.64,25.9710983 Z M27.36,10.0289017 L16.7969434,10.0289017
-                      C7.84685788,10.0289017 3.84,13.2531184 3.84,20 L0,20 C0,10.7854172
-                      5.91110441,6.02890173 16.7969434,6.02890173 L27.36,6.02890173 L27.36,3
-                      L36,8 L27.36,13 L27.36,10.0289017 Z"
-                    />
+                      d="M8.64,25.9710983 L19.2030566,25.9710983 C28.1531421,25.9710983 32.16,22.7468816
+                      32.16,16 L36,16 C36,25.2145828 30.0888956,29.9710983 19.2030566,29.9710983
+                      L8.64,29.9710983 L8.64,33 L5.68434189e-14,28 L8.64,23 L8.64,25.9710983
+                      Z M27.36,10.0289017 L16.7969434,10.0289017 C7.84685788,10.0289017
+                      3.84,13.2531184 3.84,20 L0,20 C0,10.7854172 5.91110441,6.02890173
+                      16.7969434,6.02890173 L27.36,6.02890173 L27.36,3 L36,8 L27.36,13 L27.36,10.0289017 Z"
+                    >
+                    </path>
                   </g>
                 </g>
               </g>
@@ -305,4 +355,4 @@ class Player extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Player);
+export default connect(mapStateToProps, mapDispatchToProps)(Player);

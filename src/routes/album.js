@@ -1,11 +1,12 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import idb from '../utils/cache';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
 import ProgressRound from '../components/progress-round';
 import { shuffle } from '../utils';
-import { downloadTracklist, removeTracklistFromCache } from '../utils/download';
+import { downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
 import styled from 'styled-components';
 
 import {
@@ -94,7 +95,9 @@ class Album extends Component {
       return;
     }
 
+    const id = this.props.match.params.id;
     const checked = evt.target.checked;
+
     if (checked) {
       // prevent multiples downloads of the same album to happen at the same time.
       if (this.isDownloading) {
@@ -103,14 +106,21 @@ class Album extends Component {
 
       this.isDownloading = true
 
-      // download the album
-      downloadTracklist(this.state.tracks, this.props.match.params.id).then(_ => {
-        this.isDownloading = false
-      });
+      if (Constants.SUPPORT_BACKGROUND_FETCH) {
+        // download the album in background
+        downloadTracklistInBackground({tracklist: this.props.tracks, cover: this.state.coverURL, id})
+      } else {
+        // download the album in foreground
+        downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
+          // put in cache that we have downloaded the album
+          // so we can update the UI (e.g. show downloaded toggle at app launch)
+          idb.set(id, {downloaded: true}).then(_ => this.isDownloading = false);
+        });
+      }
       return;
     }
 
-    removeTracklistFromCache(this.state.tracks);
+    removeTracklistFromCache(this.state.tracks, this.props.match.params.id);
   }
 
   handleTrackClick () {
@@ -135,7 +145,7 @@ class Album extends Component {
     });
 
     this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL})
-      .then(_ => this.props.crossFade());
+      //.then(_ => this.props.crossFade());
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {

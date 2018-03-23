@@ -12,6 +12,7 @@ import {
   isMusicPlaying,
   isMusicChromecasting,
   switchPlayingStatus,
+  switchPlayerStatus,
   setPrevTrack,
   setNextTrack
 } from '../store/player';
@@ -92,44 +93,48 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus()),
+  switchPlayerStatus: payload => dispatch(switchPlayerStatus(payload))
 });
 
 class MiniPlayer extends Component {
   constructor () {
     super();
 
+    this.showPlayer = this.showPlayer.bind(this);
     this.onPrevClick = this.onPrevClick.bind(this);
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onChromecastClick = this.onChromecastClick.bind(this);
   }
 
-  onPrevClick () {
+  showPlayer (evt) {
+    this.props.switchPlayerStatus({show: true});
+  }
+
+  onPrevClick (evt) {
+    // prevent parent onclick event to fire (show fullscreen player)
+    evt.stopPropagation();
     this.props.prev();
   }
 
-  onNextClick () {
+  onNextClick (evt) {
+    evt.stopPropagation();
     this.props.next({continuous: false});
   }
 
-  onPlayClick () {
+  onPlayClick (evt) {
+    evt.stopPropagation();
     // get last status
     const playing = this.props.playing;
     // switch status in store
-    this.props.switchPlayingStatus();
-    // update audio
-    playing ? this.props.pause() : this.props.play();
+    this.props.onPlayClick({playing});
   }
 
-  onChromecastClick () {
-    console.log(this);
-    if (this.props.chromecasting) {
-      // stop chromecast
-      return;
-    }
-
-    this.props.chromecast();
+  onChromecastClick (evt) {
+    evt.stopPropagation();
+    const {chromecasting} = this.props;
+    this.props.chromecast({chromecasting});
   }
 
   render ({
@@ -137,7 +142,7 @@ class MiniPlayer extends Component {
     playing, chromecasting
   }) {
     return (
-      <Container>
+      <Container onClick={this.showPlayer}>
         <ProgressContainer>
           <ProgressBar seek={this.props.seek} borderRadius={false} />
         </ProgressContainer>

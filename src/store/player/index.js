@@ -9,6 +9,7 @@ const SET_NEXT_TRACK = 'SET_NEXT_TRACK';
 const SET_TRACKS = 'SET_TRACKS';
 const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
+const SWITCH_PLAYER_STATUS = 'SWITCH_PLAYER_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
 const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
 const SET_PLAYING_STATUS = 'SET_PLAYING_STATUS';
@@ -115,6 +116,13 @@ export function switchPlayingStatus () {
   }
 }
 
+export function switchPlayerStatus ({show}) {
+  return {
+    type: SWITCH_PLAYER_STATUS,
+    show
+  }
+}
+
 export function switchRepeatStatus () {
   return {
     type: SWITCH_REPEAT_STATUS
@@ -177,6 +185,7 @@ export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
 export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
 export const getDownloads = state => state.player.downloads;
+export const getShowPlayer = state => state.player.show;
 
 export const getTrackInfos = createSelector(
   getArtist,
@@ -185,7 +194,6 @@ export const getTrackInfos = createSelector(
   getCoverURL,
   (artist, album, title, coverURL) => ({artist, album, title, coverURL})
 );
-
 
 // reducers
 export default (state = {}, action) => {
@@ -214,21 +222,6 @@ export default (state = {}, action) => {
         currentIndex: action.index
       }
 
-    // case SET_PREV_TRACK:
-    //   return {
-    //     ...state,
-    //     currentIndex: currentIndex - 1
-    //   }
-
-    // case SET_NEXT_TRACK:
-    //   return {
-    //     ...state,
-    //     artist: action.artist,
-    //     coverURL: action.coverURL,
-    //     track: action.track,
-    //     currentIndex: action.index
-    //   }
-
     case SET_TRACKS:
       return {
         ...state,
@@ -245,6 +238,12 @@ export default (state = {}, action) => {
       return {
         ...state,
         playing: !state.playing
+      }
+
+    case SWITCH_PLAYER_STATUS:
+      return {
+        ...state,
+        show: action.show
       }
 
     case SWITCH_REPEAT_STATUS:

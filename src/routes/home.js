@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import shaka from 'shaka-player';
-import { cast } from '../utils/chromecast';
+import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
 import MiniPlayer from '../components/mini-player';
@@ -16,6 +16,7 @@ import Settings from './settings';
 
 import {
   setPlayingStatus,
+  switchPlayingStatus,
   setPrevTrack,
   setNextTrack
 } from '../store/player';
@@ -23,12 +24,18 @@ import {
 const mapDispatchToProps = dispatch => ({
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
-  setNextTrack: payload => dispatch(setNextTrack(payload))
+  setNextTrack: payload => dispatch(setNextTrack(payload)),
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
 });
 
 class Home extends Component {
   constructor () {
     super();
+
+    this.context = null;
+    this.source = null;
+
+    this.chromecaster = null;
 
     this.audio = null;
     this.player = null;
@@ -37,6 +44,7 @@ class Home extends Component {
     this.listen = this.listen.bind(this);
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
+    this.onPlayClick = this.onPlayClick.bind(this);
     this.seekBackward = this.seekBackward.bind(this);
     this.seekForward = this.seekForward.bind(this);
     this.setPrevTrack = this.setPrevTrack.bind(this);
@@ -47,8 +55,21 @@ class Home extends Component {
   }
 
   componentDidMount () {
+    this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
+
+    this.chromecaster = new Chromecaster();
+  }
+
+  initWebAudioApi () {
+    // create a new audio context
+    this.context = new (AudioContext || webkitAudioContext)();
+    // bind the context to our <audio /> element
+    this.source = this.context.createMediaElementSource(this.audio.base);
+    // connect source to context
+    // otherwise we could'nt here anything from the audio element
+    this.source.connect(this.context.destination);
   }
 
   initShakaPlayer () {
@@ -142,12 +163,10 @@ class Home extends Component {
   crossFade () {
     const FADE_TIME = 12;
     const audio = this.audio.base;
-    // create a new audio context
-    const context = new (AudioContext || webkitAudioContext)();
-    // bind the context to our <audio /> element
-    const source = context.createMediaElementSource(audio);
+
+    console.log(this.context);
     // gain node
-    const gainNode = context.createGain();
+    const gainNode = this.context.createGain();
     // current time
     const currentTime = audio.currentTime;
     // duration
@@ -162,7 +181,14 @@ class Home extends Component {
     gainNode.gain.linearRampToValueAtTime(0, duration);
 
     // call this function when current music is finished playing (next is playing so ;))
-    setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+    //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+  }
+
+  onPlayClick ({playing}) {
+    // switch status in store
+    this.props.switchPlayingStatus();
+    // update audio
+    playing ? this.pause() : this.play();
   }
 
   play () {
@@ -186,6 +212,13 @@ class Home extends Component {
   }
 
   setPrevTrack () {
+    const currentTime = this.audio.base.currentTime;
+    // if we have listened more than 2 sec, simply replay the current audio
+    if (currentTime > 2) {
+      this.seek(0);
+      return;
+    }
+
     // update redux state, get new current track, play it
     this.props.setPrevTrack().then(({manifestURL, playlistHLSURL, trackInfos}) => {
       this.listen(manifestURL, playlistHLSURL, trackInfos);
@@ -198,9 +231,14 @@ class Home extends Component {
     });
   }
 
-  chromecast () {
+  chromecast ({chromecasting}) {
+    if (chromecasting) {
+      this.chromecaster.stop();
+      return;
+    }
+
     const url = '/player';
-    cast(url)
+    this.chromecaster.cast(url)
       .then(connexion => console.log(connexion))
       .catch(err => console.error(err));
   }
@@ -216,8 +254,7 @@ class Home extends Component {
           <Route exact path="/settings" component={Settings} />
         </Switch>
         <Player
-          play={this.play}
-          pause={this.pause}
+          onPlayClick={this.onPlayClick}
           prev={this.setPrevTrack}
           next={this.setNextTrack}
           chromecast={this.chromecast}
@@ -225,8 +262,7 @@ class Home extends Component {
         />
         <MiniPlayer
           listen={this.listen}
-          play={this.play}
-          pause={this.pause}
+          onPlayClick={this.onPlayClick}
           prev={this.setPrevTrack}
           next={this.setNextTrack}
           chromecast={this.chromecast}

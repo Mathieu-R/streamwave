@@ -152,8 +152,6 @@ class ProgressBar extends Component {
       return;
     }
 
-    console.log('end');
-
     this.setState({dragging: false});
     this.updatePosition(evt);
   }
