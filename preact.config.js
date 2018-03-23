@@ -23,26 +23,6 @@ export default (config, env, helpers) => {
     swSrc: sw,
     globPatterns: [
       "**/*.{js,css,html,json,jpg,png,svg,webp}"
-    ],
-    clientsClaim: true,
-    skipWaiting: true,
-    runtimeCaching: [
-      {
-        urlPattern: '/',
-        handler: 'networkFirst'
-      },
-      {
-        urlPattern: '/auth',
-        handler: 'networkFirst'
-      },
-      {
-        urlPattern: '/album',
-        handler: 'networkFirst'
-      },
-      {
-        urlPattern: '/settings',
-        handler: 'networkFirst'
-      }
     ]
   });
 }
