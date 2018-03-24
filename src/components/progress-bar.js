@@ -136,10 +136,12 @@ class ProgressBar extends Component {
   }
 
   onSwipeStart (evt) {
+    evt.stopPropagation();
     this.setState({dragging: true});
   }
 
   onSwipeMove (evt) {
+    evt.stopPropagation();
     if (!this.state.dragging) {
       return;
     }
@@ -148,6 +150,7 @@ class ProgressBar extends Component {
   }
 
   onSwipeEnd (evt) {
+    evt.stopPropagation();
     if (!this.state.dragging) {
       return;
     }
