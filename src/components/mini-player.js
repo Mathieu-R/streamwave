@@ -12,6 +12,7 @@ import {
   isMusicPlaying,
   isMusicChromecasting,
   switchPlayingStatus,
+  switchPlayerStatus,
   setPrevTrack,
   setNextTrack
 } from '../store/player';
@@ -93,45 +94,47 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   switchPlayingStatus: _ => dispatch(switchPlayingStatus()),
-  setPrevTrack: _ => dispatch(setPrevTrack()),
-  setNextTrack: payload => dispatch(setNextTrack(payload))
+  switchPlayerStatus: payload => dispatch(switchPlayerStatus(payload))
 });
 
 class MiniPlayer extends Component {
   constructor () {
     super();
 
+    this.showPlayer = this.showPlayer.bind(this);
     this.onPrevClick = this.onPrevClick.bind(this);
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onChromecastClick = this.onChromecastClick.bind(this);
   }
 
-  onPrevClick () {
-    this.props.setPrevTrack();
+  showPlayer (evt) {
+    this.props.switchPlayerStatus({show: true});
   }
 
-  onNextClick () {
-    this.props.setNextTrack({continuous: false});
+  onPrevClick (evt) {
+    // prevent parent onclick event to fire (show fullscreen player)
+    evt.stopPropagation();
+    this.props.prev();
   }
 
-  onPlayClick () {
+  onNextClick (evt) {
+    evt.stopPropagation();
+    this.props.next({continuous: false});
+  }
+
+  onPlayClick (evt) {
+    evt.stopPropagation();
     // get last status
     const playing = this.props.playing;
     // switch status in store
-    this.props.switchPlayingStatus();
-    // update audio
-    playing ? this.props.pause() : this.props.play();
+    this.props.onPlayClick({playing});
   }
 
-  onChromecastClick () {
-    console.log(this);
-    if (this.props.chromecasting) {
-      // stop chromecast
-      return;
-    }
-
-    this.props.chromecast();
+  onChromecastClick (evt) {
+    evt.stopPropagation();
+    const {chromecasting} = this.props;
+    this.props.chromecast({chromecasting});
   }
 
   render ({
@@ -139,9 +142,9 @@ class MiniPlayer extends Component {
     playing, chromecasting
   }) {
     return (
-      <Container>
+      <Container onClick={this.showPlayer}>
         <ProgressContainer>
-          <ProgressBar />
+          <ProgressBar seek={this.props.seek} borderRadius={false} />
         </ProgressContainer>
 
         <MiniCoverContainer>
@@ -155,7 +158,7 @@ class MiniPlayer extends Component {
 
         <ControlsContainer>
           <Button disabled={!track} onClick={this.onPrevClick}>
-            <svg width="37px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
                   <g id="Previous" transform="translate(709.000000, 279.000000)">
@@ -182,7 +185,7 @@ class MiniPlayer extends Component {
           <Button disabled={!track} onClick={this.onPlayClick}>
             {
               playing ?
-              <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
                   d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2
@@ -190,7 +193,7 @@ class MiniPlayer extends Component {
                 />
               </svg>
               :
-              <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
                   d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48
@@ -200,7 +203,7 @@ class MiniPlayer extends Component {
             }
           </Button>
           <Button disabled={!track} onClick={this.onNextClick}>
-            <svg width="36px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                 <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
                   <g id="Next" transform="translate(558.000000, 279.000000)">
@@ -224,7 +227,7 @@ class MiniPlayer extends Component {
           <Button disabled={!track} onClick={this.onChromecastClick}>
           {
             chromecasting ?
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
@@ -236,7 +239,7 @@ class MiniPlayer extends Component {
               />
             </svg>
             :
-            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path

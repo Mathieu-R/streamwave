@@ -13,8 +13,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentTime: time => dispatch(setCurrentTime(time)),
-  setNextTrack: payload => dispatch(setNextTrack(payload))
+  setCurrentTime: time => dispatch(setCurrentTime(time))
 });
 
 class Audio extends Component {
@@ -26,29 +25,6 @@ class Audio extends Component {
     this.onTimeUpdate = this.onTimeUpdate.bind(this);
     this.onLoadedMetadata = this.onLoadedMetadata.bind(this);
     this.onEnded = this.onEnded.bind(this);
-  }
-
-  componentWillReceiveProps (props) {
-    // compoare track id
-    // if (props.track['_id'] !== this.currentTrack) {
-    //   this.currentTrack = props.track['_id'];
-    //   this.isPlaying = true;
-
-    //   const {manifestURL, playlistHLSURL} = props.track;
-    //   this.listen(manifestURL, playlistHLSURL, props.trackInfos);
-    //   return;
-    // }
-
-    // console.log(props.isMusicPlaying)
-
-    // if (props.isMusicPlaying !== this.isPlaying) {
-    //   if (props.isMusicPlaying) {
-    //     this.audio.play();
-    //     return;
-    //   }
-
-    //   this.audio.pause();
-    // }
   }
 
   onTimeUpdate (evt) {
@@ -64,8 +40,7 @@ class Audio extends Component {
   }
 
   onEnded (evt) {
-    console.log(evt);
-    this.props.setNextTrack({continuous: true});
+    this.props.next({continuous: true});
   }
 
   render () {
@@ -73,6 +48,7 @@ class Audio extends Component {
       <audio
         ref={audio => this.audio = audio}
         preload="metadata"
+        //onCanPlayThrough={this.props.crossFade}
         onTimeUpdate={this.onTimeUpdate}
         onLoadedMetadata={this.onLoadedMetadata}
         onEnded={this.onEnded}

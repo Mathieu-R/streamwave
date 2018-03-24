@@ -9,11 +9,14 @@ const SET_NEXT_TRACK = 'SET_NEXT_TRACK';
 const SET_TRACKS = 'SET_TRACKS';
 const SET_QUEUE = 'SET_QUEUE';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
+const SWITCH_PLAYER_STATUS = 'SWITCH_PLAYER_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
 const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
+const SET_PLAYING_STATUS = 'SET_PLAYING_STATUS';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 const SET_DOWNLOAD_PERCENTAGE = 'SET_DOWNLOAD_PERCENTAGE';
+const REMOVE_DOWNLOAD_PERCENTAGE = 'REMOVE_DOWNLOAD_PERCENTAGE';
 
 // actions
 export function setArtist (artist) {
@@ -55,7 +58,7 @@ export function setPrevTrack () {
         album,
         coverURL,
         track
-      })
+      });
 
       const {manifestURL, playlistHLSURL, title} = track;
       resolve({
@@ -113,6 +116,13 @@ export function switchPlayingStatus () {
   }
 }
 
+export function switchPlayerStatus ({show}) {
+  return {
+    type: SWITCH_PLAYER_STATUS,
+    show
+  }
+}
+
 export function switchRepeatStatus () {
   return {
     type: SWITCH_REPEAT_STATUS
@@ -125,10 +135,17 @@ export function switchSuffleStatus () {
   }
 }
 
-export function setChromecastStatus (status) {
+export function setPlayingStatus ({playing}) {
+  return {
+    type: SET_PLAYING_STATUS,
+    playing
+  }
+}
+
+export function setChromecastStatus ({chromecasting}) {
   return {
     type: SET_CHROMECAST_STATUS,
-    status
+    chromecasting
   }
 }
 
@@ -140,11 +157,17 @@ export function setCurrentTime (time) {
 }
 
 export function setDownloadPercentage ({id, percentage}) {
-  console.log(id, percentage);
   return {
     type: SET_DOWNLOAD_PERCENTAGE,
     id,
     percentage
+  }
+}
+
+export function removeDownloadPercentage ({id}) {
+  return {
+    type: REMOVE_DOWNLOAD_PERCENTAGE,
+    id
   }
 }
 
@@ -160,7 +183,9 @@ export const isShuffle = state => state.player.shuffle;
 export const isRepeat = state => state.player.repeat;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
+export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
 export const getDownloads = state => state.player.downloads;
+export const getShowPlayer = state => state.player.show;
 
 export const getTrackInfos = createSelector(
   getArtist,
@@ -169,7 +194,6 @@ export const getTrackInfos = createSelector(
   getCoverURL,
   (artist, album, title, coverURL) => ({artist, album, title, coverURL})
 );
-
 
 // reducers
 export default (state = {}, action) => {
@@ -198,21 +222,6 @@ export default (state = {}, action) => {
         currentIndex: action.index
       }
 
-    // case SET_PREV_TRACK:
-    //   return {
-    //     ...state,
-    //     currentIndex: currentIndex - 1
-    //   }
-
-    // case SET_NEXT_TRACK:
-    //   return {
-    //     ...state,
-    //     artist: action.artist,
-    //     coverURL: action.coverURL,
-    //     track: action.track,
-    //     currentIndex: action.index
-    //   }
-
     case SET_TRACKS:
       return {
         ...state,
@@ -231,6 +240,12 @@ export default (state = {}, action) => {
         playing: !state.playing
       }
 
+    case SWITCH_PLAYER_STATUS:
+      return {
+        ...state,
+        show: action.show
+      }
+
     case SWITCH_REPEAT_STATUS:
       return {
         ...state,
@@ -243,10 +258,17 @@ export default (state = {}, action) => {
         shuffle: !state.shuffle
       }
 
+    case SET_PLAYING_STATUS: {
+      return {
+        ...state,
+        playing: action.playing
+      }
+    }
+
     case SET_CHROMECAST_STATUS:
       return {
         ...state,
-        chromecasting: action.status
+        chromecasting: action.chromecasting
       }
 
     case SET_CURRENT_TIME:
@@ -261,6 +283,15 @@ export default (state = {}, action) => {
         downloads: {
           ...state.downloads,
           [action.id]: action.percentage
+        }
+      }
+
+    case REMOVE_DOWNLOAD_PERCENTAGE:
+      return {
+        ...state,
+        downloads: {
+          ...state.downloads,
+          [action.id]: null
         }
       }
 

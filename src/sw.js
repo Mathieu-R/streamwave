@@ -1,3 +1,5 @@
+const MUSIC_CACHE_NAME = 'streamwave-music-cache';
+
 self.oninstall = event => {
   return self.skipWaiting();
 }
@@ -16,7 +18,25 @@ self.onfetch = event => {
   });
 }
 
-function createRangedResponse(request, response) {
+self.onbackgroundfetched = event => {
+  event.waitUntil(async () => {
+    // open the cache
+    const cache = await caches.open(MUSIC_CACHE_NAME);
+    // put the downloaded stuff in the cache
+    await Promise.all(event.fetches.map(({request, response}) => cache.put(request, response)));
+
+    // update UI. Yeah, there's an event for that !
+    event.updateUI('Tracklist downloaded');
+  });
+}
+
+self.onbackgroundfetchfail = event => {
+  event.waitUntil(async () => {
+    event.updateUI('Tracklist dowload failed.');
+  });
+}
+
+const createRangedResponse = (request, response) => {
   const rangeHeader = request.headers.get('Range');
   // manifest comes through this function
   // and has no range header

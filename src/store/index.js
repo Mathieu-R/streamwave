@@ -14,6 +14,8 @@ const initialState = {
     messages: []
   },
   player: {
+    // show fullscreen player
+    show: false,
     // current track
     track: null,
     // all the tracks of album or playlist

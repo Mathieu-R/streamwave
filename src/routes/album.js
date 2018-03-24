@@ -1,10 +1,12 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import idb from '../utils/cache';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
+import ProgressRound from '../components/progress-round';
 import { shuffle } from '../utils';
-import { downloadTracklist, removeTracklistFromCache } from '../utils/download';
+import { downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
 import styled from 'styled-components';
 
 import {
@@ -18,6 +20,42 @@ import {
   toasting
 } from '../store/toast';
 
+const Container = styled.div``;
+
+const Infos = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+`;
+
+const Title = styled.h1`
+  font-size: 22px;
+  font-weight: bold;
+  margin: 5px 0;
+`;
+
+const Artist = styled.h2`
+  font-weight: 18px;
+  color: #7C7C7C;
+  margin: 0;
+`;
+
+const Download = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 35px;
+`;
+
+const Tracks = styled.section`
+  margin: 0 10px;
+`;
 
 
 const mapStateToProps = state => ({
@@ -57,13 +95,32 @@ class Album extends Component {
       return;
     }
 
+    const id = this.props.match.params.id;
     const checked = evt.target.checked;
+
     if (checked) {
-      // download the album
-      downloadTracklist(this.state.tracks, this.props.match.params.id);
+      // prevent multiples downloads of the same album to happen at the same time.
+      if (this.isDownloading) {
+        return;
+      }
+
+      this.isDownloading = true
+
+      if (Constants.SUPPORT_BACKGROUND_FETCH) {
+        // download the album in background
+        downloadTracklistInBackground({tracklist: this.props.tracks, cover: this.state.coverURL, id})
+      } else {
+        // download the album in foreground
+        downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
+          // put in cache that we have downloaded the album
+          // so we can update the UI (e.g. show downloaded toggle at app launch)
+          idb.set(id, {downloaded: true}).then(_ => this.isDownloading = false);
+        });
+      }
       return;
     }
-    removeTracklistFromCache();
+
+    removeTracklistFromCache(this.state.tracks, this.props.match.params.id);
   }
 
   handleTrackClick () {
@@ -87,32 +144,35 @@ class Album extends Component {
       index
     });
 
-    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL});
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL})
+      //.then(_ => this.props.crossFade());
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
     return (
-      <div class="album">
-        <div class="album__info-block">
-          <h1 class="album__title">{title}</h1>
-          <h2 class="album__artist">{artist}</h2>
-          <div class="album__download-container">
-            <div class="album__download-container__progress">
+      <Container>
+        <Infos>
+          <Title>{title}</Title>
+          <Artist>{artist}</Artist>
+          <Download>
             {
-              downloads[this.props.match.params.id] ? downloads[this.props.match.params.id] + '%' : ''
+              downloads[this.props.match.params.id] ?
+                <ProgressRound
+                  progress={(downloads[this.props.match.params.id])}
+                  value={Math.round((downloads[this.props.match.params.id]) * 100) + '%'}
+                /> : ''
             }
-            </div>
             <Switch label="Télécharger" onChange={this.download} />
-          </div>
-        </div>
-        <div className="album-tracks">
+          </Download>
+        </Infos>
+        <Tracks>
           {tracks && tracks.map(track => (
             <Track
               {...track}
               onClick={_ => this.listenToTrack(artist, title, coverURL, track)}/>
           ))}
-        </div>
-      </div>
+        </Tracks>
+      </Container>
     );
   }
 }

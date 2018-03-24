@@ -1,9 +1,11 @@
 import { Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import shaka from 'shaka-player';
-import { cast } from '../utils/chromecast';
+import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
+import SideNav from '../components/side-nav';
 import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';
 import NavBar from '../components/navbar';
@@ -13,9 +15,31 @@ import Library from './library';
 import Album from './album';
 import Settings from './settings';
 
+import About from 'async!./about';
+import Licences from 'async!./licences';
+
+import {
+  setPlayingStatus,
+  switchPlayingStatus,
+  setPrevTrack,
+  setNextTrack
+} from '../store/player';
+
+const mapDispatchToProps = dispatch => ({
+  setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
+  setPrevTrack: _ => dispatch(setPrevTrack()),
+  setNextTrack: payload => dispatch(setNextTrack(payload)),
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
+});
+
 class Home extends Component {
   constructor () {
     super();
+
+    this.context = null;
+    this.source = null;
+
+    this.chromecaster = null;
 
     this.audio = null;
     this.player = null;
@@ -24,16 +48,32 @@ class Home extends Component {
     this.listen = this.listen.bind(this);
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
+    this.onPlayClick = this.onPlayClick.bind(this);
     this.seekBackward = this.seekBackward.bind(this);
     this.seekForward = this.seekForward.bind(this);
     this.setPrevTrack = this.setPrevTrack.bind(this);
     this.setNextTrack = this.setNextTrack.bind(this);
     this.chromecast = this.chromecast.bind(this);
+    this.seek = this.seek.bind(this);
+    this.crossFade = this.crossFade.bind(this);
   }
 
   componentDidMount () {
+    this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
+
+    this.chromecaster = new Chromecaster();
+  }
+
+  initWebAudioApi () {
+    // create a new audio context
+    this.context = new (AudioContext || webkitAudioContext)();
+    // bind the context to our <audio /> element
+    this.source = this.context.createMediaElementSource(this.audio.base);
+    // connect source to context
+    // otherwise we could'nt here anything from the audio element
+    this.source.connect(this.context.destination);
   }
 
   initShakaPlayer () {
@@ -65,8 +105,14 @@ class Home extends Component {
       return;
     }
 
-    navigator.mediaSession.setActionHandler('play', this.play);
-    navigator.mediaSession.setActionHandler('pause', this.pause);
+    navigator.mediaSession.setActionHandler('play', evt => {
+      this.props.setPlayingStatus({playing: true});
+      this.play();
+    });
+    navigator.mediaSession.setActionHandler('pause', evt => {
+      this.props.setPlayingStatus({playing: false});
+      this.pause();
+    });
     navigator.mediaSession.setActionHandler('seekbackward', this.seekBackward);
     navigator.mediaSession.setActionHandler('seekforward', this.seekForward);
     navigator.mediaSession.setActionHandler('previoustrack', this.setPrevTrack);
@@ -118,6 +164,37 @@ class Home extends Component {
     });
   }
 
+  crossFade () {
+    const FADE_TIME = 12;
+    const audio = this.audio.base;
+
+    console.log(this.context);
+    // gain node
+    const gainNode = this.context.createGain();
+    // current time
+    const currentTime = audio.currentTime;
+    // duration
+    const duration = audio.duration;
+
+    // fade in launched track
+    gainNode.gain.linearRampToValueAtTime(0, currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
+
+    // fade out
+    gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
+    gainNode.gain.linearRampToValueAtTime(0, duration);
+
+    // call this function when current music is finished playing (next is playing so ;))
+    //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+  }
+
+  onPlayClick ({playing}) {
+    // switch status in store
+    this.props.switchPlayingStatus();
+    // update audio
+    playing ? this.pause() : this.play();
+  }
+
   play () {
     this.audio.base.play();
   }
@@ -127,30 +204,45 @@ class Home extends Component {
   }
 
   seekBackward () {
-    this.audio.base.currentTime = Math.max(0, this.audio.currentTime - this.skipTime);
+    this.audio.base.currentTime = Math.max(0, this.audio.base.currentTime - this.skipTime);
   }
 
   seekForward () {
-    this.audio.base.currentTime = Math.min(this.audio.duration, this.audio.currentTime + this.skipTime);
+    this.audio.base.currentTime = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
+  }
+
+  seek (time) {
+    this.audio.base.currentTime = time
   }
 
   setPrevTrack () {
+    const currentTime = this.audio.base.currentTime;
+    // if we have listened more than 2 sec, simply replay the current audio
+    if (currentTime > 2) {
+      this.seek(0);
+      return;
+    }
+
     // update redux state, get new current track, play it
-    this.props.setPrevTrack().then((manifestURL, playlistHLSURL, trackInfos) => {
-      this.listen(manifestURL, m3u8playlist, trackInfos);
+    this.props.setPrevTrack().then(({manifestURL, playlistHLSURL, trackInfos}) => {
+      this.listen(manifestURL, playlistHLSURL, trackInfos);
     });
   }
 
   setNextTrack (continuous) {
     this.props.setNextTrack(continuous).then(({manifestURL, playlistHLSURL, trackInfos}) => {
-      console.log('next');
       this.listen(manifestURL, playlistHLSURL, trackInfos);
     });
   }
 
-  chromecast () {
-    const url = this.audio.base.src;
-    cast(url)
+  chromecast ({chromecasting}) {
+    if (chromecasting) {
+      this.chromecaster.stop();
+      return;
+    }
+
+    const url = '/player';
+    this.chromecaster.cast(url)
       .then(connexion => console.log(connexion))
       .catch(err => console.error(err));
   }
@@ -158,30 +250,41 @@ class Home extends Component {
   render () {
     return (
       <div class="home">
+        <SideNav />
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
-            render={props => <Album listen={this.listen} {...props} />}
+            render={props => <Album listen={this.listen} crossFade={this.crossFade} {...props} />}
           />
           <Route exact path="/settings" component={Settings} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/licences" component={Licences} />
         </Switch>
-        <MiniPlayer
-          listen={this.listen}
-          play={this.play}
-          pause={this.pause}
+        <Player
+          onPlayClick={this.onPlayClick}
           prev={this.setPrevTrack}
           next={this.setNextTrack}
           chromecast={this.chromecast}
+          seek={this.seek}
+        />
+        <MiniPlayer
+          listen={this.listen}
+          onPlayClick={this.onPlayClick}
+          prev={this.setPrevTrack}
+          next={this.setNextTrack}
+          chromecast={this.chromecast}
+          seek={this.seek}
         />
         <NavBar />
-        {/*<Player ref={player => this.player = player} />*/}
         <Audio
           ref={audio => this.audio = audio}
           preload="metadata"
+          next={this.setNextTrack}
+          crossFade={this.crossFade}
         />
       </div>
     );
   }
 }
 
-export default Home;
+export default connect(null, mapDispatchToProps)(Home);

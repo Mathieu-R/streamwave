@@ -10,7 +10,7 @@ class TopBarHamburger extends Component {
   render () {
     return (
       <TopBarContainer>
-        <TopBarButton src="/assets/svg/ic_menu_white_24px.svg" />
+        <TopBarButton src="/assets/svg/hamburger.svg" />
         <TopBarTitle>
           Streamwave
         </TopBarTitle>

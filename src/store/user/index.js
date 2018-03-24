@@ -9,6 +9,9 @@ export function storeUser (user) {
   }
 }
 
+// selectors
+export const getUser = state => state.user;
+
 // reducers
 export default (state = {}, action) => {
   const {type, user} = action;
