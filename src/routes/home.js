@@ -5,6 +5,7 @@ import shaka from 'shaka-player';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
+import SideNav from '../components/side-nav';
 import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';
 import NavBar from '../components/navbar';
@@ -13,6 +14,9 @@ import Audio from '../components/audio';
 import Library from './library';
 import Album from './album';
 import Settings from './settings';
+
+import About from 'async!./about';
+import Licences from 'async!./licences';
 
 import {
   setPlayingStatus,
@@ -246,12 +250,15 @@ class Home extends Component {
   render () {
     return (
       <div class="home">
+        <SideNav />
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
             render={props => <Album listen={this.listen} crossFade={this.crossFade} {...props} />}
           />
           <Route exact path="/settings" component={Settings} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/licences" component={Licences} />
         </Switch>
         <Player
           onPlayClick={this.onPlayClick}

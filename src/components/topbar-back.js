@@ -10,7 +10,7 @@ class TopBarBack extends Component {
   render () {
     return (
       <TopBarContainer>
-        <TopBarButton></TopBarButton>
+        <TopBarButton src="/assets/svg/arrow.svg" />
         <TopBarTitle>
           Streamwave
         </TopBarTitle>
