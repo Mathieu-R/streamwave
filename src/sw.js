@@ -14,7 +14,15 @@ self.onfetch = event => {
     if (!response) {
       return fetch(event.request)
     }
-    return createRangedResponse(event.request, response);
+
+    const rangeHeader = request.headers.get('Range');
+    console.log(rangeHeader);
+
+    if (rangeHeader) {
+      return createRangedResponse(event.request, response);
+    }
+
+    return response;
   });
 }
 
