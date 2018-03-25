@@ -1,21 +1,28 @@
 const MUSIC_CACHE_NAME = 'streamwave-music-cache';
 
-self.oninstall = event => {
-  return self.skipWaiting();
-}
+// workbox library will be injected by webpack plugin
+workbox.precaching.precache(self.__precacheManifest);
+workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute('/settings', workbox.strategies.staleWhileRevalidate());
 
-self.onactivate = event => {
-  return self.clients.claim();
-}
+// skipping default sw lifecycle
+// update page as soon as possible
+workbox.skipWaiting();
+workbox.clientsClaim();
 
 self.onfetch = event => {
-  event.respondWith(async () => {
+  event.respondWith(async function () {
+    // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
+    // api call
     if (!response) {
       return fetch(event.request)
     }
 
-    const rangeHeader = request.headers.get('Range');
+    // range-request (music)
+    const rangeHeader = event.request.headers.get('Range');
     console.log(rangeHeader);
 
     if (rangeHeader) {
@@ -23,11 +30,11 @@ self.onfetch = event => {
     }
 
     return response;
-  });
+  }());
 }
 
 self.onbackgroundfetched = event => {
-  event.waitUntil(async () => {
+  event.waitUntil(async function () {
     // open the cache
     const cache = await caches.open(MUSIC_CACHE_NAME);
     // put the downloaded stuff in the cache
@@ -35,23 +42,16 @@ self.onbackgroundfetched = event => {
 
     // update UI. Yeah, there's an event for that !
     event.updateUI('Tracklist downloaded');
-  });
+  }());
 }
 
 self.onbackgroundfetchfail = event => {
-  event.waitUntil(async () => {
+  event.waitUntil(async function () {
     event.updateUI('Tracklist dowload failed.');
-  });
+  }());
 }
 
 const createRangedResponse = (request, response) => {
-  const rangeHeader = request.headers.get('Range');
-  // manifest comes through this function
-  // and has no range header
-  if (!rangeHeader) {
-    return response;
-  }
-
   if (!response.status !== 200) {
     //return response;
   }
