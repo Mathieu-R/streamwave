@@ -108,7 +108,7 @@ class Album extends Component {
 
       if (Constants.SUPPORT_BACKGROUND_FETCH) {
         // download the album in background
-        downloadTracklistInBackground({tracklist: this.props.tracks, cover: this.state.coverURL, id})
+        downloadTracklistInBackground({tracklist: this.state.tracks, cover: this.state.coverURL, id})
       } else {
         // download the album in foreground
         downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {

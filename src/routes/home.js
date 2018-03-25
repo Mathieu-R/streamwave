@@ -168,24 +168,26 @@ class Home extends Component {
     const FADE_TIME = 12;
     const audio = this.audio.base;
 
-    console.log(this.context);
-    // gain node
-    const gainNode = this.context.createGain();
-    // current time
-    const currentTime = audio.currentTime;
-    // duration
-    const duration = audio.duration;
+    // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
+    this.context.resume().then(_ => {
+      // gain node
+      const gainNode = this.context.createGain();
+      // current time
+      const currentTime = audio.currentTime;
+      // duration
+      const duration = audio.duration;
 
-    // fade in launched track
-    gainNode.gain.linearRampToValueAtTime(0, currentTime);
-    gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
+      // fade in launched track
+      gainNode.gain.linearRampToValueAtTime(0, currentTime);
+      gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
 
-    // fade out
-    gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
-    gainNode.gain.linearRampToValueAtTime(0, duration);
+      // fade out
+      gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
+      gainNode.gain.linearRampToValueAtTime(0, duration);
 
-    // call this function when current music is finished playing (next is playing so ;))
-    //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+      // call this function when current music is finished playing (next is playing so ;))
+      //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+    });
   }
 
   onPlayClick ({playing}) {
