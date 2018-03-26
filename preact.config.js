@@ -1,6 +1,7 @@
 import path from 'path';
 import async from 'preact-cli-plugin-fast-async';
 import { injectManifest as workbox } from 'preact-cli-workbox-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 export default (config, env, helpers) => {
   // by default async functions are transpiled and depend
@@ -25,4 +26,9 @@ export default (config, env, helpers) => {
       "**/*.{js,css,html,json,jpg,png,svg,webp}"
     ]
   });
+
+  // copy idbKeyval so it's available in service-worker
+  if (env.isProd) {
+    config.plugins.push(new CopyWebpackPlugin([{from: `${__dirname}/src/third_party/idb-keyval.min.js`, to: `${__dirname}/build/third_party/idb-keyval.min.js`}]));
+  }
 }

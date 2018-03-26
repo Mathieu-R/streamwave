@@ -90,7 +90,7 @@ class Album extends Component {
   }
 
   download (evt) {
-    if (!Constants.SUPPORT_CACHE_API) {
+    if (!Constants.SUPPORT_BACKGROUND_SYNC) {
       this.props.toasting(['Votre navigateur ne supporte pas le téléchargement de musiques...']);
       return;
     }
