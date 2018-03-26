@@ -166,6 +166,7 @@ const trackDownload = (responses, tracklistId) => {
         // get all clients (window)
         // and show a ui feedback
         clients.matchAll({type: 'window'}).then(clients => {
+          console.log(clients);
           clients.forEach(client => client.postMessage({type: 'downloaded', tracklistId, downloaded, totalDownload}));
         });
         return;
@@ -173,6 +174,7 @@ const trackDownload = (responses, tracklistId) => {
 
       downloaded += value.length;
       clients.matchAll({type: 'window'}).then(clients => {
+        console.log(clients);
         clients.forEach(client => client.postMessage({type: 'downloading', tracklistId}));
       });
       return reader.read().then(onStream);
