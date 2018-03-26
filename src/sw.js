@@ -1,3 +1,5 @@
+importScripts("/third_party/idb-keyval.min.js");
+
 const MUSIC_CACHE_NAME = 'streamwave-music-cache';
 
 // workbox library will be injected by webpack plugin
@@ -30,7 +32,6 @@ self.onfetch = event => {
 
     // range-request (music)
     const rangeHeader = event.request.headers.get('Range');
-    console.log(rangeHeader);
 
     if (rangeHeader) {
       return createRangedResponse(event.request, response);
@@ -62,6 +63,50 @@ self.onbackgroundfetchfail = event => {
   event.waitUntil(async function () {
     event.updateUI('Tracklist download failed.');
   }());
+}
+
+self.onsync = event => {
+  if (event.tag === 'foreground-download') {
+    event.waitUntil(downloadInForeground())
+  }
+}
+
+self.onnotificationclick = event => {
+  // close notification
+  event.notification.close();
+  // redirect user to album
+  clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
+}
+
+const downloadInForeground = async () => {
+  try {
+    // money-clip put the data in data property
+    const toCache = JSON.parse((await idbKeyval.get('bg-sync-queue'))).data;
+
+    // download each tracklist
+    // feedback in ui
+    await Promise.all(toCache.map(async ({requests, tracklistId}) => {
+      const files = await requests.map(request => ({request, response: fetch(request)}));
+      const responses = await Promise.all(files.map(file => file.response));
+
+
+      //track(responses, tracklistId);
+      const cache = await caches.open(MUSIC_CACHE_NAME);
+      await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
+      self.registration.showNotification('Tracklist downloaded.', {
+        // could show more infos.
+        body: 'access the tracklist.',
+        // usefull to redirect user when
+        // he clicks on the notification
+        data: {type: 'album', id: tracklistId}
+      });
+    }));
+
+    // clean bg-sync-queue
+    await idbKeyval.set('bg-sync-queue', []);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 const createRangedResponse = (request, response) => {
@@ -100,5 +145,42 @@ const createRangedResponse = (request, response) => {
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
     return slicedResponse;
+  });
+}
+
+
+const trackDownload = (responses, tracklistId) => {
+  let totalDownload, downloaded = 0;
+
+  totalDownload = responses.reduce((total, response) => {
+    const contentLength = parseInt(response.headers.get('content-length'), 10);
+    return total += contentLength;
+  }, 0);
+
+  responses.map(response => {
+    // response has been consumed
+    // by cache api
+    const cloned = response.clone();
+    const onStream = ({done, value}) => {
+      if (done) {
+        // get all clients (window)
+        // and show a ui feedback
+        clients.matchAll({type: 'window'}).then(clients => {
+          console.log(clients);
+          clients.forEach(client => client.postMessage({type: 'downloaded', tracklistId, downloaded, totalDownload}));
+        });
+        return;
+      }
+
+      downloaded += value.length;
+      clients.matchAll({type: 'window'}).then(clients => {
+        console.log(clients);
+        clients.forEach(client => client.postMessage({type: 'downloading', tracklistId}));
+      });
+      return reader.read().then(onStream);
+    }
+
+    const reader = cloned.body.getReader();
+    reader.read().then(onStream);
   });
 }

@@ -7,6 +7,10 @@ class Constants {
     );
   }
 
+  static get PRODUCTION () {
+    process.env.NODE_ENV === 'production';
+  }
+
   static get AUTH_URL () {
     return (
       production ? 'https://auth.streamwave.be' : 'http://localhost:3000'
@@ -46,7 +50,7 @@ class Constants {
   }
 
   static get SUPPORT_SERVICE_WORKER () {
-    return navigator.serviceWorker;
+    return 'serviceWorker' in navigator;
   }
 
   static get SUPPORT_CACHE_API () {
@@ -54,7 +58,7 @@ class Constants {
   }
 
   static get SUPPORT_BACKGROUND_SYNC () {
-    return (navigator.serviceWorker && navigator.SyncManager);
+    return ('serviceWorker' in navigator && 'SyncManager' in window);
   }
 
   static get SUPPORT_BACKGROUND_FETCH () {

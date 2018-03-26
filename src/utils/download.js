@@ -27,15 +27,27 @@ async function getRequestsUrls (tracklist, cover) {
 }
 
 export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
+  const registration = await navigator.serviceWorker.ready;
+
+  if (!registration.active) {
+    return;
+  }
+
+  // ask user permission to show notification
+  await Notification.requestPermission();
+
   // get all requests url
-  const requests = await getRequestsUrls(tracklist, cover)
+  const requests = await getRequestsUrls(tracklist, cover);
+  // stuff to cache
+  const toCache = {requests, tracklistId};
 
-  const files = await requests.map(request => ({request, response: fetch(request)}));
-  const responses = await Promise.all(files.map(file => file.response));
+  // retrieve bg-sync queue if any (in case of multiple tracklist download)
+  const bgSyncQueue = await idb.get('bg-sync-queue') || [];
 
-  track(responses, tracklistId);
-  const cache = await caches.open(MUSIC_CACHE_NAME);
-  return files.map(file => file.response.then(response => cache.put(file.request, response)));
+  // add stuff to queue, avoid double
+  idb.set('bg-sync-queue', Array.from(new Set([...bgSyncQueue, toCache])));
+
+  await registration.sync.register('foreground-download');
 }
 
 export async function removeTracklistFromCache (tracklist, id) {
