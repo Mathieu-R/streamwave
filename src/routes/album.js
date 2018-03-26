@@ -109,13 +109,14 @@ class Album extends Component {
       if (Constants.SUPPORT_BACKGROUND_FETCH) {
         // download the album in background
         downloadTracklistInBackground({tracklist: this.state.tracks, cover: this.state.coverURL, id})
+          .catch(err => console.error(err));
       } else {
         // download the album in foreground
         downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
           // put in cache that we have downloaded the album
           // so we can update the UI (e.g. show downloaded toggle at app launch)
           idb.set(id, {downloaded: true}).then(_ => this.isDownloading = false);
-        });
+        }).catch(err => console.error(err));
       }
       return;
     }

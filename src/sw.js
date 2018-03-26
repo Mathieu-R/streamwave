@@ -16,6 +16,13 @@ self.onfetch = event => {
   event.respondWith(async function () {
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
+
+    // https://github.com/paulirish/caltrainschedule.io/pull/51
+    // seems kind of a bug with chrome devtools open
+    if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+      return;
+    }
+
     // api call
     if (!response) {
       return fetch(event.request)
@@ -33,7 +40,12 @@ self.onfetch = event => {
   }());
 }
 
+self.addEventListener('backgroundfetched', evt => console.log(evt));
+self.addEventListener('backgroundfetchfail', evt => console.log(evt));
+self.addEventListener('backgroundfetchabort', evt => console.log(evt));
+
 self.onbackgroundfetched = event => {
+  console.log(event);
   event.waitUntil(async function () {
     // open the cache
     const cache = await caches.open(MUSIC_CACHE_NAME);
@@ -46,8 +58,9 @@ self.onbackgroundfetched = event => {
 }
 
 self.onbackgroundfetchfail = event => {
+  console.log(event);
   event.waitUntil(async function () {
-    event.updateUI('Tracklist dowload failed.');
+    event.updateUI('Tracklist download failed.');
   }());
 }
 

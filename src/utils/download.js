@@ -39,6 +39,7 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
 }
 
 export async function removeTracklistFromCache (tracklist, id) {
+  return;
   const cache = await caches.open(MUSIC_CACHE_NAME);
   await Promise.all(
     tracklist.map(([audio256URL, manifestURL, playlistHLSURL]) => {
@@ -119,6 +120,5 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   const requests = await getRequestsUrls(tracklist, cover);
 
   // launch a background fetch
-  const bgFetch = await registration.backgroundFetch.fetch(id, requests, options)
-    .catch(err => console.error(err));
+  const bgFetch = await registration.backgroundFetch.fetch(id, requests, options);
 }
