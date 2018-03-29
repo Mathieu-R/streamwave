@@ -90,7 +90,7 @@ const downloadInForeground = async () => {
       const responses = await Promise.all(files.map(file => file.response));
 
 
-      //track(responses, tracklistId);
+      trackDownload(responses, tracklistId);
       const cache = await caches.open(MUSIC_CACHE_NAME);
       await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
       self.registration.showNotification('Tracklist downloaded.', {
@@ -167,7 +167,7 @@ const trackDownload = (responses, tracklistId) => {
         // and show a ui feedback
         clients.matchAll({type: 'window'}).then(clients => {
           console.log(clients);
-          clients.forEach(client => client.postMessage({type: 'downloaded', tracklistId, downloaded, totalDownload}));
+          clients.forEach(client => client.postMessage({type: 'downloaded', tracklistId}));
         });
         return;
       }
@@ -175,7 +175,7 @@ const trackDownload = (responses, tracklistId) => {
       downloaded += value.length;
       clients.matchAll({type: 'window'}).then(clients => {
         console.log(clients);
-        clients.forEach(client => client.postMessage({type: 'downloading', tracklistId}));
+        clients.forEach(client => client.postMessage({type: 'downloading', tracklistId, downloaded, totalDownload}));
       });
       return reader.read().then(onStream);
     }

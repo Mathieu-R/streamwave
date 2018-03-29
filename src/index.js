@@ -21,6 +21,11 @@ if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
       return;
     }
 
+    // first time service-worker installed.
+    if (!navigator.serviceWorker.controller) {
+      toasting(['Streamwave cached.', 'Ready to work offline.']);
+    }
+
     registration.onupdatefound = event => {
       console.log('A new service worker has been found, installing...');
 
