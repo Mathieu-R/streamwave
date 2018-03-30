@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 class Reset extends Component {
@@ -58,21 +59,21 @@ class Reset extends Component {
 
   render () {
     return (
-      <div class="reset">
-        <form class="reset-form" onSubmit={this.reset}>
-          <div class="reset-form__password input-wrapper">
-            <label for="password" class="reset-form__password__label">Nouveau mot de passe</label>
-            <input ref={input => this.password = input} type="password" id="password" class="reset-form__password__input" autocomplete="new-password"/>
-          </div>
-          <div class="reset-form__password-confirm input-wrapper">
-            <label for="password-confirm" class="reset-form__password-confirm__label">Confirmation du nouveau mot de passe</label>
-            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="reset-form__password-confirm__input" autocomplete="new-password"/>
-          </div>
-          <button type="submit" class="reset-button">
+      <Container>
+        <Form onSubmit={this.reset}>
+          <InputWrapper>
+            <Label for="password">Nouveau mot de passe</Label>
+            <input ref={input => this.password = input} type="password" id="password" autocomplete="new-password"/>
+          </InputWrapper>
+          <InputWrapper>
+            <Label for="password-confirm">Confirmation du nouveau mot de passe</Label>
+            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" autocomplete="new-password"/>
+          </InputWrapper>
+          <FormButton type="submit">
             Créer un compte
-          </button>
-        </form>
-      </div>
+          </FormButton>
+        </Form>
+      </Container>
     );
   }
 }

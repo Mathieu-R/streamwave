@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { LinkButton } from '../../components/ui';
+import { Container, Wrapper, LinkButton } from '../../components/ui';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
 import Constants from '../../constants';
@@ -183,8 +183,8 @@ class Auth extends Component {
 
   render () {
     return (
-      <div class="auth">
-        <section class="auth-wrapper">
+      <Container>
+        <Wrapper>
           <Welcome>
             <Title>Streamwave</Title>
             <Subtitle>streaming music pwa</Subtitle>
@@ -207,8 +207,8 @@ class Auth extends Component {
               Mot de passe oublié ?
             </PasswordResetLink>
           </ButtonsContainer>
-        </section>
-      </div>
+        </Wrapper>
+      </Container>
     )
   }
 }

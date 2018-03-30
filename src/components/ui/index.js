@@ -39,3 +39,47 @@ export const TopBarTitle = styled.div`
   font-size: 14px;
   font-weight: 500;
 `;
+
+export const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: ${props => props.theme.mobile};
+  margin: 0 15px;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: ${props => props.theme.mobile};
+  margin: 0 15px;
+`;
+
+export const FormButton = styled.button`
+  font-size: 20px;
+  height: 55px;
+  background: ${props => props.theme.auth.background};
+  margin-top: 17px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+`;
+
+export const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 17px 0;
+`;
+
+export const Label = styled.label`
+  font-size: 18px;
+  margin-bottom: 2px;
+`;
