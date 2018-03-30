@@ -49,12 +49,12 @@ const Track = ({
   playlistHLSURL, audio128URL, audio192URL,
   audio256URL, onClick
 }) => (
-  <div class="track" onClick={onClick}>
-    <div class="track__number">{number}</div>
-    <div class="track__name">{title}</div>
-    <div class="track__is-offline"></div>
-    <div class="track__duration">{formatDuration(duration)}</div>
-  </div>
+  <Container onClick={onClick}>
+    <Number>{number}</Number>
+    <Title>{title}</Title>
+    <IsOffline></IsOffline>
+    <Duration>{formatDuration(duration)}</Duration>
+  </Container>
 );
 
 export default Track;

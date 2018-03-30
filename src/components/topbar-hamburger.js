@@ -2,21 +2,14 @@ import { Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
-class TopBarHamburger extends Component {
-  constructor () {
-    super();
-  }
+const TopBarHamburger = props => (
+  <TopBarContainer>
+    <TopBarButton src="/assets/svg/hamburger.svg" />
+    <TopBarTitle>
+      Streamwave
+    </TopBarTitle>
+  </TopBarContainer>
+);
 
-  render () {
-    return (
-      <TopBarContainer>
-        <TopBarButton src="/assets/svg/hamburger.svg" />
-        <TopBarTitle>
-          Streamwave
-        </TopBarTitle>
-      </TopBarContainer>
-    )
-  }
-}
 
 export default TopBarHamburger;
