@@ -1,3 +1,4 @@
+import TopBarHamburger from '../../components/topbar-hamburger';
 import styled from 'styled-components';
 
 const Container = styled.section`
@@ -45,6 +46,7 @@ const Licence = styled.a`
 
 const Licences = props => (
   <Container>
+    <TopBarHamburger />
     <Inner>
       <Album>Borrtex - Ability</Album><Licence href="http://creativecommons.org/licenses/by-nc/3.0/">http://creativecommons.org/licenses/by-nc/3.0/</Licence>
       <Album>Galdson - Roots</Album><Licence href="http://creativecommons.org/licenses/by-nc-nd/2.5/">http://creativecommons.org/licenses/by-nc-nd/2.5/</Licence>

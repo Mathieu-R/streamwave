@@ -1,12 +1,18 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 import PrivateRoute from '../guard/private-route';
 
 import Toast from './toast';
 
 import Home from '../routes/home';
 import Auth from '../routes/auth';
+
+const Container = styled.div`
+  min-height: 100vh;
+  background: #161C36;
+`;
 
 class App extends Component {
 	render () {
@@ -68,13 +74,13 @@ class App extends Component {
 
 		return (
       <ThemeProvider theme={theme}>
-        <div class="app">
+        <Container>
           <Switch>
             <Route path="/auth" component={Auth} />
             <PrivateRoute path="/" component={Home} />
           </Switch>
           <Toast />
-        </div>
+        </Container>
       </ThemeProvider>
 		);
 	}

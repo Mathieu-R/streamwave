@@ -13,6 +13,9 @@ const initialState = {
     show: false,
     messages: []
   },
+  sideNav: {
+    show: false
+  },
   player: {
     // show fullscreen player
     show: false,

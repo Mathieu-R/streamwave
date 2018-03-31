@@ -1,10 +1,19 @@
 import { Component } from 'preact';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
-const TopBarHamburger = props => (
+import {
+  showSideNav
+} from '../store/side-nav';
+
+const mapDispatchToProps = dispatch => ({
+  showSideNav: _ => dispatch(showSideNav())
+});
+
+const TopBarHamburger = ({showSideNav}) => (
   <TopBarContainer>
-    <TopBarButton src="/assets/svg/hamburger.svg" />
+    <TopBarButton src="/assets/svg/hamburger.svg" onClick={showSideNav} />
     <TopBarTitle>
       Streamwave
     </TopBarTitle>
@@ -12,4 +21,4 @@ const TopBarHamburger = props => (
 );
 
 
-export default TopBarHamburger;
+export default connect(null, mapDispatchToProps)(TopBarHamburger);

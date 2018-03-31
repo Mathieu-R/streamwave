@@ -37,7 +37,8 @@ class Cover extends Component {
     return (
       <Container>
         <CoverLink to={`/album/${_id}`} >
-          <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} />
+          {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
+          <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} className="cover__artwork" />
           <Artist>{artist}</Artist>
           <Title>{title}</Title>
         </CoverLink>

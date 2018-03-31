@@ -4,6 +4,7 @@ import idb from '../utils/cache';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
+import TopBarBack from '../components/topbar-back';
 import ProgressRound from '../components/progress-round';
 import { shuffle } from '../utils';
 import { downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
@@ -152,6 +153,7 @@ class Album extends Component {
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
     return (
       <Container>
+        <TopBarBack />
         <Infos>
           <Title>{title}</Title>
           <Artist>{artist}</Artist>

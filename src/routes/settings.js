@@ -10,14 +10,40 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin: 0 10px;
 `;
 
-const Label = styled.label``;
+const SettingsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+`;
 
-const Fade = styled.section``;
+const Label = styled.label`
+  margin-bottom: 10px;
+`;
 
-const EqualizeVolume = styled.section``;
+const RangeBound = styled.span`
+  display: flex;
+  padding: 0 5px;
+  font-weight: bold;
+`;
+
+const FadeContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 0;
+`;
+
+const Fade = styled.div`
+  display: flex;
+`;
+
+const EqualizeVolume = styled.section`
+  display: flex;
+  width: 100%;
+  padding: 10px 0;
+`;
 
 const EQ = styled.section``;
 
@@ -25,7 +51,10 @@ const DownloadQuality = styled.section``;
 
 const DataVolume = styled.section``;
 
+const DataVolumeRange = styled.div``;
+
 const Logout = styled.button`
+  padding: 10px 0;
   border-radius: 5px;
   background: ${props => props.theme.primaryColor}
   color: #FFF;
@@ -45,23 +74,31 @@ class Settings extends Component {
     return (
       <Container>
         <TopBarHamburger />
-        <Fade>
-          <Label for="fade">Fondu enchainé</Label>
-          <span>0</span><Range min={0} max={12} value={5} /><span>12</span>
-        </Fade>
-        <EqualizeVolume>
-          <Switch label="Egaliser le volume sonore"/>
-        </EqualizeVolume>
-        <EQ>
-        </EQ>
-        <DownloadQuality>
-        </DownloadQuality>
-        <DataVolume>
-          <Label for="data-volume">Volume de données maximale</Label>
-          <Range min={0} max={2000} value={0}/>
-          {/* SVG arc with data consumed until today */}
-        </DataVolume>
-        <Logout onClick={this.logout}>Déconnexion</Logout>
+        <SettingsContainer>
+          <FadeContainer>
+            <Label for="fade">Fondu enchainé</Label>
+            <Fade>
+              <RangeBound>0</RangeBound><Range min={0} max={12} value={5} /><RangeBound>12</RangeBound>
+            </Fade>
+          </FadeContainer>
+          <EqualizeVolume>
+            <Switch label="Egaliser le volume sonore"/>
+          </EqualizeVolume>
+          <EQ>
+          </EQ>
+          <DownloadQuality>
+          </DownloadQuality>
+          <DataVolume>
+            <Label for="data-volume">Volume de données maximale</Label>
+            <DataVolumeRange>
+              <RangeBound>0</RangeBound>
+              <Range min={0} max={2000} value={0}/>
+              <RangeBound>12</RangeBound>
+            </DataVolumeRange>
+            {/* SVG arc with data consumed until today */}
+          </DataVolume>
+          <Logout onClick={this.logout}>Déconnexion</Logout>
+        </SettingsContainer>
       </Container>
     )
   }

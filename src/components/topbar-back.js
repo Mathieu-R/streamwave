@@ -10,3 +10,5 @@ const TopBarBack = props => (
       </TopBarTitle>
     </TopBarContainer>
 );
+
+export default TopBarBack;

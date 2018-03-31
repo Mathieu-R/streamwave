@@ -33,6 +33,7 @@ export const TopBarButton = styled.img`
   height: 30px;
   width: 30px;
   transform: translateY(-50%);
+  cursor: pointer;
 `;
 
 export const TopBarTitle = styled.div`

@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { getUser } from '../store/user';
 
-import HamburgerIcon from '../assets/svg/hamburger.svg';
+import {
+  getUser
+} from '../store/user';
+
+import {
+  getShowSideNav,
+  hideSideNav
+} from '../store/side-nav';
+
+import closeIcon from '../assets/png/close.png';
+
+console.log(closeIcon);
 
 const Container = styled.aside`
   position: fixed;
@@ -14,11 +24,34 @@ const Container = styled.aside`
   max-width: 400px;
   background: #0e1325;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
-  transform: translateX(-102%);
-  opacity: 0;
+  transform: translateX(${props => props.show ? 0 : '-102%'});
+  opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
   will-change: opacity transform;
   z-index: 1;
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: ${props => props.show ? 'auto' : 'none'};
+  z-index: 10000;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: ${props => props.show ? 1 : 0};
+    transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
+    will-change: opacity
+  }
 `;
 
 const HamburgerContainer = styled.div`
@@ -31,7 +64,7 @@ const HamburgerContainer = styled.div`
 `;
 
 const Hamburger = styled.button`
-  background: ${HamburgerIcon} no-repeat no-repeat;
+  background: ${closeIcon} no-repeat no-repeat;
   background-size: 24px 24px;
   border: none;
   width: 24px;
@@ -105,27 +138,34 @@ const CustomLink = styled(Link)`
 `;
 
 const mapStateToProps = state => ({
+  showSideNav: getShowSideNav(state),
   user: getUser(state)
 });
 
-const SideNav = ({user}) => (
-  <Container>
-    <HamburgerContainer>
-      <Hamburger />
-    </HamburgerContainer>
-    <User>
-      <Avatar src={user.avatar} />
-      <Infos>
-        <Username>{user.username}</Username>
-        <Mail>{user.email ? user.email : ''}</Mail>
-      </Infos>
-    </User>
-    <Menu>
-      <Element><CustomLink to="/">Home</CustomLink></Element>
-      <Element><CustomLink to="/about">A propos</CustomLink></Element>
-      <Element><CustomLink to="/licences">Licenses musicales</CustomLink></Element>
-    </Menu>
-  </Container>
+const mapDispatchToProps = dispatch => ({
+  hideSideNav: _ => dispatch(hideSideNav())
+});
+
+const SideNav = ({showSideNav, hideSideNav, user}) => (
+  <Overlay show={showSideNav}>
+    <Container show={showSideNav}>
+      <HamburgerContainer>
+        <Hamburger onClick={hideSideNav} />
+      </HamburgerContainer>
+      <User>
+        <Avatar src={user.avatar} />
+        <Infos>
+          <Username>{user.username}</Username>
+          <Mail>{user.email ? user.email : ''}</Mail>
+        </Infos>
+      </User>
+      <Menu>
+        <Element><CustomLink to="/" onClick={hideSideNav}>Home</CustomLink></Element>
+        <Element><CustomLink to="/about" onClick={hideSideNav}>A propos</CustomLink></Element>
+        <Element><CustomLink to="/licences" onClick={hideSideNav}>Licenses musicales</CustomLink></Element>
+      </Menu>
+    </Container>
+  </Overlay>
 );
 
-export default connect(mapStateToProps)(SideNav);
+export default connect(mapStateToProps, mapDispatchToProps)(SideNav);

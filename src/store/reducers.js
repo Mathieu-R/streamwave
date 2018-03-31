@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import toast from './toast';
 import user from './user';
+import sideNav from './side-nav';
 import library from './library';
 import player from './player';
 
@@ -11,6 +12,7 @@ import player from './player';
 export default combineReducers({
   toast,
   user,
+  sideNav,
   library,
   player
 });
