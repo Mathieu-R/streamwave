@@ -47,10 +47,15 @@ button {
   font-size: 18px;
   color: #FFF;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: none;
 }
 
 button[disabled] {
   opacity: 0.7;
+}
+
+select {
+  outline: none;
 }
 
 input[type="email"], input[type="password"] {
