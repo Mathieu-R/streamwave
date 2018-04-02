@@ -1,22 +1,24 @@
 import { Component } from 'preact';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
-class TopBarHamburger extends Component {
-  constructor () {
-    super();
-  }
+import {
+  showSideNav
+} from '../store/side-nav';
 
-  render () {
-    return (
-      <TopBarContainer>
-        <TopBarButton src="/assets/svg/hamburger.svg" />
-        <TopBarTitle>
-          Streamwave
-        </TopBarTitle>
-      </TopBarContainer>
-    )
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  showSideNav: _ => dispatch(showSideNav())
+});
 
-export default TopBarHamburger;
+const TopBarHamburger = ({showSideNav}) => (
+  <TopBarContainer>
+    <TopBarButton src="/assets/svg/hamburger.svg" onClick={showSideNav} />
+    <TopBarTitle>
+      Streamwave
+    </TopBarTitle>
+  </TopBarContainer>
+);
+
+
+export default connect(null, mapDispatchToProps)(TopBarHamburger);

@@ -69,15 +69,3 @@ input[type="email"], input[type="password"] {
 a {
   text-decoration: none;
 }
-
-.app {
-  min-height: 100vh;
-  background: $background-color;
-}
-
-.library {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}

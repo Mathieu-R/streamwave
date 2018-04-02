@@ -13,6 +13,9 @@ const initialState = {
     show: false,
     messages: []
   },
+  sideNav: {
+    show: false
+  },
   player: {
     // show fullscreen player
     show: false,
@@ -33,6 +36,13 @@ const initialState = {
     chromecasting: false,
     // list of downloads and their percentages
     downloads: {}
+  },
+  settings: {
+    fade: 0,
+    equalizeVolume: false,
+    equalizer: false,
+    downloadQuality: 256,
+    dataMax: false
   }
 };
 

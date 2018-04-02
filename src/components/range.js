@@ -6,6 +6,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
+  width: 100%;
   margin: 10px 0;
 `;
 
@@ -19,8 +20,9 @@ const Input = styled.input`
 
 const Track = styled.div`
   position: relative;
-  height: 2px;
+  height: 3px;
   width: 100%;
+  background: ${props => props.theme.slider.background};
   pointer-events: none;
 `;
 
@@ -55,13 +57,14 @@ const RangeToolTip = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 10px;
-
+  top: -30px;
+  left: -5px;
   height: 20px;
-  width: 40px;
-  background: ${props => props.theme.slider.background};
+  width: 30px;
+  background: #DEDEDE;
   border-radius: 5px;
-  color: #FFF;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  color: #000;
 `;
 
 const RangeRound = styled.div`
@@ -91,6 +94,7 @@ class Range extends Component {
 
   onChange (evt) {
     const { min, max, value } = this.range;
+    this.props.onChange(parseInt(value, 10));
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
     this.setState({position});
   }

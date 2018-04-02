@@ -1,10 +1,23 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../../constants';
+import styled from 'styled-components';
+import { Container, Wrapper as Form, FormButton } from '../../components/ui';
 
 import {
   toasting
 } from '../../store/toast';
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 17px 0;
+`;
+
+const Label = styled.label`
+  font-size: 18px;
+  margin-bottom: 2px;
+`;
 
 const mapDispatchToProps = dispatch => ({
   toasting: (messages, duration) => dispatch(toasting(messages, duration))
@@ -59,17 +72,17 @@ class Forgot extends Component {
 
   render () {
     return (
-      <div class="forgot">
-      <form class="forgot-form" onSubmit={this.sendPasswordChangeEmail}>
-        <div class="forgot-form__email input-wrapper">
-          <label for="email" class="forgot-form__email__label">E-mail</label>
-          <input ref={input => this.email = input} type="email" id="email" class="forgot-form__email__input" autocomplete="email"/>
-        </div>
-        <button type="submit" class="forgot-button">
+      <Container>
+      <Form onSubmit={this.sendPasswordChangeEmail}>
+        <InputContainer>
+          <Label htmlFor="email">E-mail</Label>
+          <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
+        </InputContainer>
+        <FormButton>
           Envoyer un e-mail de changement de mot de passe
-        </button>
-      </form>
-      </div>
+        </FormButton>
+      </Form>
+      </Container>
     );
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
+import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 import { toasting } from '../../store/toast';
@@ -71,25 +72,25 @@ class Register extends Component {
 
   render () {
     return (
-      <div class="register">
-        <form class="register-form" onSubmit={this.register}>
-          <div class="register-form__email input-wrapper">
-            <label for="email" class="register-form__email__label">E-mail</label>
+      <Container>
+        <Form onSubmit={this.register}>
+          <InputWrapper class="register-form__email input-wrapper">
+            <Label for="email">E-mail</Label>
             <input ref={input => this.email = input} type="email" id="email" class="register-form__email__input" autocomplete="email"/>
-          </div>
-          <div class="register-form__password input-wrapper">
-            <label for="password" class="register-form__password__label">Mot de passe</label>
+          </InputWrapper>
+          <InputWrapper class="register-form__password input-wrapper">
+            <Label for="password">Mot de passe</Label>
             <input ref={input => this.password = input} type="password" id="password" class="register-form__password__input" autocomplete="new-password"/>
-          </div>
-          <div class="register-form__password-confirm input-wrapper">
-            <label for="password-confirm" class="register-form__password-confirm__label">Confirmation du mot de passe</label>
+          </InputWrapper>
+          <InputWrapper class="register-form__password-confirm input-wrapper">
+            <Label for="password-confirm">Confirmation du mot de passe</Label>
             <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="register-form__password-confirm__input" autocomplete="new-password"/>
-          </div>
-          <button type="submit" class="register-button">
+          </InputWrapper>
+          <FormButton type="submit">
             Créer un compte
-          </button>
-        </form>
-      </div>
+          </FormButton>
+        </Form>
+      </Container>
     );
   }
 }

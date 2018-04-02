@@ -1,6 +1,7 @@
 import { Component } from 'preact';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 import {
@@ -83,21 +84,21 @@ class Login extends Component {
 
   render () {
     return (
-      <div class="login">
-        <form class="login-form" onSubmit={this.login}>
-          <div class="login-form__email input-wrapper">
-            <label for="email" class="login-form__email__label">E-mail</label>
+      <Container>
+        <Form onSubmit={this.login}>
+          <InputWrapper>
+            <Label for="email" class="login-form__email__label">E-mail</Label>
             <input ref={input => this.email = input} type="email" id="email" class="login-form__email__input" autocomplete="email"/>
-          </div>
-          <div class="login-form__password input-wrapper">
-            <label for="password" class="login-form__password__label">Mot de passe</label>
+          </InputWrapper>
+          <InputWrapper>
+            <Label for="password" class="login-form__password__label">Mot de passe</Label>
             <input ref={input => this.password = input} type="password" id="password" class="login-form__password__input" autocomplete="current-password"/>
-          </div>
-          <button type="submit" class="login-button">
+          </InputWrapper>
+          <FormButton>
             Se connecter
-          </button>
-        </form>
-      </div>
+          </FormButton>
+        </Form>
+      </Container>
     );
   }
 }

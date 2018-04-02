@@ -19,6 +19,10 @@ import About from 'async!./about';
 import Licences from 'async!./licences';
 
 import {
+  restoreSettings
+} from '../store/settings';
+
+import {
   setPlayingStatus,
   switchPlayingStatus,
   setPrevTrack,
@@ -26,6 +30,7 @@ import {
 } from '../store/player';
 
 const mapDispatchToProps = dispatch => ({
+  restoreSettings: _ => dispatch(restoreSettings()),
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
   setNextTrack: payload => dispatch(setNextTrack(payload)),
@@ -62,6 +67,7 @@ class Home extends Component {
     this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
+    this.props.restoreSettings();
 
     this.chromecaster = new Chromecaster();
   }
