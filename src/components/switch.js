@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const Input = styled.input`
   position: absolute;
   opacity: 0;
@@ -15,6 +19,7 @@ const Input = styled.input`
 
 const Label = styled.label`
   position: relative;
+  display: flex;
   padding: 5px 75px 5px 5px;
   font-size: 16px;
   font-weight: bold;
@@ -52,12 +57,12 @@ const Label = styled.label`
   }
 `;
 
-const Switch = ({label, onChange}) => (
-  <div>
-    <Input type="checkbox" id={label} onChange={onChange}/>
+const Switch = ({label, value, onChange}) => (
+  <Container>
+    <Input type="checkbox" id={label} onChange={onChange} checked={value}/>
     {/* Little Hack => altough preact support "for" attribute, styled-components only accept "htmlFor" */}
     <Label htmlFor={label}>{label}</Label>
-  </div>
+  </Container>
 );
 
 export default Switch;

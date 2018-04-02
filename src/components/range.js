@@ -94,6 +94,7 @@ class Range extends Component {
 
   onChange (evt) {
     const { min, max, value } = this.range;
+    this.props.onChange(parseInt(value, 10));
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
     this.setState({position});
   }

@@ -4,6 +4,20 @@ import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';
 import Switch from '../components/switch';
 import styled from 'styled-components';
+import Constants from '../constants';
+
+import {
+  getFade,
+  getEqualizeVolume,
+  getEq,
+  getQuality,
+  getDataMax,
+  setFade,
+  setEqualizeVolume,
+  setEqualizer,
+  setDownloadQuality,
+  setMaxDataVolume
+} from '../store/settings';
 
 const Container = styled.div`
   display: flex;
@@ -15,11 +29,19 @@ const Container = styled.div`
 const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 20px;
+  padding: 0 20px;
+  width: 100%;
 `;
 
 const Label = styled.label`
   margin-bottom: 10px;
+`;
+
+const LabelInline = styled.label`
+`;
+
+const Select = styled.select`
+  color: #FFF;
 `;
 
 const RangeBound = styled.span`
@@ -32,68 +54,189 @@ const FadeContainer = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 50px;
   padding: 10px 0;
 `;
 
 const Fade = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const EqualizeVolume = styled.section`
   display: flex;
+  align-items: center;
   width: 100%;
+  min-height: 50px;
   padding: 10px 0;
 `;
 
-const EQ = styled.section``;
+const EQ = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+`;
 
-const DownloadQuality = styled.section``;
+const DownloadQuality = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+`;
 
-const DataVolume = styled.section``;
+const DataVolume = styled.section`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 0;
+`;
 
-const DataVolumeRange = styled.div``;
+const DataVolumeRange = styled.section`
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  opacity: ${props => props.show ? 1 : 0};
+  transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
+  will-change: opacity;
+`;
 
 const Logout = styled.button`
-  padding: 10px 0;
+  align-self: center;
+  padding: 10px 25px;
   border-radius: 5px;
-  background: ${props => props.theme.primaryColor}
+  background: ${props => props.theme.primaryColor};
   color: #FFF;
 `;
+
+const mapStateToProps = state => ({
+  fade: getFade(state),
+  equalizeVolume: getEqualizeVolume(state),
+  equalize: getEq(state),
+  quality: getQuality(state),
+  dataMax: getDataMax(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  setFade: value => dispatch(setFade(value)),
+  setEqualizeVolume: status => dispatch(setEqualizeVolume(status)),
+  setEqualizer: value => dispatch(setEqualizer(value)),
+  setDownloadQuality: quality => dispatch(setDownloadQuality(quality)),
+  setMaxDataVolume: value => dispatch(setMaxDataVolume(value))
+});
 
 class Settings extends Component {
   constructor () {
     super();
+
     this.logout = this.logout.bind(this);
+    this.onFadeChange = this.onFadeChange.bind(this);
+    this.onEqualizeVolumeChange = this.onEqualizeVolumeChange.bind(this);
+    this.onEqualizerChange = this.onEqualizerChange.bind(this);
+    this.onQualityChange = this.onQualityChange.bind(this);
+    this.activateMaxDataVolume = this.activateMaxDataVolume.bind(this);
+    this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
+  }
+
+  onFadeChange (value) {
+    this.props.setFade(value);
+  }
+
+  onEqualizeVolumeChange (evt) {
+    const status = evt.target.checked;
+    this.props.setEqualizeVolume(status);
+  }
+
+  onEqualizerChange (evt) {
+    const {value} = evt.target;
+    const eq = value === 'none' ? false : value;
+    this.props.setEqualizer(eq);
+  }
+
+  onQualityChange (evt) {
+    const {value} = evt.target;
+    this.props.setDownloadQuality(value)
+  }
+
+  activateMaxDataVolume (evt) {
+    const status = evt.target.checked;
+    this.props.setMaxDataVolume(status);
+  }
+
+  onMaxDataVolumeChange (value) {
+    this.props.setMaxDataVolume(value);
   }
 
   logout (evt) {
-
+    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+      // disable auto signin next visite
+      // until user signin again
+      navigator.credentials.preventSilentAccess().then(_ => {
+        localStorage.removeItem('streamwave-token');
+        this.props.history.push('/auth');
+      });
+    }
   }
 
-  render () {
+  render ({fade, equalizeVolume, equalizer, quality, dataMax}) {
     return (
       <Container>
         <TopBarHamburger />
         <SettingsContainer>
           <FadeContainer>
-            <Label for="fade">Fondu enchainé</Label>
+            <Label htmlFor="fade">Fondu enchainé</Label>
             <Fade>
-              <RangeBound>0</RangeBound><Range min={0} max={12} value={5} /><RangeBound>12</RangeBound>
+              <RangeBound>0</RangeBound>
+                <Range
+                  min={0}
+                  max={12}
+                  value={5}
+                  onChange={this.onFadeChange}
+                  value={fade}
+                />
+              <RangeBound>12</RangeBound>
             </Fade>
           </FadeContainer>
           <EqualizeVolume>
-            <Switch label="Egaliser le volume sonore"/>
+            <Switch
+              label="Egaliser le volume sonore"
+              onChange={this.onEqualizeVolumeChange}
+              value={equalizeVolume}
+            />
           </EqualizeVolume>
           <EQ>
+          <LabelInline htmlFor="quality">Equaliseur</LabelInline>
+            <Select onChange={this.onEqualizerChange} value={equalizer}>
+              <option value="none">Aucun</option>
+              <option value="church">Church</option>
+              <option value="pop">Pop</option>
+              <option value="jazz">Jazz</option>
+            </Select>
           </EQ>
           <DownloadQuality>
+            <LabelInline htmlFor="quality">Qualité de téléchargement</LabelInline>
+            <Select onChange={this.onQualityChange} value={quality}>
+              <option value="128">128k</option>
+              <option value="192">192k</option>
+              <option value="256">256k</option>
+            </Select>
           </DownloadQuality>
           <DataVolume>
-            <Label for="data-volume">Volume de données maximale</Label>
-            <DataVolumeRange>
-              <RangeBound>0</RangeBound>
-              <Range min={0} max={2000} value={0}/>
-              <RangeBound>12</RangeBound>
+            <Switch
+              label="Volume de données maximale (mo)"
+              onChange={this.activateMaxDataVolume}
+              value={dataMax}
+            />
+            <DataVolumeRange show={dataMax}>
+              <RangeBound>200</RangeBound>
+              <Range
+                min={200}
+                max={2000}
+                value={dataMax}
+                onChange={this.onMaxDataVolumeChange}
+              />
+              <RangeBound>2000</RangeBound>
             </DataVolumeRange>
             {/* SVG arc with data consumed until today */}
           </DataVolume>
@@ -104,4 +247,4 @@ class Settings extends Component {
   }
 }
 
-export default Settings;
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);

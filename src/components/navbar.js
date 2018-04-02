@@ -41,7 +41,7 @@ const Icon = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   margin-top: 5px;
 `;
