@@ -187,7 +187,7 @@ class Settings extends Component {
           <FadeContainer>
             <Label htmlFor="fade">Fondu enchainé</Label>
             <Fade>
-              <RangeBound>0</RangeBound>
+              <RangeBound>off</RangeBound>
                 <Range
                   min={0}
                   max={12}
@@ -195,7 +195,7 @@ class Settings extends Component {
                   onChange={this.onFadeChange}
                   value={fade}
                 />
-              <RangeBound>12</RangeBound>
+              <RangeBound>12s</RangeBound>
             </Fade>
           </FadeContainer>
           <EqualizeVolume>
@@ -229,14 +229,14 @@ class Settings extends Component {
               value={dataMax}
             />
             <DataVolumeRange show={dataMax}>
-              <RangeBound>200</RangeBound>
+              <RangeBound>200mo</RangeBound>
               <Range
                 min={200}
                 max={2000}
                 value={dataMax}
                 onChange={this.onMaxDataVolumeChange}
               />
-              <RangeBound>2000</RangeBound>
+              <RangeBound>2000mo</RangeBound>
             </DataVolumeRange>
             {/* SVG arc with data consumed until today */}
           </DataVolume>

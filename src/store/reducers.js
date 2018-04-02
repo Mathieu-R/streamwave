@@ -5,6 +5,7 @@ import user from './user';
 import sideNav from './side-nav';
 import library from './library';
 import player from './player';
+import playlists from './playlists';
 import settings from './settings';
 
 // the name of reducers here
@@ -16,5 +17,6 @@ export default combineReducers({
   sideNav,
   library,
   player,
+  playlists,
   settings
 });

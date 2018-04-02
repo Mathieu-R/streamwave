@@ -4,7 +4,9 @@ import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 const TopBarBack = props => (
     <TopBarContainer>
-      <TopBarButton src="/assets/svg/arrow.svg" />
+      <Link to="/">
+        <TopBarButton src="/assets/svg/arrow.svg" />
+      </Link>
       <TopBarTitle>
         Streamwave
       </TopBarTitle>

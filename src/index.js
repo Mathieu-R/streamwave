@@ -15,10 +15,7 @@ import {
 import './style/index.scss';
 import App from './components/app';
 
-console.log(Constants.PRODUCTION, Constants.SUPPORT_SERVICE_WORKER);
-
 if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
-  console.log('SW EVENTS');
   navigator.serviceWorker.ready.then(registration => {
     if (!registration.active) {
       return;
@@ -43,7 +40,6 @@ if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
   }).catch(err => console.error(err));
 
   navigator.serviceWorker.onmessage = event => {
-    console.log(event);
     if (event.data.type === 'downloading') {
       const {tracklistId, downloaded, totalDownload} = event.data;
       store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));

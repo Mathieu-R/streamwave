@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build",
+    "build": "preact build --no-prerender",
     "build:noprerender": "preact build --no-prerender",
     "build:analyse": "preact build --no-prerender --json=true && webpack-bundle-analyzer stats.json",
     "serve": "preact build && preact serve",
