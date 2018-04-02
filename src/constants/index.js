@@ -8,7 +8,7 @@ class Constants {
   }
 
   static get PRODUCTION () {
-    process.env.NODE_ENV === 'production';
+    return process.env.NODE_ENV === 'production';
   }
 
   static get AUTH_URL () {

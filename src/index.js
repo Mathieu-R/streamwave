@@ -15,7 +15,10 @@ import {
 import './style/index.scss';
 import App from './components/app';
 
+console.log(Constants.PRODUCTION, Constants.SUPPORT_SERVICE_WORKER);
+
 if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
+  console.log('SW EVENTS');
   navigator.serviceWorker.ready.then(registration => {
     if (!registration.active) {
       return;
