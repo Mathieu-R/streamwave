@@ -1,3 +1,4 @@
+import { h, render } from 'preact';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Constants from './constants';
@@ -15,8 +16,13 @@ import {
 import './style/index.scss';
 import App from './components/app';
 
+if (process.env.NODE_ENV === 'development') {
+  // react devtools
+  require('preact/debug');
+}
+
 if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
-  navigator.serviceWorker.ready.then(registration => {
+  navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
     if (!registration.active) {
       return;
     }
@@ -61,4 +67,15 @@ const Main = () => (
   </Provider>
 );
 
-export default Main;
+let root = document.body.firstElementChild;
+// render a root component in <body>
+const rendering = Component => {
+  root = render(<Component/>, document.body, root);
+};
+
+// preact hmr
+if (module.hot) {
+  module.hot.accept('./components/app', () => rendering(Main));
+}
+
+rendering(Main);

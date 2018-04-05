@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { Container, Wrapper, LinkButton } from '../../components/ui';

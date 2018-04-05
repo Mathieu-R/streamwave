@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import { formatDuration } from '../utils';
 import styled from 'styled-components';
 

@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import idb from '../utils/cache';
 import Constants from '../constants';

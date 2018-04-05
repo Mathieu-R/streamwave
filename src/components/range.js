@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import styled from 'styled-components';
 
 const Container = styled.div`

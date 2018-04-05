@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import shaka from 'shaka-player';
@@ -15,8 +15,8 @@ import Library from './library';
 import Album from './album';
 import Settings from './settings';
 
-import About from 'async!./about';
-import Licences from 'async!./licences';
+import About from './about';
+import Licences from './licences';
 
 import {
   restoreSettings

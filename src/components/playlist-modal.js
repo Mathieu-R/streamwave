@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Overlay } from './ui';
@@ -7,7 +7,7 @@ import backIcon from '../assets/svg/arrow.svg';
 
 import {
   createPlaylist
-} from '../store/playlist';
+} from '../store/playlists';
 
 const Container = styled.div`
   position: fixed;

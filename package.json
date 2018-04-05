@@ -1,62 +1,69 @@
 {
   "name": "streamwave",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "license": "MIT",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --no-prerender",
-    "build:noprerender": "preact build --no-prerender",
-    "build:analyse": "preact build --no-prerender --json=true && webpack-bundle-analyzer stats.json",
-    "serve": "preact build && preact serve",
-    "serve:noprerender": "npm run build:noprerender && preact serve",
-    "dev": "preact watch",
-    "lint": "eslint src"
+    "start": "webpack-dev-server --config build/webpack.config.js",
+    "build:analyse": "npm run build && webpack-bundle-analyzer",
+    "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p"
   },
-  "eslintIgnore": [
-    "build/*"
-  ],
   "bundlesize": [
     {
       "path": "./build/bundle.*.js",
       "maxSize": "220kB"
-    },
-    {
-      "path": "./build/route-home.chunk.*.js",
-      "maxSize": "220kB"
     }
   ],
   "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.44",
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.44",
+    "@babel/plugin-transform-react-jsx": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "babel-loader": "^8.0.0-beta.2",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "copy-webpack-plugin": "^4.5.1",
-    "eslint": "^4.19.1",
-    "if-env": "^1.0.4",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "fast-async": "^6.3.1",
+    "file-loader": "^1.1.11",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.8.3",
-    "preact-cli": "^2.2.1",
-    "preact-cli-plugin-async": "^1.0.0",
-    "preact-cli-plugin-fast-async": "^1.0.1",
-    "preact-cli-workbox-plugin": "^1.0.0",
+    "optimize-css-assets-webpack-plugin": "^4.0.0",
+    "preload-webpack-plugin": "^3.0.0-alpha.1",
+    "progress-bar-webpack-plugin": "^1.11.0",
+    "resource-hints-webpack-plugin": "0.0.1",
     "sass-loader": "^6.0.7",
-    "svg-inline-loader": "^0.8.0"
+    "script-ext-html-webpack-plugin": "^2.0.1",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.5.0",
+    "webpack-bundle-analyzer": "^2.11.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-middleware": "^3.1.0",
+    "webpack-dev-server": "^3.1.1",
+    "webpack-externals-plugin": "^1.0.0",
+    "workbox-webpack-plugin": "^3.0.1"
   },
   "dependencies": {
     "debounce": "^1.1.0",
     "idb-keyval": "^2.5.1",
     "jwt-decode": "^2.2.0",
     "money-clip": "^2.0.1",
+    "nodent": "^3.1.7",
     "preact": "^8.2.6",
     "preact-compat": "^3.18.0",
-    "preact-router": "^2.5.7",
     "prop-types": "^15.6.1",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-transition-group": "^2.2.1",
+    "react-transition-group": "^2.3.0",
     "redux": "^3.7.2",
-    "redux-persist-middleware": "^1.0.1",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
     "shaka-player": "^2.3.4",
-    "styled-components": "^3.2.3",
-    "window-or-global": "^1.0.1",
-    "workerize-loader": "^1.0.2"
+    "styled-components": "^3.2.3"
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';

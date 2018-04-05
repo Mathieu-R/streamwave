@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
