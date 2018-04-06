@@ -2,9 +2,11 @@ import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import shaka from 'shaka-player';
+import Loadable from 'react-loadable';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
+import Loading from '../components/loading';
 import SideNav from '../components/side-nav';
 import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';

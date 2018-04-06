@@ -28,12 +28,18 @@ const Loader = styled.div`
   animation: ${spinner} 1.2s linear infinite;
 `;
 
-const Loading = ({error, pastDelay}) => (
+const Loading = ({error, pastDelay, timedOut}) => (
   <Container>
     {
+      // async loading failed
       error ? 'Error ! Please, try refreshing the page.'
       :
+      // 200ms loading delay => show a loader
       pastDelay ? <Loader color="#FFF" />
+      :
+      // connection too slow => timed out
+      // need to pass a timeout properties to Loadable (e.g. {timeout: 10000})
+      timedOut ? 'You connection seems too slow... Try again later.'
       :
       null
     }
