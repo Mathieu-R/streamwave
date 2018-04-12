@@ -5,7 +5,7 @@ import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
 import TopBarBack from '../components/topbar-back';
-import ProgressRound from '../components/progress-round';
+import ProgressLine from '../components/progress-line';
 import { shuffle } from '../utils';
 import { downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
 import styled from 'styled-components';
@@ -39,7 +39,7 @@ const Title = styled.h1`
 `;
 
 const Artist = styled.h2`
-  font-weight: 18px;
+  font-size: 18px;
   color: #7C7C7C;
   margin: 0;
 `;
@@ -52,12 +52,18 @@ const Download = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 35px;
+  width: 100%;
+`;
+
+const SwitchContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 
 const Tracks = styled.section`
   margin: 0 10px;
 `;
-
 
 const mapStateToProps = state => ({
   shuffle: isShuffle(state),
@@ -160,12 +166,14 @@ class Album extends Component {
           <Download>
             {
               downloads[this.props.match.params.id] ?
-                <ProgressRound
-                  progress={(downloads[this.props.match.params.id])}
-                  value={Math.round((downloads[this.props.match.params.id]) * 100) + '%'}
-                /> : ''
+              <ProgressLine
+                progress={(downloads[this.props.match.params.id])}
+                value={Math.round((downloads[this.props.match.params.id]) * 100) + '%'}
+              /> : ''
             }
-            <Switch label="Télécharger" onChange={this.download} />
+            <SwitchContainer>
+              <Switch label="Télécharger" onChange={this.download} />
+            </SwitchContainer>
           </Download>
         </Infos>
         <Tracks>

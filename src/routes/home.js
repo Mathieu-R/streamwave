@@ -13,8 +13,18 @@ import Player from '../components/player';
 import NavBar from '../components/navbar';
 import Audio from '../components/audio';
 
-import Library from './library';
-import Album from './album';
+const Library = Loadable({
+  loader: () => import('./library' /* webpackChunkName: "route-library" */),
+  loading: Loading,
+  timeout: 10000
+});
+
+const Album = Loadable({
+  loader: () => import('./album' /* webpackChunkName: "route-album" */),
+  loading: Loading,
+  timeout: 10000
+});
+
 import Settings from './settings';
 
 import About from './about';
