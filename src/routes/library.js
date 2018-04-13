@@ -53,7 +53,10 @@ class Library extends Component {
         return;
       }
 
-      this.props.storeLibrary(response)
+      return Promise.all([
+        idb.set('library', response),
+        this.props.storeLibrary(response)
+      ]);
     })
     .then(_ => this.lazyLoadArtworks())
     .catch(err => console.error(err));

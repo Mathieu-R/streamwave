@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Overlay } from './ui';
+import Constants from '../constants';
 
 import backIcon from '../assets/svg/arrow.svg';
 
@@ -74,7 +75,7 @@ class PlaylistModal extends Component {
   }
 
   componentDidMount () {
-    fetch('/playlists', {
+    fetch(`${Constants.API_URL}/playlists`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
