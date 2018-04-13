@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import idb from '../utils/cache';
 import styled from 'styled-components';
 import Constants from '../constants';
 import Cover from '../components/cover';
@@ -38,15 +39,37 @@ class Library extends Component {
   }
 
   componentDidMount () {
-    fetch(`${Constants.API_URL}/library`, {
+    // NOTE: trying some stuff here. Different than logic in album view
+    // 1. Try to fetch and get gallery from the cache, get the faster one.
+    Promise.race([
+      this.getGalleryFromCache(),
+      // If fetch is faster but reject, trying to get stuff from the cache
+      this.fetchGallery().catch(_ => this.getGalleryFromCache())
+    ]).then(response => {
+      // If nor response from catch or from fail
+      // Gallery not stored + No connectivity.
+      // TODO: show message on screen (e.g. No internet connection)
+      if (!response) {
+        return;
+      }
+
+      this.props.storeLibrary(response)
+    })
+    .then(_ => this.lazyLoadArtworks())
+    .catch(err => console.error(err));
+  }
+
+  getGalleryFromCache () {
+    return idb.get('library');
+  }
+
+  fetchGallery () {
+    return fetch(`${Constants.API_URL}/library`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
     })
     .then(response => response.json())
-    .then(response => this.props.storeLibrary(response))
-    .then(_ => this.lazyLoadArtworks())
-    .catch(err => console.error(err));
   }
 
   lazyLoadArtworks () {

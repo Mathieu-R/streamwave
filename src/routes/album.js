@@ -87,13 +87,33 @@ class Album extends Component {
 
   componentWillMount () {
     const id = this.props.match.params.id;
-    fetch(`${Constants.API_URL}/album/${id}`, {
+    const IDB_KEY = `album-${id}`;
+
+    // 1. Try to retrieve album infos
+    // from the cache
+    idb.get(IDB_KEY).then(response => {
+      if (response) {
+        this.setState({...response});
+        return;
+      }
+
+      // 2. If not in the cache, fetch it, store in the cache.
+      return this.fetchAlbumAndStoreInTheCache(id, IDB_KEY)
+    }).catch(err => console.error(err));
+  }
+
+  fetchAlbumAndStoreInTheCache (id, idbKey) {
+    return fetch(`${Constants.API_URL}/album/${id}`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
     })
-      .then(response => response.json())
-      .then(response => this.setState({...response}));
+    .then(response => response.json())
+    .then(response => {
+      this.setState({...response});
+      return response;
+    })
+    .then(response => idb.set(idbKey, response));
   }
 
   download (evt) {
