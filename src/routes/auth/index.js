@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 

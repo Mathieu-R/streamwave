@@ -1,6 +1,8 @@
+import { h } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Overlay } from './ui';
 
 import {
   getUser
@@ -12,8 +14,6 @@ import {
 } from '../store/side-nav';
 
 import closeIcon from '../assets/png/close.png';
-
-console.log(closeIcon);
 
 const Container = styled.aside`
   position: fixed;
@@ -31,29 +31,6 @@ const Container = styled.aside`
   z-index: 1;
 `;
 
-const Overlay = styled.div`
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: ${props => props.show ? 'auto' : 'none'};
-  z-index: 10000;
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    opacity: ${props => props.show ? 1 : 0};
-    transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
-    will-change: opacity
-  }
-`;
-
 const HamburgerContainer = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -64,7 +41,7 @@ const HamburgerContainer = styled.div`
 `;
 
 const Hamburger = styled.button`
-  background: ${closeIcon} no-repeat no-repeat;
+  background: url(${closeIcon}) no-repeat no-repeat;
   background-size: 24px 24px;
   border: none;
   width: 24px;

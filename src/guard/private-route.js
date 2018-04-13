@@ -1,5 +1,5 @@
 // https://tylermcginnis.com/react-router-protected-routes-authentication/
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import authenticated from './authenticated';

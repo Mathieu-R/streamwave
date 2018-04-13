@@ -1,5 +1,5 @@
 node_modules
 stats.json
-/build
+dist
 /*.log
 .DS_STORE

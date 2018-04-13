@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -80,15 +80,16 @@ const RangeRound = styled.div`
 `;
 
 class Range extends Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
 
     this.onChange = this.onChange.bind(this);
 
     this.state = {
       dragging: false,
       bcr: null,
-      position: 0
+      position: 0,
+      value: props.value
     }
   }
 
@@ -96,10 +97,10 @@ class Range extends Component {
     const { min, max, value } = this.range;
     this.props.onChange(parseInt(value, 10));
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
-    this.setState({position});
+    this.setState({position, value});
   }
 
-  render ({min, max, value, onChange}, {position}) {
+  render ({min, max, onChange}, {position, value}) {
     return (
       <Container
         innerRef={container => this.container = container}
@@ -110,7 +111,7 @@ class Range extends Component {
           min={min}
           max={max}
           onChange={this.onChange}
-          defaultValue={value}
+          value={value}
         />
         <Track>
           <RangeTrack position={position} />

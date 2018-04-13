@@ -1,22 +1,34 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import shaka from 'shaka-player';
+import Loadable from 'react-loadable';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
+import Loading from '../components/loading';
 import SideNav from '../components/side-nav';
 import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';
 import NavBar from '../components/navbar';
 import Audio from '../components/audio';
 
-import Library from './library';
-import Album from './album';
+const Library = Loadable({
+  loader: () => import('./library' /* webpackChunkName: "route-library" */),
+  loading: Loading,
+  timeout: 10000
+});
+
+const Album = Loadable({
+  loader: () => import('./album' /* webpackChunkName: "route-album" */),
+  loading: Loading,
+  timeout: 10000
+});
+
 import Settings from './settings';
 
-import About from 'async!./about';
-import Licences from 'async!./licences';
+import About from './about';
+import Licences from './licences';
 
 import {
   restoreSettings

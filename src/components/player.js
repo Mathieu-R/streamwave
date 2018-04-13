@@ -1,11 +1,13 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from './progress-bar';
 import { formatDuration, getRGBCssFromObject } from '../utils';
+import PlaylistModal from './playlist-modal';
 import Constants from '../constants';
 
 import closeIcon from '../assets/svg/close.svg';
+import addIcon from '../assets/svg/add.svg';
 
 import {
   getShowPlayer,
@@ -55,7 +57,7 @@ const Close = styled(Button)`
   position: absolute;
   top: 15px;
   left: 15px;
-  background: ${closeIcon} no-repeat no-repeat;
+  background: url(${closeIcon}) no-repeat no-repeat;
   background-size: 24px 24px;
   width: 24px;
   height: 24px;
@@ -66,6 +68,7 @@ const Cover = styled.div``;
 const Artwork = styled.img``;
 
 const InfoContainer = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,7 +85,14 @@ const Artist = styled.span``;
 
 const Title = styled.span``;
 
-const AddToPlaylist = styled.div``;
+const AddToPlaylist = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+`;
 
 const ProgressWrapper = styled.section`
   display: flex;
@@ -160,6 +170,11 @@ class Player extends Component {
     this.onNextClick = this.onNextClick.bind(this);
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onChromecastClick = this.onChromecastClick.bind(this);
+    this.addToPlaylist = this.addToPlaylist.bind(this);
+
+    this.state = {
+      showPlaylistModal: false
+    }
   }
 
   closePlayer () {
@@ -186,10 +201,18 @@ class Player extends Component {
     this.props.chromecast({chromecasting});
   }
 
+  addToPlaylist (evt) {
+    this.setState({
+      showPlaylistModal: true
+    });
+  }
+
   render ({
     showPlayer, coverURL, artist, title, duration,
     playing, chromecasting, shuffle, repeat,
     track, currentTime, totalTime, seek
+  }, {
+    showPlaylistModal
   }) {
     return (
       <Container show={showPlayer} primaryColor={track && track.primaryColor}>
@@ -227,7 +250,9 @@ class Player extends Component {
               <Artist>{artist && artist}</Artist>
               <Title>{track && track.title}</Title>
             </Infos>
-            <AddToPlaylist></AddToPlaylist>
+            <AddToPlaylist onClick={this.addToPlaylist}>
+              <img alt="add to playlist" src={addIcon} />
+            </AddToPlaylist>
           </InfoContainer>
         </Cover>
         <ProgressWrapper>
@@ -350,6 +375,7 @@ class Player extends Component {
             </SVG>
           </Repeat>
         </Controls>
+        <PlaylistModal show={showPlaylistModal} />
       </Container>
     );
   }

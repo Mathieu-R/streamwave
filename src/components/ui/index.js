@@ -84,3 +84,26 @@ export const Label = styled.label`
   font-size: 18px;
   margin-bottom: 2px;
 `;
+
+export const Overlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: ${props => props.show ? 'auto' : 'none'};
+  z-index: 10000;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: ${props => props.show ? 1 : 0};
+    transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
+    will-change: opacity
+  }
+`;

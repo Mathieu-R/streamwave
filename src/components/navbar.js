@@ -1,7 +1,12 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
+
+import {
+  switchPlayerStatus
+} from '../store/player';
 
 const Container = styled.div`
   position: fixed;
@@ -46,6 +51,10 @@ const Title = styled.div`
   margin-top: 5px;
 `;
 
+const mapDispatchToProps = dispatch => ({
+  switchPlayerStatus: payload => dispatch(switchPlayerStatus(payload))
+});
+
 class Navbar extends Component {
   constructor () {
     super();
@@ -53,7 +62,7 @@ class Navbar extends Component {
   }
 
   showPlayer (evt) {
-
+    this.props.switchPlayerStatus({show: true});
   }
 
   render () {
@@ -166,4 +175,4 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default connect(null, mapDispatchToProps)(Navbar);
