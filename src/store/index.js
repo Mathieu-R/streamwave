@@ -37,7 +37,7 @@ const initialState = {
     // list of downloads and their percentages
     downloads: {}
   },
-  playlists: {},
+  playlists: [],
   settings: {
     fade: 0,
     equalizeVolume: false,

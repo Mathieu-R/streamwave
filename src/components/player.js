@@ -171,6 +171,7 @@ class Player extends Component {
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onChromecastClick = this.onChromecastClick.bind(this);
     this.addToPlaylist = this.addToPlaylist.bind(this);
+    this.removePlaylistModal = this.removePlaylistModal.bind(this);
 
     this.state = {
       showPlaylistModal: false
@@ -204,6 +205,12 @@ class Player extends Component {
   addToPlaylist (evt) {
     this.setState({
       showPlaylistModal: true
+    });
+  }
+
+  removePlaylistModal () {
+    this.setState({
+      showPlaylistModal: false
     });
   }
 
@@ -375,7 +382,7 @@ class Player extends Component {
             </SVG>
           </Repeat>
         </Controls>
-        <PlaylistModal show={showPlaylistModal} />
+        <PlaylistModal show={showPlaylistModal} removePlaylistModal={this.removePlaylistModal} />
       </Container>
     );
   }

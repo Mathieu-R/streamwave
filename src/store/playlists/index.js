@@ -1,9 +1,14 @@
+import Constants from '../../constants';
+
+// types
+const FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
 const CREATE_PLAYLIST = 'CREATE_PLAYLIST';
 
+// actions
 export function createPlaylist ({title}) {
-  return new Promise((resolve, reject) => {
-    return async dispatch => {
-      const response = await fetch('/playlist', {
+  return dispatch => {
+    return new Promise(async (resolve, reject) => {
+      const response = await fetch(`${Constants.API_URL}/playlist`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -15,29 +20,55 @@ export function createPlaylist ({title}) {
       });
 
       if (response.status === 422) {
-        reject('Titre de la playlist manquant...');
+        reject(['Titre de la playlist manquant...']);
       }
 
       const data = await response.json();
-      return {
+
+      dispatch({
         type: CREATE_PLAYLIST,
         playlist: data
-      }
-    }
-  });
+      });
+    });
+  }
 }
 
-export default (state = {}, action) => {
+export function fetchPlaylists () {
+  return dispatch => {
+    fetch(`${Constants.API_URL}/playlists`, {
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
+      }
+    })
+    .then(response => response.json())
+    .then(response => {
+      dispatch({
+        type: FETCH_PLAYLISTS,
+        playlists: response
+      });
+    })
+    .catch(err => console.error(err));
+  }
+
+}
+
+// selectors
+export const getPlaylists = state => state.playlists;
+
+// reducers
+export default (state = [], action) => {
   const {type} = action;
   switch (type) {
+    case FETCH_PLAYLISTS:
+      return [
+        ...action.playlists
+      ]
+
     case CREATE_PLAYLIST:
-      return {
+      return [
         ...state.playlists,
-        [action.playlist._id]: {
-          title: action.playlist.title,
-          tracks: action.playlist.tracks
-        }
-      }
+        action.playlist
+      ]
 
     default:
       return state;

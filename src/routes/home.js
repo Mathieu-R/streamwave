@@ -208,6 +208,14 @@ class Home extends Component {
     });
   }
 
+  equalizeVolume () {
+
+  }
+
+  setEqualize () {
+
+  }
+
   onPlayClick ({playing}) {
     // switch status in store
     this.props.switchPlayingStatus();
