@@ -47,7 +47,7 @@ const devServer = {
 
 if (production) {
   plugins.push(
-    new webpack.optimize.OccurrenceOrderPlugin(),
+    //new webpack.optimize.OccurrenceOrderPlugin(),
     // Compress extracted CSS.
     // Possible duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
@@ -60,18 +60,18 @@ if (production) {
       minify: {
         removeComments: true
       },
-      cache: true,
+      //cache: true,
       // make it work consistently with multiple chunks
-      chunksSortMode: 'dependency'
+      //chunksSortMode: 'dependency'
     }),
-    new ScriptExtHtmlWebpackPlugin({
-      preload: ['runtime~app.bundle.*.js', 'vendor~app.bundle.*.js', 'app.bundle.*.js'],
-      prefetch: {
-        test: /\.js$/,
-        chunks: 'async'
-      },
-      defaultAttribute: 'async'
-    }),
+    // new ScriptExtHtmlWebpackPlugin({
+    //   preload: ['runtime~app.bundle.*.js', 'vendors~app.bundle.*.js', 'app.bundle.*.js'],
+    //   prefetch: {
+    //     test: /\.js$/,
+    //     chunks: 'async'
+    //   },
+    //   defaultAttribute: 'async'
+    // }),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../src/assets/'),

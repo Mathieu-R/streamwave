@@ -21,9 +21,6 @@ const initialState = {
     show: false,
     // current track
     track: null,
-    // all the tracks of album or playlist
-    // needed to handle next/prev
-    // tracks: [],
     // queue (shuffle or not)
     // needed to handle continuous play
     queue: [],
@@ -34,10 +31,10 @@ const initialState = {
     repeat: false,
     shuffle: false,
     chromecasting: false,
-    // list of downloads and their percentages
+    // list of current downloads and their percentages
     downloads: {}
   },
-  playlists: {},
+  playlists: [],
   settings: {
     fade: 0,
     equalizeVolume: false,
