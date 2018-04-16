@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 const SET_ARTIST = 'SET_ARTIST';
 const SET_COVER_URL = 'SET_COVER_URL';
 const SET_TRACK = 'SET_TRACK';
+const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX';
 const SET_PREV_TRACK = 'SET_PREV_TRACK';
 const SET_NEXT_TRACK = 'SET_NEXT_TRACK';
 const SET_TRACKS = 'SET_TRACKS';
@@ -40,6 +41,13 @@ export function setTrack ({artist, album, coverURL, track, index}) {
     album,
     coverURL,
     track,
+    index
+  }
+}
+
+export function setCurrentIndex ({index}) {
+  return {
+    type: SET_CURRENT_INDEX,
     index
   }
 }
@@ -181,6 +189,7 @@ export const isMusicPlaying = state => state.player.playing;
 export const isMusicChromecasting = state => state.player.chromecasting;
 export const isShuffle = state => state.player.shuffle;
 export const isRepeat = state => state.player.repeat;
+export const getQueue = state => state.player.queue;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
 export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
@@ -219,6 +228,12 @@ export default (state = {}, action) => {
         album: action.album,
         coverURL: action.coverURL,
         track: action.track,
+        currentIndex: action.index
+      }
+
+    case SET_CURRENT_INDEX:
+      return {
+        ...state,
         currentIndex: action.index
       }
 

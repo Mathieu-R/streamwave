@@ -90,7 +90,7 @@ class Home extends Component {
     // bind the context to our <audio /> element
     this.source = this.context.createMediaElementSource(this.audio.base);
     // connect source to context
-    // otherwise we could'nt here anything from the audio element
+    // otherwise we could'nt hear anything from the audio element
     this.source.connect(this.context.destination);
   }
 
@@ -269,7 +269,7 @@ class Home extends Component {
       return;
     }
 
-    const url = '/player';
+    const url = '/chromecast';
     this.chromecaster.cast(url)
       .then(connexion => console.log(connexion))
       .catch(err => console.error(err));

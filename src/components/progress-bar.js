@@ -62,11 +62,23 @@ const ProgressRound = styled.div`
   left: -5px;
   height: 15px;
   width: 15px;
+  outline: 0;
   border-radius: 50%;
   background: #FFF;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(0.7);
+  transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
   will-change: transform;
+
+  &:hover, &:focus, &:active {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+
+  ${ProgressRoundContainer}:hover, ${ProgressRoundContainer}:focus, ${ProgressRoundContainer}:active {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+  }
 `;
 
 class ProgressBar extends Component {

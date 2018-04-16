@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import Player from './player';
 import styled from 'styled-components';
 import PrivateRoute from '../guard/private-route';
 
@@ -77,6 +78,15 @@ class App extends Component {
         <Container>
           <Switch>
             <Route path="/auth" component={Auth} />
+            {/* Trying some stuff with chromecast, should try to protect this route later */}
+            <Route exact path="/chromecast"
+              render={
+                props =>
+                <Player
+                  //onPlayClick={this.onPlayClick}
+                />
+              }
+            />
             <PrivateRoute path="/" component={Home} />
           </Switch>
           <Toast />
