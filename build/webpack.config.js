@@ -2,12 +2,13 @@ const config = require('../config.js');
 const path = require('path');
 const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
+const TidyHtmlWebpackPlugin = require('tidy-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+//const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
-const ResourceHintWebpackPlugin = require('resource-hints-webpack-plugin');
+//const ResourceHintWebpackPlugin = require('resource-hints-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -60,18 +61,18 @@ if (production) {
       minify: {
         removeComments: true
       },
-      //cache: true,
+      cache: true,
       // make it work consistently with multiple chunks
-      //chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency'
     }),
-    // new ScriptExtHtmlWebpackPlugin({
-    //   preload: ['runtime~app.bundle.*.js', 'vendors~app.bundle.*.js', 'app.bundle.*.js'],
-    //   prefetch: {
-    //     test: /\.js$/,
-    //     chunks: 'async'
-    //   },
-    //   defaultAttribute: 'async'
-    // }),
+    // preload main bundles
+    // prefetch should be done with webpack
+    // when native support for prefetch will land
+    new PreloadWebpackPlugin({
+      rel: 'preload',
+      include: 'initial'
+    }),
+    // new TidyHtmlWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../src/assets/'),
