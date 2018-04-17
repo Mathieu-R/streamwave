@@ -11,18 +11,17 @@ const Inner = styled.div`
   word-wrap: break-word;
   position: fixed;
   bottom: 5px;
-  right: 5px;
-  height: 60px;
-  width: 90%;
-  max-width: 300px;
+  left: 5px;
+  right: auto;
   padding: 10px;
-  background: #FFF;
   text-align: center;
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-  color: #000;
+  font-size: 18px;
+  background: #323232;
+  color: #FFF;
   opacity: 0;
-  z-index: 1;
+  z-index: 10000;
   transition: opacity .3s cubic-bezier(0, 0, 0.3, 1),
   transform .3s cubic-bezier(0, 0, 0.3, 1);
   will-change: opacity, transform;
@@ -38,7 +37,10 @@ const Inner = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}) {
-    font-size: 14px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    font-size: 15px;
   }
 `;
 

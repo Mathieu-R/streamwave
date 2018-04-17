@@ -17,6 +17,7 @@ const Gallery = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-gap: 20px;
+  padding: 0 2%;
 `;
 
 const mapStateToProps = state => ({
