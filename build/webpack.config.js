@@ -2,25 +2,22 @@ const config = require('../config.js');
 const path = require('path');
 const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
+const TidyHtmlWebpackPlugin = require('tidy-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
-const ResourceHintWebpackPlugin = require('resource-hints-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const production = process.env.NODE_ENV === 'production';
-const extractSass = new ExtractTextPlugin({
-    filename: '[name].[md5:contenthash:hex:20].css'
-});
 
 const sw = path.join(__dirname, '../src/sw.js');
-
 const plugins = [
-  extractSass
+  new MiniCSSExtractPlugin({
+    filename: '[name].[contenthash].css'
+  })
 ];
 
 const devServer = {
@@ -47,31 +44,24 @@ const devServer = {
 
 if (production) {
   plugins.push(
-    //new webpack.optimize.OccurrenceOrderPlugin(),
-    // Compress extracted CSS.
-    // Possible duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin({
-      cssProcessorOptions: {
-        safe: true
-      }
-    }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new htmlWebpackPlugin({
       template: config.template,
       minify: {
         removeComments: true
       },
-      //cache: true,
+      cache: true,
       // make it work consistently with multiple chunks
-      //chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency'
     }),
-    // new ScriptExtHtmlWebpackPlugin({
-    //   preload: ['runtime~app.bundle.*.js', 'vendors~app.bundle.*.js', 'app.bundle.*.js'],
-    //   prefetch: {
-    //     test: /\.js$/,
-    //     chunks: 'async'
-    //   },
-    //   defaultAttribute: 'async'
-    // }),
+    // preload main bundles
+    // prefetch should be done with webpack
+    // when native support for prefetch will land
+    new PreloadWebpackPlugin({
+      rel: 'preload',
+      include: 'initial'
+    }),
+    // new TidyHtmlWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../src/assets/'),
@@ -133,11 +123,15 @@ const common = {
   module: {
     rules: [{
       test: /\.(css|scss)$/,
-      use: ExtractTextPlugin.extract({
-        // style-loader in developpment
-        fallback: 'style-loader',
-        use: ['css-loader', 'sass-loader']
-      })
+      use: [
+        MiniCSSExtractPlugin.loader,
+        {
+          loader: 'css-loader', options: {minify: true}
+        },
+        {
+          loader: 'sass-loader'
+        }
+      ]
     },{
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
@@ -153,6 +147,19 @@ const common = {
     }]
   },
   optimization: {
+    // optimization.minimizer overrides default optimization
+    // in webpack 4.
+    // plugin optimizer should be put here
+    // not in plugins anymore as before
+    minimizer: [
+      // Compress extracted CSS.
+      // Possible duplicated CSS from differents components can be deduped.
+      new OptimizeCSSPlugin({
+        cssProcessorOptions: {
+          safe: true
+        }
+      })
+    ],
     runtimeChunk: true,
     splitChunks: {
       chunks: 'all'
