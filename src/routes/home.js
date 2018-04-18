@@ -14,13 +14,13 @@ import NavBar from '../components/navbar';
 import Audio from '../components/audio';
 
 const Library = Loadable({
-  loader: () => import('./library' /* webpackChunkName: "route-library" */),
+  loader: () => import('./library' /* webpackPrefetch: true, webpackChunkName: "route-library" */),
   loading: Loading,
   timeout: 10000
 });
 
 const Album = Loadable({
-  loader: () => import('./album' /* webpackChunkName: "route-album" */),
+  loader: () => import('./album' /* webpackPrefetch: true, webpackChunkName: "route-album" */),
   loading: Loading,
   timeout: 10000
 });
