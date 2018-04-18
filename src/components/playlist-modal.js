@@ -178,9 +178,9 @@ class PlaylistModal extends Component {
       <Overlay show={show} onClick={removePlaylistModal}>
         <Container show={show} onClick={this.blockClick}>
           <CreateContainer>
-            <CreateButton onClick={this.showPlaylistInput}>Créer une nouvelle playlist</CreateButton>
+            <CreateButton onClick={this.showPlaylistInput} aria-label="create playlist">Créer une nouvelle playlist</CreateButton>
             <CreateInputContainer show={showPlaylistInput}>
-              <Back onClick={this.removePlaylistInput} />
+              <Back onClick={this.removePlaylistInput} aria-label="cancel playlist creation"/>
               <CreateInput
                 innerRef={input => this.input = input}
                 type="text"
@@ -191,7 +191,7 @@ class PlaylistModal extends Component {
           <Playlists>
             {
               playlists.map(playlist =>
-                <Playlist key={playlist._id}>
+                <Playlist key={playlist._id} aria-label="add to this playlist">
                   <Title>{playlist.title}</Title>
                   <TracksCounter>{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</TracksCounter>
                 </Playlist>

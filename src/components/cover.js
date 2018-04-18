@@ -72,8 +72,8 @@ class Cover extends Component {
         <CoverLink to={`/album/${_id}`} >
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
           <ArtworkContainer>
-            <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} className="cover__artwork" />
-            <Play />
+            <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork" />
+            <Play aria-label="play the music" />
           </ArtworkContainer>
           <InfosContainer>
             <Title>{title}</Title>

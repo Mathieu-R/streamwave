@@ -240,7 +240,7 @@ class Settings extends Component {
             </DataVolumeRange>
             {/* SVG arc with data consumed until today */}
           </DataVolume>
-          <Logout onClick={this.logout}>Déconnexion</Logout>
+          <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>
         </SettingsContainer>
       </Container>
     )

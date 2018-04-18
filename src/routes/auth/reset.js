@@ -69,8 +69,8 @@ class Reset extends Component {
             <Label for="password-confirm">Confirmation du nouveau mot de passe</Label>
             <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" autocomplete="new-password"/>
           </InputWrapper>
-          <FormButton type="submit">
-            Créer un compte
+          <FormButton type="submit" aria-label="change password">
+            Changer de mot de passe
           </FormButton>
         </Form>
       </Container>
