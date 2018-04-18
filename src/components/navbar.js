@@ -18,7 +18,7 @@ const Container = styled.div`
   height: ${props => props.theme.navbar.height};
   width: 100%;
   max-width: 500px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
   background: ${props => props.theme.navbar.background};
   transform: translateX(-50%);
 `;

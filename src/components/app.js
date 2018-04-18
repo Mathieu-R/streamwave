@@ -12,14 +12,15 @@ import Auth from '../routes/auth';
 
 const Container = styled.div`
   min-height: 100vh;
-  background: #161C36;
+  background: ${props => props.theme.background};
 `;
 
 class App extends Component {
 	render () {
     const theme = {
       auth: {
-        background: '#7C7C7C',
+        // spotify inspired background
+        background: 'linear-gradient(#485460, #0b0c0d 85%)',//'#7C7C7C',
         google: {
           background: '#2962FF'
         },
@@ -27,7 +28,8 @@ class App extends Component {
           background: '#1870D7'
         }
       },
-      background: '#161C36',
+      // spotify inspired background
+      background: 'linear-gradient(#485460, #0b0c0d 85%)', //'#161C36',
       menu: {
         active: '#4A90E2'
       },

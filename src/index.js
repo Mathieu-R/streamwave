@@ -27,36 +27,49 @@ if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
       return;
     }
 
-    // first time service-worker installed.
-    if (!navigator.serviceWorker.controller) {
-      toasting(['Streamwave cached.', 'Ready to work offline.']);
+    const isReloading = false;
+    navigator.serviceWorker.oncontrollerchange = evt => {
+      if (isReloading) {
+        return;
+      }
+
+      // refresh the page
+      window.location.reload();
+      isReloading = true;
     }
 
     registration.onupdatefound = event => {
       console.log('A new service worker has been found, installing...');
+    }
 
-      registration.installing.onstatechange = event => {
-        // as the service worker is installed, we can push the message
-        if (event.target.state === 'activated') {
-          toasting(['Streamwave updated. Refresh to get the new version.']);
-        }
-        console.log(`Service Worker ${event.target.state}`)
+    registration.installing.onstatechange = event => {
+      // first time service-worker installed.
+      if (event.target.state === 'activated' && !navigator.serviceWorker.controller) {
+        toasting(['Streamwave cached.', 'Ready to work offline.'])
+        return;
+      }
+
+      // as the service worker is installed, we can push the message
+      if (event.target.state === 'activated') {
+        toasting(['Streamwave updated.', 'Refresh to get the new version.']);
+      }
+
+      console.log(`Service Worker ${event.target.state}`);
+    }
+
+    navigator.serviceWorker.onmessage = event => {
+      if (event.data.type === 'downloading') {
+        const {tracklistId, downloaded, totalDownload} = event.data;
+        store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
+        return;
+      }
+
+      if (event.data.type === 'downloaded') {
+        const {tracklistId} = event.data;
+        store.dispatch(removeDownloadPercentage({id: tracklistId}));
       }
     }
   }).catch(err => console.error(err));
-
-  navigator.serviceWorker.onmessage = event => {
-    if (event.data.type === 'downloading') {
-      const {tracklistId, downloaded, totalDownload} = event.data;
-      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
-      return;
-    }
-
-    if (event.data.type === 'downloaded') {
-      const {tracklistId} = event.data;
-      store.dispatch(removeDownloadPercentage({id: tracklistId}));
-    }
-  }
 }
 
 const Main = () => (
