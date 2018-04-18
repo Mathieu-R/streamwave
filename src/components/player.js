@@ -285,8 +285,8 @@ class Player extends Component {
   }) {
     return (
       <Container show={showPlayer} primaryColor={track && track.primaryColor}>
-        <Close onClick={this.closePlayer} />
-        <Chromecast onClick={this.onChromecastClick}>
+        <Close onClick={this.closePlayer} aria-label="close player"/>
+        <Chromecast onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
@@ -313,14 +313,14 @@ class Player extends Component {
           }
         </Chromecast>
         <Cover>
-          <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} />
+          <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
           <InfoContainer>
             <Infos>
               <Artist>{artist && artist}</Artist>
               <Title>{track && track.title}</Title>
             </Infos>
-            <AddToPlaylist onClick={this.addToPlaylist}>
-              <img alt="add to playlist" src={addIcon} />
+            <AddToPlaylist onClick={this.addToPlaylist} aria-label="add to playlist">
+              <img src={addIcon} alt="add to playlist" />
             </AddToPlaylist>
           </InfoContainer>
         </Cover>
@@ -331,7 +331,7 @@ class Player extends Component {
             <TotalTime>{formatDuration(totalTime)}</TotalTime>
           </ProgressWrapper>
           <Controls>
-            <Shuffle onClick={this.onShuffleClick}>
+            <Shuffle onClick={this.onShuffleClick} aria-label="shuffle tracklist">
               <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill={shuffle ? "#4A90E2" : "#FFF"}>
@@ -358,7 +358,7 @@ class Player extends Component {
                 </g>
               </SVG>
             </Shuffle>
-            <Prev onClick={this.onPrevClick}>
+            <Prev onClick={this.onPrevClick} aria-label="prev track">
               <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -383,7 +383,7 @@ class Player extends Component {
                 </g>
               </svg>
             </Prev>
-            <Play onClick={this.onPlayClick}>
+            <Play onClick={this.onPlayClick} aria-label="play or pause track">
             {
               playing ?
               <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -403,7 +403,7 @@ class Player extends Component {
               </svg>
             }
             </Play>
-            <Next onClick={this.onNextClick}>
+            <Next onClick={this.onNextClick} aria-label="next track">
               <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                   <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -425,7 +425,7 @@ class Player extends Component {
                 </g>
               </svg>
             </Next>
-            <Repeat onClick={this.onRepeatClick}>
+            <Repeat onClick={this.onRepeatClick} aria-label="repeat tracklist">
               <SVG width="28px" height="22px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill={repeat ? "#4A90E2" : "#FFF"}>

@@ -7,7 +7,7 @@ import arrow from '../assets/svg/arrow.svg';
 const TopBarBack = props => (
     <TopBarContainer>
       <Link to="/">
-        <TopBarButton src={arrow} />
+        <TopBarButton role="button" src={arrow} alt="arrow back to home" />
       </Link>
       <TopBarTitle>
         Streamwave

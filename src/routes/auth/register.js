@@ -86,7 +86,7 @@ class Register extends Component {
             <Label for="password-confirm">Confirmation du mot de passe</Label>
             <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="register-form__password-confirm__input" autocomplete="new-password"/>
           </InputWrapper>
-          <FormButton type="submit">
+          <FormButton type="submit" aria-label="register">
             Créer un compte
           </FormButton>
         </Form>

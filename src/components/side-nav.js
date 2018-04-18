@@ -127,19 +127,19 @@ const SideNav = ({showSideNav, hideSideNav, user}) => (
   <Overlay show={showSideNav}>
     <Container show={showSideNav}>
       <HamburgerContainer>
-        <Hamburger onClick={hideSideNav} />
+        <Hamburger onClick={hideSideNav} aria-label="hide sidenav"/>
       </HamburgerContainer>
       <User>
-        <Avatar src={user.avatar} />
+        <Avatar src={user.avatar} alt="avatar" />
         <Infos>
           <Username>{user.username}</Username>
           <Mail>{user.email ? user.email : ''}</Mail>
         </Infos>
       </User>
       <Menu>
-        <Element><CustomLink to="/" onClick={hideSideNav}>Home</CustomLink></Element>
-        <Element><CustomLink to="/about" onClick={hideSideNav}>A propos</CustomLink></Element>
-        <Element><CustomLink to="/licences" onClick={hideSideNav}>Licenses musicales</CustomLink></Element>
+        <Element><CustomLink to="/" onClick={hideSideNav} aria-label="home">Home</CustomLink></Element>
+        <Element><CustomLink to="/about" onClick={hideSideNav} aria-label="about">A propos</CustomLink></Element>
+        <Element><CustomLink to="/licences" onClick={hideSideNav} aria-label="licences">Licenses musicales</CustomLink></Element>
       </Menu>
     </Container>
   </Overlay>

@@ -94,7 +94,7 @@ class Login extends Component {
             <Label for="password" class="login-form__password__label">Mot de passe</Label>
             <input ref={input => this.password = input} type="password" id="password" class="login-form__password__input" autocomplete="current-password"/>
           </InputWrapper>
-          <FormButton>
+          <FormButton aria-label="login">
             Se connecter
           </FormButton>
         </Form>

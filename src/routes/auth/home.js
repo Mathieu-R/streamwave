@@ -188,20 +188,20 @@ class Auth extends Component {
             <Subtitle>streaming music pwa</Subtitle>
           </Welcome>
           <ButtonsContainer>
-            <LoginButton>
+            <LoginButton aria-label="go to login page">
               <AuthLink to="/auth/login">
                 Se connecter
               </AuthLink>
             </LoginButton>
-            <RegisterButton>
+            <RegisterButton aria-label="go to register page">
               <AuthLink to="/auth/register">
                 Créer un compte
               </AuthLink>
             </RegisterButton>
-            <GoogleButton onClick={this.googleLogin}>
+            <GoogleButton onClick={this.googleLogin} aria-label="login with your google account">
               Continuer avec google
             </GoogleButton>
-            <PasswordResetLink to="/auth/forgot">
+            <PasswordResetLink to="/auth/forgot" aria-label="go to password reset page">
               Mot de passe oublié ?
             </PasswordResetLink>
           </ButtonsContainer>

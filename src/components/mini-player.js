@@ -152,7 +152,7 @@ class MiniPlayer extends Component {
         </ProgressContainer>
 
         <MiniCoverContainer>
-          <MiniCoverArtwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`}/>
+          <MiniCoverArtwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="mini cover artwork"/>
         </MiniCoverContainer>
 
         <MusicInfosContainer>
@@ -161,7 +161,7 @@ class MiniPlayer extends Component {
         </MusicInfosContainer>
 
         <ControlsContainer>
-          <Button disabled={!track} onClick={this.onPrevClick}>
+          <Button disabled={!track} onClick={this.onPrevClick} aria-label="prev track">
             <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -186,7 +186,7 @@ class MiniPlayer extends Component {
               </g>
             </svg>
           </Button>
-          <Button disabled={!track} onClick={this.onPlayClick}>
+          <Button disabled={!track} onClick={this.onPlayClick} aria-label="play or pause track">
             {
               playing ?
               <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -206,7 +206,7 @@ class MiniPlayer extends Component {
               </svg>
             }
           </Button>
-          <Button disabled={!track} onClick={this.onNextClick}>
+          <Button disabled={!track} onClick={this.onNextClick} aria-label="next track">
             <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                 <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -228,7 +228,7 @@ class MiniPlayer extends Component {
               </g>
             </svg>
           </Button>
-          <Button disabled={!track} onClick={this.onChromecastClick}>
+          <Button disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">

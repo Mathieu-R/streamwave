@@ -78,7 +78,7 @@ class Forgot extends Component {
           <Label htmlFor="email">E-mail</Label>
           <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
         </InputContainer>
-        <FormButton>
+        <FormButton aria-label="send email to change password">
           Envoyer un e-mail de changement de mot de passe
         </FormButton>
       </Form>

@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => ({
 
 const TopBarHamburger = ({showSideNav}) => (
   <TopBarContainer>
-    <TopBarButton src={hamburger} onClick={showSideNav} />
+    <TopBarButton role="button" src={hamburger} onClick={showSideNav} alt="hamburger open menu" />
     <TopBarTitle>
       Streamwave
     </TopBarTitle>
