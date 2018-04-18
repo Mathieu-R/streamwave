@@ -17,7 +17,8 @@ const sw = path.join(__dirname, '../src/sw.js');
 const plugins = [
   new MiniCSSExtractPlugin({
     filename: '[name].[contenthash].css'
-  })
+  }),
+  ProgressBarPlugin()
 ];
 
 const devServer = {
@@ -89,8 +90,7 @@ if (production) {
     new htmlWebpackPlugin({ // generate index.html
       template: config.template,
     }),
-    new FriendlyErrorsPlugin(),
-    ProgressBarPlugin()
+    new FriendlyErrorsPlugin()
   );
 };
 

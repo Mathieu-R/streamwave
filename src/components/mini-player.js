@@ -151,9 +151,12 @@ class MiniPlayer extends Component {
           <ProgressBar seek={this.props.seek} borderRadius={false} />
         </ProgressContainer>
 
-        <MiniCoverContainer>
-          <MiniCoverArtwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="mini cover artwork"/>
-        </MiniCoverContainer>
+        {
+          coverURL &&
+          <MiniCoverContainer>
+            <MiniCoverArtwork src={`${Constants.CDN_URL}/${coverURL}`} alt="mini cover artwork"/>
+          </MiniCoverContainer>
+        }
 
         <MusicInfosContainer>
           <Artist>{artist}</Artist>
