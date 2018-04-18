@@ -19,8 +19,7 @@ class App extends Component {
 	render () {
     const theme = {
       auth: {
-        // spotify inspired background
-        background: 'linear-gradient(#485460, #0b0c0d 85%)',//'#7C7C7C',
+        background: '#7C7C7C',
         google: {
           background: '#2962FF'
         },
