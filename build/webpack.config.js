@@ -11,6 +11,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const production = process.env.NODE_ENV === 'production';
 
 const sw = path.join(__dirname, '../src/sw.js');
@@ -78,10 +79,7 @@ if (production) {
       }
     ]),
     new InjectManifest({
-      swSrc: sw,
-      globPatterns: [
-        '**/*.{js,css,html,json,jpg,png,svg,webp}'
-      ]
+      swSrc: sw
     })
   );
 } else {
@@ -99,6 +97,8 @@ const common = {
   mode: production ? 'production' : 'development',
   // do not continue build if any errors
   bail: true,
+  // watch mode
+  watch: !production,
   entry: {
     app: config.entry.front
   },
@@ -152,6 +152,12 @@ const common = {
     // plugin optimizer should be put here
     // not in plugins anymore as before
     minimizer: [
+      // minify js
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: false
+      }),
       // Compress extracted CSS.
       // Possible duplicated CSS from differents components can be deduped.
       new OptimizeCSSPlugin({

@@ -4,20 +4,23 @@
 # streamwave
 TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mobile first.
 
-# Goal
-- Adaptive Streaming + Range Request
-- DASH + HLS (Mobile Safari)
-- Shaka player
-- Preact
-- NodeJS
-- Basic auth + Google Oauth2
-- Credential Management API
-- Remote Playback API (Chromecast)
-- Media Session API
-- Service Worker
-- Background Fetch
-- Background Sync
-- Socket Live Sync
-- Median Cut 
-- Elastic Search
-- ...
+# Goals
+- [X] Adaptive Streaming + Range Request  
+- [X] DASH + HLS (Mobile Safari)   
+- [X] Shaka player   
+- [X] Preact    
+- [X] NodeJS    
+- [X] Basic auth + Google Oauth2     
+- [X] Credential Management API    
+- [ ] Presentation API (Chromecast) (Work in progress...)    
+- [X] Media Session API    
+- [X] Service Worker    
+- [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878     
+- [X] Background Sync    
+- [ ] Socket Live Sync    
+- [ ] Median Cut (To Fix)    
+- [ ] Elastic Search    
+- [ ] Crossfase     
+- [ ] Equalize volume    
+- [ ] Equalizer    
+- [ ] Track data volume    
