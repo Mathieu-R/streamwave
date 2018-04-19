@@ -62,6 +62,6 @@ const Toast = ({toast}) => (
     </Inner>
   )}
   </Transition>
-)
+);
 
 export default connect(mapStateToProps)(Toast);

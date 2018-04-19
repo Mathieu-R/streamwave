@@ -162,6 +162,7 @@ class Album extends Component {
   }
 
   listenToTrack (artist, title, coverURL, track) {
+    console.log(title, track.title);
     const {tracks} = this.state;
     const {manifestURL, playlistHLSURL} = track;
 
@@ -205,7 +206,7 @@ class Album extends Component {
         <Tracks>
           {tracks.map(track => (
             <Track
-              number={track.number} title={track.title} duration={track.duration}
+              number={track.number} title={track.title} artist={artist} coverURL={coverURL} duration={track.duration} track={track}
               onClick={_ => this.listenToTrack(artist, title, coverURL, track)} />
           ))}
         </Tracks>
