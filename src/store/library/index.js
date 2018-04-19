@@ -9,6 +9,9 @@ export function storeLibrary (albums) {
   }
 }
 
+// selectors
+export const getLibrary = state => state.library;
+
 // reducers
 export default (state = [], action) => {
   const {type, albums} = action;

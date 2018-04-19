@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 import { Overlay } from './ui';
 
@@ -27,7 +28,7 @@ const Container = styled.aside`
   transform: translateX(${props => props.show ? 0 : '-102%'});
   opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity transform;
+  will-change: opacity, transform;
   z-index: 1;
 `;
 

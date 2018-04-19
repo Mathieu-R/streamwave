@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const ProgressLineContainer = styled.div`
@@ -36,4 +37,4 @@ const ProgressLine = ({progress, value}) => (
   </ProgressLineContainer>
 )
 
-export default ProgressLine;
+export default pure(ProgressLine);

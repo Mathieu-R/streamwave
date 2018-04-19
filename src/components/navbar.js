@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
 
@@ -175,4 +176,4 @@ class Navbar extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Navbar);
+export default pure(connect(null, mapDispatchToProps)(Navbar));

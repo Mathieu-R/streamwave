@@ -1,9 +1,14 @@
-import { h, render } from 'preact';
+import preact, { h, render } from 'preact';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import installServiceWorker from './install-service-worker';
 import Constants from './constants';
 import store from './store';
+
+if (process.env.NODE_ENV !== 'production') {
+  const {whyDidYouUpdate} = require('why-did-you-update');
+  whyDidYouUpdate(preact);
+}
 
 import {
   setDownloadPercentage,

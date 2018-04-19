@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 import Constants from '../constants';
 
@@ -85,4 +86,4 @@ class Cover extends Component {
   }
 }
 
-export default Cover;
+export default pure(Cover);

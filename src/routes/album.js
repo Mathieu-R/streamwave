@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
+import shallowCompare from 'shallow-compare';
 import idb from '../utils/cache';
 import Constants from '../constants';
 import Track from '../components/track';
@@ -83,6 +84,10 @@ class Album extends Component {
     this.handleTrackClick = this.handleTrackClick.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
     this.download = this.download.bind(this);
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
   }
 
   componentWillMount () {
@@ -177,6 +182,7 @@ class Album extends Component {
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
+    if (tracks === undefined) return null;
     return (
       <Container>
         <TopBarBack />
@@ -197,10 +203,10 @@ class Album extends Component {
           </Download>
         </Infos>
         <Tracks>
-          {tracks && tracks.map(track => (
+          {tracks.map(track => (
             <Track
-              {...track}
-              onClick={_ => this.listenToTrack(artist, title, coverURL, track)}/>
+              number={track.number} title={track.title} duration={track.duration}
+              onClick={_ => this.listenToTrack(artist, title, coverURL, track)} />
           ))}
         </Tracks>
       </Container>
