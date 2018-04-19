@@ -27,7 +27,7 @@ self.onfetch = event => {
 
     // api call
     if (!response) {
-      return fetch(event.request)
+      return fetch(event.request);
     }
 
     // range-request (music)
