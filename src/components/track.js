@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import { formatDuration } from '../utils';
 import styled from 'styled-components';
 
@@ -14,7 +15,7 @@ const Container = styled.div`
   cursor: pointer;
 
   &:hover, &:focus {
-    background: #262D4D;
+    background: #22242d;
   }
 `;
 
@@ -46,9 +47,7 @@ const Duration = styled.div`
 `;
 
 const Track = ({
-  number, title, duration, manifestURL,
-  playlistHLSURL, audio128URL, audio192URL,
-  audio256URL, onClick
+  number, title, duration, onClick
 }) => (
   <Container onClick={onClick}>
     <Number>{number}</Number>
@@ -58,4 +57,4 @@ const Track = ({
   </Container>
 );
 
-export default Track;
+export default onlyUpdateForKeys(['number', 'title', 'duration'])(Track);

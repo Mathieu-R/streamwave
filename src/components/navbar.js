@@ -61,6 +61,24 @@ class Navbar extends Component {
     this.showPlayer = this.showPlayer.bind(this);
   }
 
+  // trying to prevent unnecessary updates
+  shouldComponentUpdate () {
+    return false;
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(this.props);
+    console.log(nextProps);
+  }
+
+  componentWillUpdate () {
+    console.log('Update is coming...');
+  }
+
+  componentDidUpdate () {
+    console.log('Component updated.');
+  }
+
   showPlayer (evt) {
     this.props.switchPlayerStatus({show: true});
   }

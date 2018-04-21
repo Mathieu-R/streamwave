@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { Link } from 'react-router-dom';
+import pure from 'recompose/pure'
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 import arrow from '../assets/svg/arrow.svg';
@@ -15,4 +16,4 @@ const TopBarBack = props => (
     </TopBarContainer>
 );
 
-export default TopBarBack;
+export default pure(TopBarBack);

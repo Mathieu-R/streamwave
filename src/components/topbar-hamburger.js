@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import pure from 'recompose/pure';
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 import hamburger from '../assets/svg/hamburger.svg';

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
+import shallowCompare from 'shallow-compare';
 import idb from '../utils/cache';
 import Constants from '../constants';
 import Track from '../components/track';
@@ -85,6 +86,10 @@ class Album extends Component {
     this.download = this.download.bind(this);
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
+  }
+
   componentWillMount () {
     const id = this.props.match.params.id;
     const IDB_KEY = `album-${id}`;
@@ -157,6 +162,7 @@ class Album extends Component {
   }
 
   listenToTrack (artist, title, coverURL, track) {
+    console.log(title, track.title);
     const {tracks} = this.state;
     const {manifestURL, playlistHLSURL} = track;
 
@@ -177,6 +183,7 @@ class Album extends Component {
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
+    if (tracks === undefined) return null;
     return (
       <Container>
         <TopBarBack />
@@ -197,10 +204,10 @@ class Album extends Component {
           </Download>
         </Infos>
         <Tracks>
-          {tracks && tracks.map(track => (
+          {tracks.map(track => (
             <Track
-              {...track}
-              onClick={_ => this.listenToTrack(artist, title, coverURL, track)}/>
+              number={track.number} title={track.title} artist={artist} coverURL={coverURL} duration={track.duration} track={track}
+              onClick={_ => this.listenToTrack(artist, title, coverURL, track)} />
           ))}
         </Tracks>
       </Container>

@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import idb from '../utils/cache';
 import styled from 'styled-components';
 import Constants from '../constants';
@@ -8,7 +9,8 @@ import Cover from '../components/cover';
 import TopBarHamburger from '../components/topbar-hamburger';
 
 import {
-  storeLibrary
+  storeLibrary,
+  getLibrary
 } from '../store/library';
 
 const Gallery = styled.section`
@@ -21,7 +23,7 @@ const Gallery = styled.section`
 `;
 
 const mapStateToProps = state => ({
-  library: state.library
+  library: getLibrary(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -39,7 +41,7 @@ class Library extends Component {
     }
   }
 
-  componentDidMount () {
+  componentWillMount () {
     // NOTE: trying some stuff here. Different than logic in album view
     // 1. Try to fetch and get gallery from the cache, get the faster one.
     Promise.race([
@@ -121,9 +123,9 @@ class Library extends Component {
     return (
       <div>
         <TopBarHamburger />
-        <Gallery innerRef={gallery => this.gallery = gallery} >
-          {library && library.map(album => (
-            <Cover {...album} />
+        <Gallery innerRef={gallery => this.gallery = gallery}>
+          {library.map(({artist, title, coverURL, _id}) => (
+              <Cover key={_id} artist={artist} title={title} coverURL={coverURL} id={_id} />
           ))}
         </Gallery>
       </div>

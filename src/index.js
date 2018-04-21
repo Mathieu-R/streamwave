@@ -2,17 +2,7 @@ import { h, render } from 'preact';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import installServiceWorker from './install-service-worker';
-import Constants from './constants';
 import store from './store';
-
-import {
-  setDownloadPercentage,
-  removeDownloadPercentage
-} from './store/player';
-
-import {
-  toasting
-} from './store/toast';
 
 import './style/index.scss';
 import App from './components/app';

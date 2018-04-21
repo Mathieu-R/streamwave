@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -66,5 +67,5 @@ const Switch = ({label, value, onChange}) => (
   </Container>
 );
 
-export default Switch;
+export default pure(Switch);
 

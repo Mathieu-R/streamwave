@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 
+import {
+  getMessages,
+  toShow
+ } from '../store/toast';
+
 const Inner = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,19 +54,20 @@ const Content = styled.p`
 `;
 
 const mapStateToProps = state => ({
-  toast: state.toast
+  messages: getMessages(state),
+  show: toShow(state)
 });
 
-const Toast = ({toast}) => (
-  <Transition in={toast && toast.show} timeout={300}>
+const Toast = ({messages, show}) => (
+  <Transition in={show} timeout={300}>
   {state => (
     <Inner state={state} className={state}>
-      {toast && toast.messages.map((message, index) => (
+      {messages.map((message, index) => (
         <Content key={index}>{message}</Content>
       ))}
     </Inner>
   )}
   </Transition>
-)
+);
 
 export default connect(mapStateToProps)(Toast);

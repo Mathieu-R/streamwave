@@ -23,6 +23,10 @@ export function toasting (messages, duration = 3000) {
   }
 }
 
+// selectors
+export const getMessages = state => state.toast.messages;
+export const toShow = state => state.toast.show;
+
 // reducers
 export default (state = {}, action) => {
   const {type, messages} = action;

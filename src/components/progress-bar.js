@@ -113,6 +113,12 @@ class ProgressBar extends Component {
     window.removeEventListener('resize', this.onResize);
   }
 
+  // shouldComponentUpdate (nextProps) {
+  //   if (nextProps.duration !== this.props.duration) return false;
+  //   if (nextProps.currentTime !== this.props.currentTime) return false;
+  //   return true;
+  // }
+
   componentWillReceiveProps (nextProps) {
     if (!this.state.bcr) {
       this.onResize();
