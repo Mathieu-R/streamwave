@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import idb from '../utils/cache';
 import styled from 'styled-components';
 import Constants from '../constants';
@@ -123,8 +124,8 @@ class Library extends Component {
       <div>
         <TopBarHamburger />
         <Gallery innerRef={gallery => this.gallery = gallery}>
-          {library.map(album => (
-            <Cover {...album} />
+          {library.map(({artist, title, coverURL, _id}) => (
+              <Cover key={_id} artist={artist} title={title} coverURL={coverURL} id={_id} />
           ))}
         </Gallery>
       </div>

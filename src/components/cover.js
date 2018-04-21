@@ -1,15 +1,25 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import pure from 'recompose/pure';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Constants from '../constants';
 
 import playIcon from '../assets/svg/play.svg';
+
+const fade = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: ${fade} 1s linear 1s;
 `;
 
 const CoverLink = styled(Link)`
@@ -67,10 +77,10 @@ const Artist = styled.div`
 `;
 
 class Cover extends Component {
-  render ({artist, title, coverURL, _id}) {
+  render ({artist, title, coverURL, id}) {
     return (
       <Container>
-        <CoverLink to={`/album/${_id}`} >
+        <CoverLink to={`/album/${id}`} >
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
           <ArtworkContainer>
             <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork" />

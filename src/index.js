@@ -1,4 +1,4 @@
-import preact, { h, render } from 'preact';
+import { h, render } from 'preact';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import installServiceWorker from './install-service-worker';

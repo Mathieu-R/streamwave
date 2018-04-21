@@ -165,9 +165,9 @@ const common = {
     }]
   },
   optimization: {
-    concatenateModules: true,
+    concatenateModules: production,
     nodeEnv: process.env.NODE_ENV,
-    minimize: true,
+    minimize: production,
     // optimization.minimizer overrides default optimization
     // in webpack 4.
     // plugin optimizer should be put here

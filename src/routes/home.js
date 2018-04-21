@@ -1,8 +1,9 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import shaka from 'shaka-player';
-import Loadable from 'react-loadable';
+import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
@@ -26,6 +27,7 @@ const Album = Loadable({
 });
 
 import Settings from './settings';
+import Search from './search';
 
 import About from './about';
 import Licences from './licences';
@@ -40,6 +42,12 @@ import {
   setPrevTrack,
   setNextTrack
 } from '../store/player';
+
+const Container = styled.section`
+  height: 100%;
+  /* prevent navbar and mini-player to overlap */
+  margin-bottom: 100px;
+`;
 
 const mapDispatchToProps = dispatch => ({
   restoreSettings: _ => dispatch(restoreSettings()),
@@ -277,13 +285,14 @@ class Home extends Component {
 
   render () {
     return (
-      <div class="home">
+      <Container>
         <SideNav />
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
             render={props => <Album listen={this.listen} crossFade={this.crossFade} {...props} />}
           />
+          <Route exact path="/search" component={Search} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />
@@ -310,7 +319,7 @@ class Home extends Component {
           next={this.setNextTrack}
           crossFade={this.crossFade}
         />
-      </div>
+      </Container>
     );
   }
 }
