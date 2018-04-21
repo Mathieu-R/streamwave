@@ -122,7 +122,7 @@ class Library extends Component {
     return (
       <div>
         <TopBarHamburger />
-        <Gallery innerRef={gallery => this.gallery = gallery} >
+        <Gallery innerRef={gallery => this.gallery = gallery}>
           {library.map(album => (
             <Cover {...album} />
           ))}

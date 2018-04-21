@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import pure from 'recompose/pure';
 import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
 
@@ -60,6 +59,11 @@ class Navbar extends Component {
   constructor () {
     super();
     this.showPlayer = this.showPlayer.bind(this);
+  }
+
+  // trying to prevent unnecessary updates
+  shouldComponentUpdate () {
+    return false;
   }
 
   showPlayer (evt) {
@@ -176,4 +180,4 @@ class Navbar extends Component {
   }
 }
 
-export default pure(connect(null, mapDispatchToProps)(Navbar));
+export default connect(null, mapDispatchToProps)(Navbar);

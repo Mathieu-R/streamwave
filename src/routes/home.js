@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import shallowCompare from 'shallow-compare';
 import shaka from 'shaka-player';
 import Loadable from 'react-loadable';
 import Chromecaster from '../utils/chromecast';
@@ -74,10 +73,6 @@ class Home extends Component {
     this.chromecast = this.chromecast.bind(this);
     this.seek = this.seek.bind(this);
     this.crossFade = this.crossFade.bind(this);
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
   }
 
   componentDidMount () {
@@ -217,7 +212,7 @@ class Home extends Component {
 
   }
 
-  setEqualize () {
+  setEqualizer () {
 
   }
 

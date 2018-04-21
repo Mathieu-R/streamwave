@@ -1,5 +1,14 @@
 import Constants from './constants';
 
+import {
+  setDownloadPercentage,
+  removeDownloadPercentage
+} from './store/player';
+
+import {
+  toasting
+} from './store/toast';
+
 export default () => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
