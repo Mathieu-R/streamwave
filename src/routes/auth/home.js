@@ -76,6 +76,8 @@ const GoogleButton = styled(Button)`
 const AuthLink = styled(LinkButton)`
   color: #FFF;
   font-size: 18px;
+  /* fix: <a> does not take height of the button parent if firefox */
+  height: 55px;
 `;
 
 const PasswordResetLink = styled(LinkButton)`

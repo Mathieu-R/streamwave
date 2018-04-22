@@ -20,10 +20,6 @@ import {
 const progressBarHeight = 5;
 
 const Container = styled.div`
-  position: fixed;
-  bottom: ${props => props.theme.navbar.height};
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: flex-start;
   align-items: center;

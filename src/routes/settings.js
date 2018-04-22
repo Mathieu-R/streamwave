@@ -41,7 +41,7 @@ const LabelInline = styled.label`
 `;
 
 const Select = styled.select`
-  color: #FFF;
+  color: #000;
 `;
 
 const RangeBound = styled.span`

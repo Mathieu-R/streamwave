@@ -140,23 +140,24 @@ const common = {
     },
     {
       test: /\.(.png|svg)$/,
+      // compress images
       loader: 'image-webpack-loader',
       // Ensure this loader run before svg-loader or url-loader
       enforce: 'pre'
     },
+    // {
+    //   test: /\.svg$/,
+    //   loader: 'svg-url-loader',
+    //   options: {
+    //     // Inline image smaller than 10kb
+    //     limit: 10 * 1024,
+    //     // remove quotes from url
+    //     // https://developers.google.com/web/fundamentals/performance/webpack/decrease-frontend-size
+    //     noquotes: true
+    //   }
+    // },
     {
-      test: /\.svg$/,
-      loader: 'svg-url-loader',
-      options: {
-        // Inline image smaller than 10kb
-        limit: 10 * 1024,
-        // remove quotes from url
-        // https://developers.google.com/web/fundamentals/performance/webpack/decrease-frontend-size
-        noquotes: true
-      }
-    },
-    {
-      test: /\.png$/,
+      test: /\.(png|svg)$/,
       loader: production ? 'file-loader' : 'url-loader',
       query: {
         limit: 10 * 1024,

@@ -3,6 +3,7 @@ import Constants from '../../constants';
 // types
 const FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
 const CREATE_PLAYLIST = 'CREATE_PLAYLIST';
+const ADD_TRACK_TO_PLAYLIST = 'ADD_TRACK_TO_PLAYLIST';
 
 // actions
 export function createPlaylist ({title}) {
@@ -49,7 +50,29 @@ export function fetchPlaylists () {
     })
     .catch(err => console.error(err));
   }
+}
 
+export function addTrackToPlaylist ({playlistId, trackId}) {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      return fetch(`${Constants.API_URL}/playlist/${playlistId}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
+        },
+        body: JSON.stringify({
+          trackId
+        })
+      })
+      .then(response => response.json())
+      .then(response => {
+        if (!response) reject();
+        resolve();
+      });
+    })
+
+  }
 }
 
 // selectors
@@ -66,7 +89,7 @@ export default (state = [], action) => {
 
     case CREATE_PLAYLIST:
       return [
-        ...state.playlists,
+        ...state,
         action.playlist
       ]
 

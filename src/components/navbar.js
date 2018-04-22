@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
 
@@ -8,26 +8,16 @@ import {
   switchPlayerStatus
 } from '../store/player';
 
+const activeClassName = 'nav-active';
+
 const Container = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   height: ${props => props.theme.navbar.height};
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
   background: ${props => props.theme.navbar.background};
-  transform: translateX(-50%);
-`;
-
-const NavBarLink = styled(Link)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
 `;
 
 const Button = styled.button`
@@ -49,6 +39,23 @@ const Title = styled.div`
   font-size: 10px;
   font-weight: 500;
   margin-top: 5px;
+`;
+
+const NavBarLink = styled(NavLink).attrs({
+  activeClassName
+})`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+
+  &.${activeClassName} g, &.${activeClassName} svg {
+    fill: #4A90E2;
+  }
+
+  &.${activeClassName} ${Title} {
+    color: #4A90E2;
+  }
 `;
 
 const mapDispatchToProps = dispatch => ({
@@ -86,7 +93,7 @@ class Navbar extends Component {
   render () {
     return (
       <Container>
-        <NavBarLink to="/">
+        <NavBarLink to="/" activeClassName="nav-active">
           <Button aria-label="library">
             <Icon>
               <svg viewBox="0 0 33 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -105,7 +112,7 @@ class Navbar extends Component {
             </Title>
           </Button>
         </NavBarLink>
-        <NavBarLink to="/playlist">
+        <NavBarLink to="/playlist"  activeClassName="nav-active">
           <Button aria-label="playlists">
             <Icon>
               <svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +169,7 @@ class Navbar extends Component {
             En écoute
           </Title>
         </Button>
-        <NavBarLink to="/search">
+        <NavBarLink to="/search" activeClassName="nav-active">
           <Button aria-label="search">
             <Icon>
               <svg fill="#FFFFFF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -175,7 +182,7 @@ class Navbar extends Component {
             </Title>
           </Button>
         </NavBarLink>
-        <NavBarLink to="/settings">
+        <NavBarLink to="/settings" activeClassName="nav-active">
           <Button aria-label="settings">
             <Icon>
               <svg fill="#FFFFFF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

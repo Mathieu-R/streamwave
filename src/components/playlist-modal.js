@@ -13,7 +13,8 @@ import {
 import {
   getPlaylists,
   createPlaylist,
-  fetchPlaylists
+  fetchPlaylists,
+  addTrackToPlaylist
 } from '../store/playlists';
 
 const Container = styled.div`
@@ -121,7 +122,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   toasting: (messages, duration) => dispatch(toasting(messages, duration)),
   fetchPlaylists: _ => dispatch(fetchPlaylists()),
-  createPlaylist: payload => dispatch(createPlaylist(payload))
+  createPlaylist: payload => dispatch(createPlaylist(payload)),
+  addTrackToPlaylist: payload => dispatch(addTrackToPlaylist(payload))
 });
 
 class PlaylistModal extends Component {
@@ -132,6 +134,7 @@ class PlaylistModal extends Component {
     this.showPlaylistInput = this.showPlaylistInput.bind(this);
     this.removePlaylistInput = this.removePlaylistInput.bind(this);
     this.createPlaylist = this.createPlaylist.bind(this);
+    this.addTrackToPlaylist = this.addTrackToPlaylist.bind(this);
 
     this.state = {
       showPlaylistInput: false
@@ -172,7 +175,14 @@ class PlaylistModal extends Component {
       .catch(msg => this.props.toasting(msg));
   }
 
-  render ({show, removePlaylistModal, playlists}, {showPlaylistInput}) {
+  addTrackToPlaylist (playlistId) {
+    this.props.addTrackToPlaylist({playlistId, trackId: this.props.trackId})
+      .then(() => toasting(['Titre ajouté à la playliste']))
+      .then(() => this.props.removePlaylistModal())
+      .catch(err => console.error(err));
+  }
+
+  render ({show, removePlaylistModal, trackId, playlists}, {showPlaylistInput}) {
     const pluralize = (string, len) => len > 1 ? string + 's' : string;
     return (
       <Overlay show={show} onClick={removePlaylistModal}>
@@ -191,7 +201,7 @@ class PlaylistModal extends Component {
           <Playlists>
             {
               playlists.map(playlist =>
-                <Playlist key={playlist._id} aria-label="add to this playlist">
+                <Playlist key={playlist._id} onClick={evt => this.addTrackToPlaylist(playlist._id)} aria-label="add to this playlist">
                   <Title>{playlist.title}</Title>
                   <TracksCounter>{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</TracksCounter>
                 </Playlist>

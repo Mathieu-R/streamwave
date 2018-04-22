@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import ProgressBar from './progress-bar';
 import { shuffle, formatDuration, getRGBCssFromObject } from '../utils';
+import Range from './range';
 import PlaylistModal from './playlist-modal';
 import Constants from '../constants';
 
 import closeIcon from '../assets/svg/close.svg';
 import addIcon from '../assets/svg/add.svg';
+import volumeMuteIcon from '../assets/svg/volume-mute.svg';
+import volumeMaxIcon from '../assets/svg/volume-max.svg';
 
 import {
   getShowPlayer,
@@ -88,7 +91,10 @@ const Infos = styled.div`
   flex-direction: column;
 `;
 
-const Artist = styled.span``;
+const Artist = styled.span`
+  font-size: 12px;
+  font-weight: 400;
+`;
 
 const Title = styled.span``;
 
@@ -110,6 +116,7 @@ const ProgressAndControlsContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
   transform: translateX(-50%);
 `;
 
@@ -120,7 +127,16 @@ const ProgressWrapper = styled.section`
   height: 5px;
   width: 100%;
   max-width: 800px;
-  margin: 25px 0;
+  margin: 35px 0;
+`;
+
+const VolumeWrapper = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
 `;
 
 const CurrentTime = styled.span`
@@ -160,6 +176,22 @@ const Chromecast = styled(Button)`
   position: absolute;
   top: 15px;
   right: 15px;
+`;
+
+const VolumeMute = styled.div`
+  background: url(${volumeMuteIcon}) no-repeat no-repeat center;
+  background-size: 18px 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0 5px;
+`;
+
+const VolumeMax = styled.div`
+  background: url(${volumeMaxIcon}) no-repeat no-repeat center;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
 `;
 
 const mapStateToProps = state => ({
@@ -279,10 +311,16 @@ class Player extends Component {
   render ({
     showPlayer, coverURL, artist, title, duration,
     playing, chromecasting, shuffle, repeat,
-    track, currentTime, totalTime, seek
+    track, currentTime, totalTime, seek,
+    onVolumeChange
   }, {
     showPlaylistModal
   }) {
+    // no track loaded
+    if (track === null) {
+      return null;
+    }
+
     return (
       <Container show={showPlayer} primaryColor={track && track.primaryColor}>
         <Close onClick={this.closePlayer} aria-label="close player"/>
@@ -316,8 +354,8 @@ class Player extends Component {
           <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
           <InfoContainer>
             <Infos>
-              <Artist>{artist && artist}</Artist>
               <Title>{track && track.title}</Title>
+              <Artist>{artist && artist}</Artist>
             </Infos>
             <AddToPlaylist onClick={this.addToPlaylist} aria-label="add to playlist">
               <img src={addIcon} alt="add to playlist" />
@@ -445,8 +483,13 @@ class Player extends Component {
               </SVG>
             </Repeat>
           </Controls>
+          <VolumeWrapper>
+            <VolumeMute />
+            <Range min={0} max={100} showToolTip={false} onChange={onVolumeChange} />
+            <VolumeMax />
+          </VolumeWrapper>
         </ProgressAndControlsContainer>
-        <PlaylistModal show={showPlaylistModal} removePlaylistModal={this.removePlaylistModal} />
+        <PlaylistModal show={showPlaylistModal} removePlaylistModal={this.removePlaylistModal} trackId={track._id} />
       </Container>
     );
   }

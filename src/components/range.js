@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -54,7 +55,7 @@ const RangeRoundContainer = styled.div.attrs({
 
 const RangeToolTip = styled.div`
   position: absolute;
-  display: flex;
+  display: ${props => props.show ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
   top: -30px;
@@ -100,7 +101,7 @@ class Range extends Component {
     this.setState({position, value});
   }
 
-  render ({min, max, onChange}, {position, value}) {
+  render ({min, max, onChange, showToolTip}, {position, value}) {
     return (
       <Container
         innerRef={container => this.container = container}
@@ -116,7 +117,7 @@ class Range extends Component {
         <Track>
           <RangeTrack position={position} />
           <RangeRoundContainer position={position}>
-            <RangeToolTip>{value}</RangeToolTip>
+            <RangeToolTip show={showToolTip}>{value}</RangeToolTip>
             <RangeRound />
           </RangeRoundContainer>
         </Track>
@@ -127,7 +128,9 @@ class Range extends Component {
 
 Range.defaultProps = {
   min: 0,
-  value: 0
+  value: 0,
+  showToolTip: true
 }
 
-export default Range;
+
+export default pure(Range);

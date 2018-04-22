@@ -49,6 +49,19 @@ const Container = styled.section`
   margin-bottom: 100px;
 `;
 
+const MiniPlayerAndNavBarContainer = styled.section`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  background: #212121;
+`;
+
 const mapDispatchToProps = dispatch => ({
   restoreSettings: _ => dispatch(restoreSettings()),
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
@@ -79,6 +92,7 @@ class Home extends Component {
     this.setPrevTrack = this.setPrevTrack.bind(this);
     this.setNextTrack = this.setNextTrack.bind(this);
     this.chromecast = this.chromecast.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
     this.crossFade = this.crossFade.bind(this);
   }
@@ -247,6 +261,10 @@ class Home extends Component {
     this.audio.base.currentTime = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
   }
 
+  changeVolume (volume) {
+    this.audio.base.volume = volume / 100;
+  }
+
   seek (time) {
     this.audio.base.currentTime = time
   }
@@ -302,17 +320,20 @@ class Home extends Component {
           prev={this.setPrevTrack}
           next={this.setNextTrack}
           chromecast={this.chromecast}
+          onVolumeChange={this.changeVolume}
           seek={this.seek}
         />
-        <MiniPlayer
-          listen={this.listen}
-          onPlayClick={this.onPlayClick}
-          prev={this.setPrevTrack}
-          next={this.setNextTrack}
-          chromecast={this.chromecast}
-          seek={this.seek}
-        />
-        <NavBar />
+        <MiniPlayerAndNavBarContainer>
+          <MiniPlayer
+            listen={this.listen}
+            onPlayClick={this.onPlayClick}
+            prev={this.setPrevTrack}
+            next={this.setNextTrack}
+            chromecast={this.chromecast}
+            seek={this.seek}
+          />
+          <NavBar />
+        </MiniPlayerAndNavBarContainer>
         <Audio
           ref={audio => this.audio = audio}
           preload="metadata"

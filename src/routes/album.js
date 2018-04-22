@@ -98,6 +98,7 @@ class Album extends Component {
     // from the cache
     idb.get(IDB_KEY).then(response => {
       if (response) {
+        console.log(response);
         this.setState({...response});
         return;
       }
