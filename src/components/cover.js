@@ -19,7 +19,8 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${fade} 1s linear 1s;
+  opacity: 1;
+  animation: ${fade} linear 1s;
 `;
 
 const CoverLink = styled(Link)`
@@ -33,16 +34,20 @@ const CoverLink = styled(Link)`
 
 const ArtworkContainer = styled.div`
   position: relative;
+  /* background as a placeholder */
+  background: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s cubic-bezier(0, 0, 0.3, 1);
+  will-change: transform;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Artwork = styled.img`
   max-height: 150px;
   min-height: 100px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
-  &:hover {
-    filter: brightness(0.3);
-  }
 `;
 
 const Play = styled.button`
@@ -69,11 +74,13 @@ const InfosContainer = styled.div`
 
 const Title = styled.div`
   text-align: center;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 500;
 `;
 
 const Artist = styled.div`
   text-align: center;
+  font-size: 14px;
 `;
 
 class Cover extends Component {
@@ -84,7 +91,6 @@ class Cover extends Component {
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
           <ArtworkContainer>
             <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork" />
-            <Play aria-label="play the music" />
           </ArtworkContainer>
           <InfosContainer>
             <Title>{title}</Title>
