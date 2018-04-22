@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -130,4 +131,5 @@ Range.defaultProps = {
   value: 0
 }
 
-export default Range;
+
+export default pure(Range);
