@@ -133,7 +133,9 @@ class Home extends Component {
 
     // listen to errors
     this.player.addEventListener('error', err => console.error(err));
-
+    //this.player.addEventListener('buffering', evt => console.log(evt));
+    this.player.onSegmentDownloaded = evt => console.log(evt);
+    const networkEngine = this.player.getNetworkingEngine();
     // listen to remote playback api event
     //this.audio.remote.onconnecting =
     //this.audio.remote.onconnect =

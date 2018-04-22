@@ -191,8 +191,8 @@ class ProgressBar extends Component {
         borderRadius={this.props.borderRadius}
       >
         <ProgressTrack position={clampedPosition} borderRadius={this.props.borderRadius} />
-        <ProgressRoundContainer position={clampedPosition}>
-          <ProgressRound className="progress-bar"/>
+        <ProgressRoundContainer position={clampedPosition} onFocus={evt => console.log('focus')} onBlur={evt => console.log('blur')}>
+          <ProgressRound className="progress-bar" />
         </ProgressRoundContainer>
       </ProgressBarContainer>
     )

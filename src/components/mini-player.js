@@ -104,11 +104,6 @@ class MiniPlayer extends Component {
     this.onChromecastClick = this.onChromecastClick.bind(this);
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props);
-    console.log(nextProps);
-  }
-
   componentWillUpdate () {
     console.log('Update is coming...');
   }
