@@ -106,6 +106,7 @@ class Home extends Component {
     this.props.restoreSettings();
 
     this.chromecaster = new Chromecaster();
+    console.log('home');
   }
 
   initWebAudioApi () {
@@ -136,8 +137,20 @@ class Home extends Component {
     // listen to errors
     this.player.addEventListener('error', err => console.error(err));
     //this.player.addEventListener('buffering', evt => console.log(evt));
-    this.player.onSegmentDownloaded = evt => console.log(evt);
+
+    // register a response filter in order to track streaming
+    // chunk downloaded
+    // https://github.com/google/shaka-player/issues/1416
     const networkEngine = this.player.getNetworkingEngine();
+    networkEngine.registerResponseFilter((type, response) => {
+      // we're only interested in segments requests
+      if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+        // bytes downloaded
+        const value = response.data.byteLength;
+        console.log(value);
+        // TODO: update idb cache to save the user data volume consumed
+      }
+    })
   }
 
   initMediaSession () {

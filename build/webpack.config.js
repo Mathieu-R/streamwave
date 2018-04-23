@@ -52,7 +52,7 @@ if (production) {
       minify: {
         removeComments: true
       },
-      cache: true,
+      //cache: true,
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
     }),

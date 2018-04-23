@@ -74,6 +74,8 @@ class App extends Component {
       }
     };
 
+    console.log('app');
+
 		return (
       <ThemeProvider theme={theme}>
         <Container>
