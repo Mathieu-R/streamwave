@@ -43,7 +43,7 @@ const RangeTrack = styled.div.attrs({
 
 const RangeRoundContainer = styled.div.attrs({
   style: props => ({
-    transform: `translateX(${props.position * 100}%, -50%)`
+    transform: `translate(${props.position * 100}%, -50%)`
   })
 })`
   position: relative;
