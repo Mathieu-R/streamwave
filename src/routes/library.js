@@ -49,6 +49,7 @@ class Library extends Component {
       // If fetch is faster but reject, trying to get stuff from the cache
       this.fetchGallery().catch(_ => this.getGalleryFromCache())
     ]).then(response => {
+      console.log(response);
       // If nor response from catch or from fail
       // Gallery not stored + No connectivity.
       // TODO: show message on screen (e.g. No internet connection)

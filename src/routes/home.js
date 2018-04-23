@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import shaka from 'shaka-player';
+import settingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
@@ -14,14 +15,15 @@ import Player from '../components/player';
 import NavBar from '../components/navbar';
 import Audio from '../components/audio';
 
+// TODO: webpackPrefetch: true
 const Library = Loadable({
-  loader: () => import('./library' /* webpackPrefetch: true, webpackChunkName: "route-library" */),
+  loader: () => import('./library' /* webpackChunkName: "route-library" */),
   loading: Loading,
   timeout: 10000
 });
 
 const Album = Loadable({
-  loader: () => import('./album' /* webpackPrefetch: true, webpackChunkName: "route-album" */),
+  loader: () => import('./album' /* webpackChunkName: "route-album" */),
   loading: Loading,
   timeout: 10000
 });
@@ -133,11 +135,9 @@ class Home extends Component {
 
     // listen to errors
     this.player.addEventListener('error', err => console.error(err));
-
-    // listen to remote playback api event
-    //this.audio.remote.onconnecting =
-    //this.audio.remote.onconnect =
-    //this.audio.remote.ondisconnect =
+    //this.player.addEventListener('buffering', evt => console.log(evt));
+    this.player.onSegmentDownloaded = evt => console.log(evt);
+    const networkEngine = this.player.getNetworkingEngine();
   }
 
   initMediaSession () {
@@ -204,8 +204,8 @@ class Home extends Component {
     });
   }
 
-  crossFade () {
-    const FADE_TIME = 12;
+  crossFade (fade) {
+    const FADE_TIME = fade;
     const audio = this.audio.base;
 
     // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
@@ -246,7 +246,14 @@ class Home extends Component {
   }
 
   play () {
-    this.audio.base.play();
+    return this.audio.base.play();
+    // const settings = await (new settingsManager().getAll());
+    // const fade = settings['fade'];
+
+    // // if fade = 0, we consider it as disabled
+    // if (fade > 0) {
+    //   this.crossFade(fade);
+    // }
   }
 
   pause () {
@@ -308,7 +315,7 @@ class Home extends Component {
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
-            render={props => <Album listen={this.listen} crossFade={this.crossFade} {...props} />}
+            render={props => <Album listen={this.listen} {...props} />}
           />
           <Route exact path="/search" component={Search} />
           <Route exact path="/settings" component={Settings} />

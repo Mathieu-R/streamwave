@@ -18,6 +18,7 @@ import {
   getArtist,
   getTrack,
   getQueue,
+  getPrimaryColor,
   isMusicPlaying,
   isShuffle,
   isRepeat,
@@ -71,7 +72,20 @@ const Close = styled(Button)`
   height: 24px;
 `;
 
-const Cover = styled.div``;
+const CoverContainer = styled.section`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*background: ${props => getRGBCssFromObject(props.background)};*/
+  width: 100%;
+  margin-top: 60px;
+`;
+
+const Cover = styled.div`
+
+`;
 
 const Artwork = styled.img`
   max-width: 300px;
@@ -82,6 +96,7 @@ const InfoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 5px;
 `;
 
 const Infos = styled.div`
@@ -108,16 +123,12 @@ const AddToPlaylist = styled.button`
 `;
 
 const ProgressAndControlsContainer = styled.section`
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  transform: translateX(-50%);
 `;
 
 const ProgressWrapper = styled.section`
@@ -197,6 +208,7 @@ const VolumeMax = styled.div`
 const mapStateToProps = state => ({
   showPlayer: getShowPlayer(state),
   coverURL: getCoverURL(state),
+  primaryColor: getPrimaryColor(state),
   artist: getArtist(state),
   track: getTrack(state),
   playing: isMusicPlaying(state),
@@ -311,8 +323,8 @@ class Player extends Component {
   render ({
     showPlayer, coverURL, artist, title, duration,
     playing, chromecasting, shuffle, repeat,
-    track, currentTime, totalTime, seek,
-    onVolumeChange
+    track, currentTime, totalTime, primaryColor,
+    seek, onVolumeChange
   }, {
     showPlaylistModal
   }) {
@@ -322,7 +334,7 @@ class Player extends Component {
     }
 
     return (
-      <Container show={showPlayer} primaryColor={track && track.primaryColor}>
+      <Container show={showPlayer}>
         <Close onClick={this.closePlayer} aria-label="close player"/>
         <Chromecast onClick={this.onChromecastClick} aria-label="chromecast music">
           {
@@ -350,18 +362,20 @@ class Player extends Component {
             </svg>
           }
         </Chromecast>
-        <Cover>
-          <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
-          <InfoContainer>
-            <Infos>
-              <Title>{track && track.title}</Title>
-              <Artist>{artist && artist}</Artist>
-            </Infos>
-            <AddToPlaylist onClick={this.addToPlaylist} aria-label="add to playlist">
-              <img src={addIcon} alt="add to playlist" />
-            </AddToPlaylist>
-          </InfoContainer>
-        </Cover>
+        <CoverContainer background={primaryColor}>
+          <Cover>
+            <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
+            <InfoContainer>
+              <Infos>
+                <Title>{track && track.title}</Title>
+                <Artist>{artist && artist}</Artist>
+              </Infos>
+              <AddToPlaylist onClick={this.addToPlaylist} aria-label="add to playlist">
+                <img src={addIcon} alt="add to playlist" />
+              </AddToPlaylist>
+            </InfoContainer>
+          </Cover>
+        </CoverContainer>
         <ProgressAndControlsContainer>
           <ProgressWrapper>
             <CurrentTime>{formatDuration(currentTime)}</CurrentTime>

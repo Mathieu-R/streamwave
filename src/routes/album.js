@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import {
   setTrack,
   setQueue,
+  setPrimaryColor,
   isShuffle,
   getDownloads
 } from '../store/player';
@@ -74,7 +75,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   toasting: (messages, duration) => dispatch(toasting(messages, duration)),
   setTrack: (music) => dispatch(setTrack(music)),
-  setQueue: (queue) => dispatch(setQueue(queue))
+  setQueue: (queue) => dispatch(setQueue(queue)),
+  setPrimaryColor: primaryColor => dispatch(setPrimaryColor(primaryColor))
 });
 
 class Album extends Component {
@@ -84,6 +86,10 @@ class Album extends Component {
     this.handleTrackClick = this.handleTrackClick.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
     this.download = this.download.bind(this);
+
+    this.state = {
+      downloaded: false
+    }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -99,6 +105,7 @@ class Album extends Component {
     idb.get(IDB_KEY).then(response => {
       if (response) {
         console.log(response);
+        this.props.setPrimaryColor(response.primaryColor);
         this.setState({...response});
         return;
       }
@@ -106,6 +113,11 @@ class Album extends Component {
       // 2. If not in the cache, fetch it, store in the cache.
       return this.fetchAlbumAndStoreInTheCache(id, IDB_KEY)
     }).catch(err => console.error(err));
+
+    // check if album is downloaded
+    idb.get(id).then(album => {
+      this.setState({downloaded: album && album.downloaded});
+    });
   }
 
   fetchAlbumAndStoreInTheCache (id, idbKey) {
@@ -116,6 +128,8 @@ class Album extends Component {
     })
     .then(response => response.json())
     .then(response => {
+      // TODO: refactoring.
+      this.props.setPrimaryColor(response.primaryColor);
       this.setState({...response});
       return response;
     })
@@ -148,7 +162,10 @@ class Album extends Component {
         downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
           // put in cache that we have downloaded the album
           // so we can update the UI (e.g. show downloaded toggle at app launch)
-          idb.set(id, {downloaded: true}).then(_ => this.isDownloading = false);
+          idb.set(id, {downloaded: true}).then(_ => {
+            this.setState({downloaded: true});
+            this.isDownloading = false;
+          });
         }).catch(err => console.error(err));
       }
       return;
@@ -183,7 +200,7 @@ class Album extends Component {
       //.then(_ => this.props.crossFade());
   }
 
-  render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year}) {
+  render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
     if (tracks === undefined) return null;
     return (
       <Container>
@@ -200,7 +217,7 @@ class Album extends Component {
               /> : ''
             }
             <SwitchContainer>
-              <Switch label="Télécharger" onChange={this.download} />
+              <Switch label="Télécharger" onChange={this.download} value={downloaded} />
             </SwitchContainer>
           </Download>
         </Infos>

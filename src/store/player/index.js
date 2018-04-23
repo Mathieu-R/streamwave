@@ -9,6 +9,7 @@ const SET_PREV_TRACK = 'SET_PREV_TRACK';
 const SET_NEXT_TRACK = 'SET_NEXT_TRACK';
 const SET_TRACKS = 'SET_TRACKS';
 const SET_QUEUE = 'SET_QUEUE';
+const SET_PRIMARY_COLOR = 'SET_PRIMARY_COLOR';
 const SWITCH_PLAYING_STATUS = 'SWITCH_PLAYING_STATUS';
 const SWITCH_PLAYER_STATUS = 'SWITCH_PLAYER_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
@@ -118,6 +119,13 @@ export function setQueue (queue) {
   }
 }
 
+export function setPrimaryColor (primaryColor) {
+  return {
+    type: SET_PRIMARY_COLOR,
+    primaryColor
+  }
+}
+
 export function switchPlayingStatus () {
   return {
     type: SWITCH_PLAYING_STATUS
@@ -192,9 +200,10 @@ export const isRepeat = state => state.player.repeat;
 export const getQueue = state => state.player.queue;
 export const getDuration = state => getTrack(state) && getTrack(state).duration;
 export const getCurrentTime = state => state.player.currentTime;
-export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
+//export const getPrimaryColor = state => getTrack(state) && getTrack(state).primaryColor;
 export const getDownloads = state => state.player.downloads;
 export const getShowPlayer = state => state.player.show;
+export const getPrimaryColor = state => state.player.primaryColor;
 
 export const getTrackInfos = createSelector(
   getArtist,
@@ -247,6 +256,12 @@ export default (state = {}, action) => {
       return {
         ...state,
         queue: action.queue
+      }
+
+    case SET_PRIMARY_COLOR:
+      return {
+        ...state,
+        primaryColor: action.primaryColor
       }
 
     case SWITCH_PLAYING_STATUS:

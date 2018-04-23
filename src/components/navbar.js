@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import LibraryIcon from '../assets/svg/library.svg';
 
 import {
-  switchPlayerStatus
+  switchPlayerStatus, getTrack
 } from '../store/player';
 
 const activeClassName = 'nav-active';
@@ -58,6 +58,10 @@ const NavBarLink = styled(NavLink).attrs({
   }
 `;
 
+const mapStateToProps = state => ({
+  track: getTrack(state)
+})
+
 const mapDispatchToProps = dispatch => ({
   switchPlayerStatus: payload => dispatch(switchPlayerStatus(payload))
 });
@@ -73,20 +77,12 @@ class Navbar extends Component {
     return false;
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props);
-    console.log(nextProps);
-  }
-
-  componentWillUpdate () {
-    console.log('Update is coming...');
-  }
-
-  componentDidUpdate () {
-    console.log('Component updated.');
-  }
-
   showPlayer (evt) {
+    // no track playing (pause or play)
+    if (!this.props.track) {
+      return;
+    }
+
     this.props.switchPlayerStatus({show: true});
   }
 
@@ -200,4 +196,4 @@ class Navbar extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
