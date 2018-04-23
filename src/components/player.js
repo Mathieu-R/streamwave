@@ -78,14 +78,11 @@ const CoverContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*background: ${props => getRGBCssFromObject(props.background)};*/
   width: 100%;
   margin-top: 60px;
 `;
 
-const Cover = styled.div`
-
-`;
+const Cover = styled.div``;
 
 const Artwork = styled.img`
   max-width: 300px;
