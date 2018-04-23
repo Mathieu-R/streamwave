@@ -65,20 +65,10 @@ const ProgressRound = styled.div`
   outline: 0;
   border-radius: 50%;
   background: #FFF;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-  transform: translateY(-50%) scale(0.7);
+  box-shadow: ${props => props.active ? '0 0 0 5px rgba(255, 255, 255, 0.2)' : '0 0 4px rgba(0, 0, 0, 0.5)'};
+  transform: translateY(-50%) scale(${props => props.active ? 1 : 0.7});
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
   will-change: transform;
-
-  &:hover, &:focus, &:active {
-    transform: translateY(-50%) scale(1);
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
-  }
-
-  ${ProgressRoundContainer}:hover, ${ProgressRoundContainer}:focus, ${ProgressRoundContainer}:active {
-    transform: translateY(-50%) scale(1);
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
-  }
 `;
 
 class ProgressBar extends Component {
@@ -149,12 +139,13 @@ class ProgressBar extends Component {
     const clampedPosition = Math.max(0, Math.min(normalizedPosition, 1));
     const currentTime = clampedPosition * this.props.duration;
     this.props.setCurrentTime(currentTime);
-    // should set the current time of audio element => this.audio.currentTime = currentTime
     this.props.seek(currentTime);
   }
 
   onSwipeStart (evt) {
     evt.stopPropagation();
+
+    this.roundContainer.focus();
     this.setState({dragging: true});
   }
 
@@ -173,11 +164,12 @@ class ProgressBar extends Component {
       return;
     }
 
+    //this.roundContainer.blur();
     this.setState({dragging: false});
     this.updatePosition(evt);
   }
 
-  render ({duration, currentTime}) {
+  render ({duration, currentTime}, {dragging}) {
     // do not render component if not necessary
     if (!duration && !currentTime) return null;
 
@@ -191,8 +183,8 @@ class ProgressBar extends Component {
         borderRadius={this.props.borderRadius}
       >
         <ProgressTrack position={clampedPosition} borderRadius={this.props.borderRadius} />
-        <ProgressRoundContainer position={clampedPosition} onFocus={evt => console.log('focus')} onBlur={evt => console.log('blur')}>
-          <ProgressRound className="progress-bar" />
+        <ProgressRoundContainer position={clampedPosition} innerRef={container => this.roundContainer = container}>
+          <ProgressRound className="progress-bar" active={dragging} />
         </ProgressRoundContainer>
       </ProgressBarContainer>
     )

@@ -191,7 +191,6 @@ class Settings extends Component {
                 <Range
                   min={0}
                   max={12}
-                  value={5}
                   onChange={this.onFadeChange}
                   value={fade}
                 />
