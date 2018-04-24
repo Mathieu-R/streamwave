@@ -20,7 +20,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [ ] Socket Live Sync    
 - [ ] Median Cut (To Fix)    
 - [ ] Elastic Search    
-- [ ] Crossfase     
+- [ ] Crossfade (extra-buffering or sample ?)     
 - [ ] Equalize volume    
 - [ ] Equalizer    
 - [ ] Track data volume    

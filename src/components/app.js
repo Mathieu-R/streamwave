@@ -15,86 +15,82 @@ const Container = styled.div`
   background: ${props => props.theme.background};
 `;
 
-class App extends Component {
-	render () {
-    const theme = {
-      auth: {
-        background: '#7C7C7C',
-        google: {
-          background: '#2962FF'
-        },
-        logout: {
-          background: '#1870D7'
-        }
+const theme = {
+  auth: {
+    background: '#7C7C7C',
+    google: {
+      background: '#2962FF'
+    },
+    logout: {
+      background: '#1870D7'
+    }
+  },
+  // spotify inspired background
+  background: 'linear-gradient(#485460, #0b0c0d 85%)', //'#161C36',
+  menu: {
+    active: '#4A90E2'
+  },
+  miniPlayer: {
+    height: '45px',
+    background: '#212121',
+  },
+  mobile: '530px',
+  navbar: {
+    height: '55px',
+    background: '#222223'
+  },
+  primaryColor: '#4A90E2',
+  slider: {
+    background: '#979797',
+    progress: {
+      color: '#4A90E2'
+    },
+    round: {
+      background: '#1870D7'
+    },
+    player: {
+      background: '#D8D8D8',
+      progress: {
+        background: '#FFF',
       },
-      // spotify inspired background
-      background: 'linear-gradient(#485460, #0b0c0d 85%)', //'#161C36',
-      menu: {
-        active: '#4A90E2'
-      },
-      miniPlayer: {
-        height: '45px',
-        background: '#212121',
-      },
-      mobile: '530px',
-      navbar: {
-        height: '55px',
-        background: '#222223'
-      },
-      primaryColor: '#4A90E2',
-      slider: {
-        background: '#979797',
-        progress: {
-          color: '#4A90E2'
-        },
-        round: {
-          background: '#1870D7'
-        },
-        player: {
-          background: '#D8D8D8',
-          progress: {
-            background: '#FFF',
-          },
-          round: {
-            background: '#FFF'
-          }
-        }
-      },
-      switch: {
-        opacity: 0.3,
-        round: '#4A90E2'
-      },
-      track: {
-        active: '#4A90E2'
-      },
-      welcome: {
-        subtitle: {
-          color: '#D8D8D8'
-        }
+      round: {
+        background: '#FFF'
       }
-    };
+    }
+  },
+  switch: {
+    opacity: 0.3,
+    round: '#4A90E2'
+  },
+  track: {
+    active: '#4A90E2'
+  },
+  welcome: {
+    subtitle: {
+      color: '#D8D8D8'
+    }
+  }
+};
 
-		return (
-      <ThemeProvider theme={theme}>
-        <Container>
-          <Switch>
-            <Route path="/auth" component={Auth} />
-            {/* Trying some stuff with chromecast, should try to protect this route later */}
-            <Route exact path="/chromecast"
-              render={
-                props =>
-                <Player
-                  //onPlayClick={this.onPlayClick}
-                />
-              }
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <Container>
+      <Switch>
+        <Route path="/auth" component={Auth} />
+        {/* Trying some stuff with chromecast, should try to protect this route later */}
+        <Route exact path="/chromecast"
+          render={
+            props =>
+            <Player
+              //onPlayClick={this.onPlayClick}
             />
-            <PrivateRoute path="/" component={Home} />
-          </Switch>
-          <Toast />
-        </Container>
-      </ThemeProvider>
-		);
-	}
-}
+          }
+        />
+        <PrivateRoute path="/" component={Home} />
+      </Switch>
+      <Toast />
+    </Container>
+  </ThemeProvider>
+);
 
 export default App;

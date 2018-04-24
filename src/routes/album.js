@@ -201,6 +201,7 @@ class Album extends Component {
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
+    console.log(downloads);
     if (tracks === undefined) return null;
     return (
       <Container>
