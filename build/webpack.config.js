@@ -178,7 +178,12 @@ const common = {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: false
+        sourceMap: false,
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
+        }
       }),
       // Compress extracted CSS.
       // Possible duplicated CSS from differents components can be deduped.
