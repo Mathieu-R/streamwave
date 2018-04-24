@@ -12,9 +12,7 @@ if (process.env.NODE_ENV === 'development') {
   require('preact/debug');
 }
 
-console.log('index.js');
-
-installServiceWorker();
+//installServiceWorker();
 
 const Main = () => (
   <Provider store={store}>
