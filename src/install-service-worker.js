@@ -9,7 +9,7 @@ import {
   toasting
 } from './store/toast';
 
-export default () => {
+export default (store) => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
       // if (!registration.active) {
