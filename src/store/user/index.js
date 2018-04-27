@@ -11,6 +11,7 @@ export function storeUser (user) {
 
 // selectors
 export const getUser = state => state.user;
+export const getUserId = state => getUser(state).id;
 
 // reducers
 export default (state = {}, action) => {
