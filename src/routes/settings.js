@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';
 import Switch from '../components/switch';
+import Circle from '../components/circle';
+import { getDataVolumeDownloaded } from '../utils/download';
 import styled from 'styled-components';
 import Constants from '../constants';
 
@@ -18,6 +20,7 @@ import {
   setDownloadQuality,
   setMaxDataVolume
 } from '../store/settings';
+import { getUserId } from '../store/user';
 
 const Container = styled.div`
   display: flex;
@@ -115,7 +118,8 @@ const mapStateToProps = state => ({
   equalizeVolume: getEqualizeVolume(state),
   equalize: getEq(state),
   quality: getQuality(state),
-  dataMax: getDataMax(state)
+  dataMax: getDataMax(state),
+  userId: getUserId(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -137,6 +141,22 @@ class Settings extends Component {
     this.onQualityChange = this.onQualityChange.bind(this);
     this.activateMaxDataVolume = this.activateMaxDataVolume.bind(this);
     this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
+  }
+
+  componentWillMount () {
+    if (!this.props.dataMax) {
+      return;
+    }
+
+    getDataVolumeDownloaded({
+      userId: this.props.userId,
+      dataMax: this.props.dataMax
+    }).then(({volume, percentage}) => {
+      this.setState({
+        volume,
+        percentage
+      });
+    })
   }
 
   onFadeChange (value) {
@@ -179,7 +199,8 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, equalizeVolume, equalizer, quality, dataMax}) {
+  render ({fade, equalizeVolume, equalizer, quality, dataMax}, {volume, percentage}) {
+    console.log(dataMax);
     return (
       <Container>
         <TopBarHamburger />
@@ -238,6 +259,10 @@ class Settings extends Component {
               <RangeBound>2000mo</RangeBound>
             </DataVolumeRange>
             {/* SVG arc with data consumed until today */}
+            {
+              dataMax &&
+              <Circle progress={percentage} value={volume} radius={20} />
+            }
           </DataVolume>
           <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>
         </SettingsContainer>

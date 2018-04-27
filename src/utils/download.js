@@ -1,4 +1,5 @@
 import idb from './cache';
+import { get, set } from 'idb-keyval';
 import store from '../store';
 import { flatten } from '../utils';
 import Constants from '../constants';
@@ -15,8 +16,7 @@ async function getRequestsUrls (tracklist, cover) {
     '256': 'audio256URL'
   };
 
-  // temp.
-  const quality = await idb.get('download-quality') || 256;
+  const quality = await idb.get('download-quality');
   const urls = tracklist.map(track => {
     const audio = track[qualities[quality]];
     const {manifestURL, playlistHLSURL} = track;
@@ -133,4 +133,33 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
 
   // launch a background fetch
   const bgFetch = await registration.backgroundFetch.fetch(id, requests, options);
+}
+
+export function updateDataVolume ({userId, value}) {
+  return get(`data-volume_${userId}`).then(volume => {
+    let newDataVolume;
+
+    // if volume has never been set
+    if (volume === undefined) {
+      newDataVolume = value;
+    } else {
+      newDataVolume = volume + value;
+    }
+
+    return set(`data-volume_${userId}`, newDataVolume);
+  }).catch(err => console.error(err));
+}
+
+export function getDataVolumeDownloaded ({userId, dataMax}) {
+  return get(`data-volume_${userId}`).then(volume => {
+    // user hasn't chosen to limit data
+    if (!volume) return;
+    // volume in bytes
+    const volumeInMo = volume / 1024;
+    const percentage = volume / dataMax;
+    return {
+      volume: volumeInMo,
+      percentage
+    }
+  }).catch(err => console.error(err));
 }

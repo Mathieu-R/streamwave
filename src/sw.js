@@ -171,6 +171,8 @@ const trackDownload = (responses, tracklistId) => {
         return;
       }
 
+      updateDataVolume({userId, value: value.length});
+
       downloaded += value.length;
       clients.matchAll({type: 'window'}).then(clients => {
         clients.forEach(client => client.postMessage({type: 'downloading', tracklistId, downloaded, totalDownload}));
@@ -180,5 +182,17 @@ const trackDownload = (responses, tracklistId) => {
 
     const reader = cloned.body.getReader();
     reader.read().then(onStream);
+  });
+}
+
+const updateDataVolume = ({userId, value}) => {
+  return idbKeyVal.get(`data-volume_${userId}`).then(volume => {
+    let newDataVolume = 0;
+
+    if (volume) {
+      newDataVolume = volume + value;
+    }
+
+    return idbKeyVal.set(`data-volume_${userId}`, newDataVolume);
   });
 }

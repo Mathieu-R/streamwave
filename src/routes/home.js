@@ -3,6 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import shaka from 'shaka-player';
+import debounce from 'debounce';
+import { updateDataVolume } from '../utils/download'
 import settingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
@@ -15,15 +17,14 @@ import Player from '../components/player';
 import NavBar from '../components/navbar';
 import Audio from '../components/audio';
 
-// TODO: webpackPrefetch: true
 const Library = Loadable({
-  loader: () => import('./library' /* webpackChunkName: "route-library" */),
+  loader: () => import('./library' /* webpackPrefetch: true, webpackChunkName: "route-library" */),
   loading: Loading,
   timeout: 10000
 });
 
 const Album = Loadable({
-  loader: () => import('./album' /* webpackChunkName: "route-album" */),
+  loader: () => import('./album' /* webpackPrefetch: true, webpackChunkName: "route-album" */),
   loading: Loading,
   timeout: 10000
 });
@@ -33,6 +34,10 @@ import Search from './search';
 
 import About from './about';
 import Licences from './licences';
+
+import {
+  getUserId
+} from '../store/user';
 
 import {
   restoreSettings
@@ -63,6 +68,10 @@ const MiniPlayerAndNavBarContainer = styled.section`
   width: 100%;
   background: #212121;
 `;
+
+const mapStateToProps = state => ({
+  userId: getUserId(state)
+});
 
 const mapDispatchToProps = dispatch => ({
   restoreSettings: _ => dispatch(restoreSettings()),
@@ -106,7 +115,6 @@ class Home extends Component {
     this.props.restoreSettings();
 
     this.chromecaster = new Chromecaster();
-    console.log('home');
   }
 
   initWebAudioApi () {
@@ -142,13 +150,15 @@ class Home extends Component {
     // chunk downloaded
     // https://github.com/google/shaka-player/issues/1416
     const networkEngine = this.player.getNetworkingEngine();
+    const updateDataVolumeDebounced = debounce(updateDataVolume, 300);
     networkEngine.registerResponseFilter((type, response) => {
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
         // bytes downloaded
         const value = response.data.byteLength;
-        console.log(value);
-        // TODO: update idb cache to save the user data volume consumed
+        console.log(value, this.props.userId);
+        // update idb cache to save the user data volume consumed
+         updateDataVolumeDebounced({userId: this.props.userId, value});
       }
     })
   }
@@ -365,4 +375,4 @@ class Home extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
