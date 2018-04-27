@@ -9,7 +9,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const WebpackBar = require('webpackbar');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const production = process.env.NODE_ENV === 'production';
@@ -19,7 +19,7 @@ const plugins = [
   new MiniCSSExtractPlugin({
     filename: '[name].[contenthash].css'
   }),
-  ProgressBarPlugin()
+  new WebpackBar({profile: true})
 ];
 
 const devServer = {
