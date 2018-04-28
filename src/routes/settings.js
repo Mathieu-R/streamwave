@@ -212,7 +212,6 @@ class Settings extends Component {
   }
 
   render ({fade, equalizeVolume, eq, quality, limitData, dataMax}, {volume, percentage}) {
-    console.log(this.props);
     return (
       <Container>
         <TopBarHamburger />
@@ -273,7 +272,7 @@ class Settings extends Component {
             {/* SVG arc with data consumed until today */}
             {
               limitData &&
-              <Circle progress={percentage} value={volume} />
+              <Circle percentage={percentage} value={volume} />
             }
           </DataVolume>
           <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>

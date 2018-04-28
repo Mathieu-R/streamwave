@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import idb from '../utils/cache';
 import styled from 'styled-components';
 import Constants from '../constants';

@@ -61,7 +61,9 @@ class Circle extends Component {
   }
 
   drawProgressively () {
+    console.log(this.props.percentage);
     for (let percentage = 0; percentage <= this.props.percentage; percentage++) {
+      console.log(percentage, this.props.percentage);
       requestAnimationFrame(_ => {
         setTimeout(_ => {
           this.setState({volume: (this.props.volume / 100) * percentage});
