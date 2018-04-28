@@ -155,7 +155,8 @@ export function getDataVolumeDownloaded ({userId, dataMax}) {
     // user hasn't chosen to limit data
     if (!volume) return;
     // volume in bytes
-    const volumeInMo = volume / 1024;
+    // 1 byte = 8bits
+    const volumeInMo = volume / 1000 * 1024;
     const percentage = volume / dataMax;
     return {
       volume: volumeInMo,

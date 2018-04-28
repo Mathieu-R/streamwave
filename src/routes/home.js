@@ -29,11 +29,16 @@ const Album = Loadable({
   timeout: 10000
 });
 
-import Settings from './settings';
-import Search from './search';
+const Settings = Loadable({
+  loader: () => import('./settings', /* webpackPrefetch: true, webpackChunkName: "route-settings" */),
+  loading: Loading,
+  timeout: 10000
+});
+
 
 import About from './about';
 import Licences from './licences';
+import Search from './search';
 
 import {
   getUserId

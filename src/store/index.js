@@ -38,9 +38,10 @@ const initialState = {
   settings: {
     fade: 0,
     equalizeVolume: false,
-    equalizer: false,
+    eq: 'none',
     downloadQuality: 256,
-    dataMax: false
+    limitData: false,
+    dataMax: 0
   }
 };
 

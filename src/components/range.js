@@ -93,7 +93,6 @@ const RangeRound = styled.div`
 class Range extends Component {
   constructor (props) {
     super(props);
-    console.log(props.value);
 
     this.showBigRound = this.showBigRound.bind(this);
     this.removeBigRound = this.removeBigRound.bind(this);
@@ -102,9 +101,12 @@ class Range extends Component {
     this.state = {
       dragging: false,
       bcr: null,
-      position: props.value / 100,
-      value: props.value
+      position: 0
     }
+  }
+
+  componentDidMount () {
+    requestAnimationFrame(() => this.update(this.props.value));
   }
 
   showBigRound (evt) {
@@ -118,13 +120,19 @@ class Range extends Component {
   }
 
   onChange (evt) {
-    const { min, max, value } = this.range;
+    const { value } = this.range;
     this.props.onChange(parseInt(value, 10));
-    const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
-    this.setState({position, value});
+    requestAnimationFrame(() => this.update(value));
   }
 
-  render ({min, max, onChange, showToolTip}, {position, value, active}) {
+  update (value) {
+    //console.log(value);
+    const { min, max } = this.range;
+    const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
+    this.setState({position});
+  }
+
+  render ({min, max, onChange, value, showToolTip}, {position, active}) {
     return (
       <Container
         innerRef={container => this.container = container}
