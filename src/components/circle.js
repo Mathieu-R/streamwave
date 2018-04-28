@@ -3,17 +3,14 @@ import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const AverageCircle = styled.div`
-  margin: 0 16px;
-  min-width: 100px;
-  max-width: 300px;
+  margin: 0 auto;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
 `;
 
 const Infos = styled.div`
@@ -57,13 +54,13 @@ class Circle extends Component {
   }
 
   componentDidUpdate () {
-    this.drawProgressively();
+    //this.drawProgressively();
   }
 
   drawProgressively () {
     console.log(this.props.percentage);
     for (let percentage = 0; percentage <= this.props.percentage; percentage++) {
-      console.log(percentage, this.props.percentage);
+      console.log(percentage, this.props.volume, this.props.percentage);
       requestAnimationFrame(_ => {
         setTimeout(_ => {
           this.setState({volume: (this.props.volume / 100) * percentage});
@@ -74,7 +71,6 @@ class Circle extends Component {
   }
 
   drawCircle (percentage) {
-    console.log(percentage);
     const mid = this.canvas.width / 2;
     const lineWidth = 15;
     const radius = (this.canvas.width - lineWidth) / 2;
