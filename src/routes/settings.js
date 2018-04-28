@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';
 import Switch from '../components/switch';
+import Select from 'material-ui/Select';
 import Circle from '../components/circle';
 import { getDataVolumeDownloaded } from '../utils/download';
 import styled from 'styled-components';
@@ -13,14 +14,19 @@ import {
   getEqualizeVolume,
   getEq,
   getQuality,
+  getLimitDataStatus,
   getDataMax,
   setFade,
   setEqualizeVolume,
   setEqualizer,
   setDownloadQuality,
-  setMaxDataVolume
+  setLimitDataStatus,
+  setMaxDataVolume,
 } from '../store/settings';
-import { getUserId } from '../store/user';
+
+import {
+  getUserId
+} from '../store/user';
 
 const Container = styled.div`
   display: flex;
@@ -43,9 +49,9 @@ const Label = styled.label`
 const LabelInline = styled.label`
 `;
 
-const Select = styled.select`
-  color: #000;
-`;
+// const Select = styled.select`
+//   color: #000;
+// `;
 
 const RangeBound = styled.span`
   display: flex;
@@ -116,8 +122,9 @@ const Logout = styled.button`
 const mapStateToProps = state => ({
   fade: getFade(state),
   equalizeVolume: getEqualizeVolume(state),
-  equalize: getEq(state),
+  eq: getEq(state),
   quality: getQuality(state),
+  limitData: getLimitDataStatus(state),
   dataMax: getDataMax(state),
   userId: getUserId(state)
 });
@@ -127,6 +134,7 @@ const mapDispatchToProps = dispatch => ({
   setEqualizeVolume: status => dispatch(setEqualizeVolume(status)),
   setEqualizer: value => dispatch(setEqualizer(value)),
   setDownloadQuality: quality => dispatch(setDownloadQuality(quality)),
+  setLimitDataStatus: status => dispatch(setLimitDataStatus(status)),
   setMaxDataVolume: value => dispatch(setMaxDataVolume(value))
 });
 
@@ -139,7 +147,7 @@ class Settings extends Component {
     this.onEqualizeVolumeChange = this.onEqualizeVolumeChange.bind(this);
     this.onEqualizerChange = this.onEqualizerChange.bind(this);
     this.onQualityChange = this.onQualityChange.bind(this);
-    this.activateMaxDataVolume = this.activateMaxDataVolume.bind(this);
+    this.onLimitDataStatusChange = this.onLimitDataStatusChange.bind(this);
     this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
   }
 
@@ -160,6 +168,11 @@ class Settings extends Component {
   }
 
   onFadeChange (value) {
+    // avoid unnecessary update
+    if (value === this.props.fade) {
+      return;
+    }
+
     this.props.setFade(value);
   }
 
@@ -170,8 +183,7 @@ class Settings extends Component {
 
   onEqualizerChange (evt) {
     const {value} = evt.target;
-    const eq = value === 'none' ? false : value;
-    this.props.setEqualizer(eq);
+    this.props.setEqualizer(value);
   }
 
   onQualityChange (evt) {
@@ -179,9 +191,9 @@ class Settings extends Component {
     this.props.setDownloadQuality(value)
   }
 
-  activateMaxDataVolume (evt) {
+  onLimitDataStatusChange (evt) {
     const status = evt.target.checked;
-    this.props.setMaxDataVolume(status);
+    this.props.setLimitDataStatus(status);
   }
 
   onMaxDataVolumeChange (value) {
@@ -199,8 +211,8 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, equalizeVolume, equalizer, quality, dataMax}, {volume, percentage}) {
-    console.log(dataMax);
+  render ({fade, equalizeVolume, eq, quality, limitData, dataMax}, {volume, percentage}) {
+    console.log(this.props);
     return (
       <Container>
         <TopBarHamburger />
@@ -227,7 +239,7 @@ class Settings extends Component {
           </EqualizeVolume>
           <EQ>
           <LabelInline htmlFor="quality">Equaliseur</LabelInline>
-            <Select onChange={this.onEqualizerChange} value={equalizer}>
+            <Select native onChange={this.onEqualizerChange} value={eq} style={{color: '#FFF'}}>
               <option value="none">Aucun</option>
               <option value="church">Church</option>
               <option value="pop">Pop</option>
@@ -236,7 +248,7 @@ class Settings extends Component {
           </EQ>
           <DownloadQuality>
             <LabelInline htmlFor="quality">Qualité de téléchargement</LabelInline>
-            <Select onChange={this.onQualityChange} value={quality}>
+            <Select native onChange={this.onQualityChange} value={quality.toString()} style={{color: '#FFF'}}>
               <option value="128">128k</option>
               <option value="192">192k</option>
               <option value="256">256k</option>
@@ -245,10 +257,10 @@ class Settings extends Component {
           <DataVolume>
             <Switch
               label="Volume de données maximale (mo)"
-              onChange={this.activateMaxDataVolume}
+              onChange={this.onLimitDataStatusChange}
               value={dataMax}
             />
-            <DataVolumeRange show={dataMax}>
+            <DataVolumeRange show={limitData}>
               <RangeBound>200mo</RangeBound>
               <Range
                 min={200}
@@ -260,8 +272,8 @@ class Settings extends Component {
             </DataVolumeRange>
             {/* SVG arc with data consumed until today */}
             {
-              dataMax &&
-              <Circle progress={percentage} value={volume} radius={20} />
+              limitData &&
+              <Circle progress={percentage} value={volume} />
             }
           </DataVolume>
           <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>

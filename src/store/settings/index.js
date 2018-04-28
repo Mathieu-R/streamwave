@@ -8,6 +8,7 @@ const SET_FADE = 'SET_FADE';
 const SET_EQUALIZE_VOLUME = 'SET_EQUALIZE_VOLUME';
 const SET_EQUALIZER = 'SET_EQUALIZER';
 const SET_DOWNLOAD_QUALITY = 'SET_DOWNLOAD_QUALITY';
+const SET_LIMIT_DATA_STATUS = 'SET_LIMIT_DATA_STATUS';
 const SET_DATA_VOLUME_MAX = 'SET_DATA_VOLUME_MAX';
 
 export function restoreSettings () {
@@ -68,6 +69,17 @@ export function setDownloadQuality (quality) {
   }
 }
 
+export function setLimitDataStatus (status) {
+  return dispatch => {
+    manager.set('limit-data', status).then(_ => {
+      dispatch({
+        type: SET_LIMIT_DATA_STATUS,
+        status
+      })
+    })
+  }
+}
+
 export function setMaxDataVolume (value) {
   return dispatch => {
     manager.set('data-max', value).then(_ => {
@@ -82,8 +94,9 @@ export function setMaxDataVolume (value) {
 // selectors
 export const getFade = state => state.settings.fade;
 export const getEqualizeVolume = state => state.settings.equalizeVolume;
-export const getEq = createSelector(state => state.settings.eq, eq => eq ? eq : 'none');
-export const getQuality = state => state.settings.quality;
+export const getEq = state => state.settings.eq;
+export const getQuality = state => state.settings.downloadQuality;
+export const getLimitDataStatus = state => state.settings.limitData;
 export const getDataMax = state => state.settings.dataMax;
 
 // reducers
@@ -96,15 +109,16 @@ export default (state = {}, action) => {
         ...state,
         fade: action.settings['fade'],
         equalizeVolume: action.settings['equalize-volume'],
-        equalizer: action.settings['equalizer'],
+        eq: action.settings['equalizer'],
         downloadQuality: action.settings['download-quality'],
+        limitData: action.settings['limit-data'],
         dataMax: action.settings['data-max']
       }
 
     case SET_FADE:
       return {
         ...state,
-        fade: action.fade
+        fade: action.value
       }
 
     case SET_EQUALIZE_VOLUME:
@@ -116,13 +130,19 @@ export default (state = {}, action) => {
     case SET_EQUALIZER:
       return {
         ...state,
-        equalize: action.eq
+        eq: action.eq
       }
 
     case SET_DOWNLOAD_QUALITY:
       return {
         ...state,
         downloadQuality: action.quality
+      }
+
+    case SET_LIMIT_DATA_STATUS:
+      return {
+        ...state,
+        limitData: action.status
       }
 
     case SET_DATA_VOLUME_MAX:

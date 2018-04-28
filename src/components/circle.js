@@ -34,6 +34,7 @@ class Circle extends Component {
   constructor() {
     super();
     this.container = null;
+    this.drawProgressively = this.drawProgressively.bind(this);
     this.drawCircle = this.drawCircle.bind(this);
 
     this.state = {
@@ -41,7 +42,7 @@ class Circle extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
 
@@ -52,6 +53,14 @@ class Circle extends Component {
     this.ctx.scale(DPR, DPR);
     this.container.querySelector('.circle__canvas').appendChild(this.canvas);
 
+    this.drawProgressively();
+  }
+
+  componentDidUpdate () {
+    this.drawProgressively();
+  }
+
+  drawProgressively () {
     for (let percentage = 0; percentage <= this.props.percentage; percentage++) {
       requestAnimationFrame(_ => {
         setTimeout(_ => {
@@ -62,7 +71,8 @@ class Circle extends Component {
     }
   }
 
-  drawCircle(percentage) {
+  drawCircle (percentage) {
+    console.log(percentage);
     const mid = this.canvas.width / 2;
     const lineWidth = 15;
     const radius = (this.canvas.width - lineWidth) / 2;
@@ -81,10 +91,6 @@ class Circle extends Component {
     this.ctx.restore();
   }
 
-  componentWillUnmount() {
-    this.container.querySelector('circle__canvas').removeChild(this.canvas);
-  }
-
   render({dataMax}, {volume}) {
     return (
       <AverageCircle innerRef={container => this.container = container}>
@@ -96,7 +102,5 @@ class Circle extends Component {
     )
   }
 }
-
-Circle.prop
 
 export default pure(Circle);

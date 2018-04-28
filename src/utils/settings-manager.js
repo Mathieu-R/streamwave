@@ -19,9 +19,10 @@ class SettingsManager {
 
     settings['fade'] = 0;
     settings['equalize-volume'] = false;
-    settings['equalizer'] = false;
+    settings['equalizer'] = 'none';
     settings['download-quality'] = 256;
-    settings['data-max'] = false;
+    settings['limit-data'] = false;
+    settings['data-max'] = 0;
 
     return idb.set(SettingsManager.IDB_KEY, settings);
   }
