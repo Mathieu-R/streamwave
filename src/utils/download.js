@@ -156,7 +156,7 @@ export function getDataVolumeDownloaded ({userId, dataMax}) {
     if (!volume) return;
     // volume in bytes
     // 1 byte = 8bits
-    const volumeInMo = volume / 1000 * 1024;
+    const volumeInMo = Math.round(volume / (1000 * 1024));
     const percentage = volume / dataMax;
     return {
       volume: volumeInMo,

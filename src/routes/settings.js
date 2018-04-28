@@ -162,7 +162,7 @@ class Settings extends Component {
     }).then(({volume, percentage}) => {
       this.setState({
         volume,
-        percentage
+        percentage500
       });
     })
   }
@@ -272,7 +272,7 @@ class Settings extends Component {
             {/* SVG arc with data consumed until today */}
             {
               limitData &&
-              <Circle percentage={percentage} value={volume} />
+              <Circle percentage={percentage} volume={volume} dataMax={dataMax} />
             }
           </DataVolume>
           <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>
