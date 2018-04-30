@@ -6,8 +6,13 @@ const Container = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
   width: 100%;
+`;
+
+const Wrapper = styled.section`
+  flex-grow: 1;
 `;
 
 const Inner = styled.section`
@@ -48,13 +53,15 @@ const Licence = styled.a`
 const Licences = props => (
   <Container>
     <TopBarHamburger />
-    <Inner>
-      <Album>Borrtex - Ability</Album><Licence href="http://creativecommons.org/licenses/by-nc/3.0/">http://creativecommons.org/licenses/by-nc/3.0/</Licence>
-      <Album>Galdson - Roots</Album><Licence href="http://creativecommons.org/licenses/by-nc-nd/2.5/">http://creativecommons.org/licenses/by-nc-nd/2.5/</Licence>
-      <Album>Jose Konda - Bolingo Na Nzambe</Album><Licence href="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">http://creativecommons.org/licenses/by-nc-sa/2.0/uk/</Licence>
-      <Album>Mady - Laisse Entrer la fraicheur</Album><Licence href="http://creativecommons.org/licenses/by-sa/2.0/be/">http://creativecommons.org/licenses/by-sa/2.0/be/</Licence>
-      <Album>Tim Praiz - Praise Your Name</Album><Licence>Creative Common</Licence>
-    </Inner>
+    <Wrapper>
+      <Inner>
+        <Album>Borrtex - Ability</Album><Licence href="http://creativecommons.org/licenses/by-nc/3.0/">http://creativecommons.org/licenses/by-nc/3.0/</Licence>
+        <Album>Galdson - Roots</Album><Licence href="http://creativecommons.org/licenses/by-nc-nd/2.5/">http://creativecommons.org/licenses/by-nc-nd/2.5/</Licence>
+        <Album>Jose Konda - Bolingo Na Nzambe</Album><Licence href="http://creativecommons.org/licenses/by-nc-sa/2.0/uk/">http://creativecommons.org/licenses/by-nc-sa/2.0/uk/</Licence>
+        <Album>Mady - Laisse Entrer la fraicheur</Album><Licence href="http://creativecommons.org/licenses/by-sa/2.0/be/">http://creativecommons.org/licenses/by-sa/2.0/be/</Licence>
+        <Album>Tim Praiz - Praise Your Name</Album><Licence>Creative Common</Licence>
+      </Inner>
+    </Wrapper>
   </Container>
 );
 
