@@ -162,7 +162,7 @@ class Settings extends Component {
     }).then(({volume, percentage}) => {
       this.setState({
         volume,
-        percentage500
+        percentage
       });
     })
   }

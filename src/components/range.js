@@ -106,6 +106,7 @@ class Range extends Component {
   }
 
   componentDidMount () {
+    console.log('RANGE - COMPONENT DID MOUNT - VALUE', this.props.value);
     requestAnimationFrame(() => this.update(this.props.value));
   }
 
@@ -126,9 +127,10 @@ class Range extends Component {
   }
 
   update (value) {
-    //console.log(value);
+    console.log('RANGE - VALUE', value);
     const { min, max } = this.range;
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
+    console.log('RANGE - POSITION', position)
     this.setState({position});
   }
 
