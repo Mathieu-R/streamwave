@@ -9,12 +9,13 @@ import {
   toasting
 } from './store/toast';
 
+import {
+  updateDataVolume
+} from './utils/download';
+
 export default (store) => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
-      // if (!registration.active) {
-      //   return;
-      // }
 
       const isReloading = false;
       navigator.serviceWorker.oncontrollerchange = evt => {
@@ -54,8 +55,11 @@ export default (store) => {
 
       navigator.serviceWorker.onmessage = event => {
         if (event.data.type === 'downloading') {
-          const {tracklistId, downloaded, totalDownload} = event.data;
+          // value is the bit that's been downloaded for a chunk
+          // with that I am consistant with shaka-player streaming track
+          const {tracklistId, downloaded, totalDownload, value} = event.data;
           store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
+          updateDataVolume({userId: store.getState().user.id, value})
           return;
         }
 

@@ -128,6 +128,7 @@ class Range extends Component {
 
   update (value) {
     console.log('RANGE - VALUE', value);
+    console.log('range element', this.range);
     const { min, max } = this.range;
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
     console.log('RANGE - POSITION', position)
