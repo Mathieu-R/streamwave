@@ -212,6 +212,10 @@ class Settings extends Component {
   }
 
   render ({fade, equalizeVolume, eq, quality, limitData, dataMax}, {volume, percentage}) {
+    console.log('LIMIT DATA', limitData);
+    console.log('DATA MAX', dataMax);
+    console.log('VOLUME DOWNLOADED', volume);
+    console.log('PERCENTAGE DOWNLOADED', percentage);
     return (
       <Container>
         <TopBarHamburger />
@@ -257,7 +261,7 @@ class Settings extends Component {
             <Switch
               label="Volume de données maximale (mo)"
               onChange={this.onLimitDataStatusChange}
-              value={dataMax}
+              value={limitData}
             />
             <DataVolumeRange show={limitData}>
               <RangeBound>200mo</RangeBound>
