@@ -33,11 +33,13 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  height: 100vh;
 `;
 
 const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
   padding: 0 20px;
   width: 100%;
 `;
@@ -97,6 +99,7 @@ const DownloadQuality = styled.section`
 const DataVolume = styled.section`
   display: flex;
   flex-direction: column;
+  flex: 1;
   width: 100%;
   min-height: 50px;
   padding: 10px 0;
@@ -112,7 +115,9 @@ const DataVolumeRange = styled.section`
 `;
 
 const Logout = styled.button`
+  display: flex;
   align-self: center;
+  margin: 10px;
   padding: 10px 25px;
   border-radius: 5px;
   background: ${props => props.theme.primaryColor};

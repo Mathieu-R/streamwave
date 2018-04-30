@@ -136,6 +136,8 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
 }
 
 export function updateDataVolume ({userId, value}) {
+  if (!userId) return;
+
   return get(`data-volume_${userId}`).then(volume => {
     let newDataVolume;
 
@@ -162,7 +164,7 @@ export function getDataVolumeDownloaded ({userId, dataMax}) {
     console.log('UTILS - VOLUME IN MO', volumeInMo);
     console.log('UTILS - PERCENTAGE', percentage);
     return {
-      volume: volumeInMo.toFixed(2),
+      volume: parseFloat(volumeInMo.toFixed(2)),
       percentage
     }
   }).catch(err => console.error(err));
