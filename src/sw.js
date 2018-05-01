@@ -41,10 +41,6 @@ self.onfetch = event => {
   }());
 }
 
-self.addEventListener('backgroundfetched', evt => console.log(evt));
-self.addEventListener('backgroundfetchfail', evt => console.log(evt));
-self.addEventListener('backgroundfetchabort', evt => console.log(evt));
-
 self.onbackgroundfetched = event => {
   console.log(event);
   event.waitUntil(async function () {
