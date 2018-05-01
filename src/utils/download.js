@@ -1,5 +1,4 @@
-import idb from './cache';
-import { get, set } from 'idb-keyval';
+import { get, set, del } from 'idb-keyval';
 import store from '../store';
 import { flatten } from '../utils';
 import Constants from '../constants';
@@ -16,7 +15,7 @@ async function getRequestsUrls (tracklist, cover) {
     '256': 'audio256URL'
   };
 
-  const quality = await idb.get('download-quality');
+  const quality = store.getState().settings.downloadQuality;
   const urls = tracklist.map(track => {
     const audio = track[qualities[quality]];
     const {manifestURL, playlistHLSURL} = track;
@@ -42,10 +41,10 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
   const toCache = {requests, tracklistId};
 
   // retrieve bg-sync queue if any (in case of multiple tracklist download)
-  const bgSyncQueue = await idb.get('bg-sync-queue') || [];
+  const bgSyncQueue = await get('bg-sync-queue') || [];
 
   // add stuff to queue, avoid double
-  idb.set('bg-sync-queue', Array.from(new Set([...bgSyncQueue, toCache])));
+  set('bg-sync-queue', Array.from(new Set([...bgSyncQueue, toCache])));
 
   await registration.sync.register('foreground-download');
 }
@@ -60,7 +59,7 @@ export async function removeTracklistFromCache (tracklist, id) {
       cache.delete(playlistHLSURL);
   }));
 
-  return idb.delete(id, {downloaded: false});
+  return del(id, {downloaded: false});
 }
 
 export function track (responses, tracklistId) {
