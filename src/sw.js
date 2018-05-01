@@ -41,10 +41,6 @@ self.onfetch = event => {
   }());
 }
 
-self.addEventListener('backgroundfetched', evt => console.log(evt));
-self.addEventListener('backgroundfetchfail', evt => console.log(evt));
-self.addEventListener('backgroundfetchabort', evt => console.log(evt));
-
 self.onbackgroundfetched = event => {
   console.log(event);
   event.waitUntil(async function () {
@@ -80,8 +76,7 @@ self.onnotificationclick = event => {
 
 const downloadInForeground = async () => {
   try {
-    // money-clip put the data in data property
-    const toCache = JSON.parse((await idbKeyval.get('bg-sync-queue'))).data;
+    const toCache = await idbKeyval.get('bg-sync-queue');
 
     // download each tracklist
     // feedback in ui

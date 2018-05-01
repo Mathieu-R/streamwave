@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import idb from '../utils/cache';
+import { get, set } from 'idb-keyval';
 import styled from 'styled-components';
 import Constants from '../constants';
 import Cover from '../components/cover';
@@ -57,7 +57,7 @@ class Library extends Component {
       }
 
       return Promise.all([
-        idb.set('library', response),
+        set('library', response),
         this.props.storeLibrary(response)
       ]);
     })
@@ -66,7 +66,7 @@ class Library extends Component {
   }
 
   getGalleryFromCache () {
-    return idb.get('library');
+    return get('library');
   }
 
   fetchGallery () {

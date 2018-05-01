@@ -15,7 +15,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [ ] Presentation API (Chromecast) (Work in progress...)    
 - [X] Media Session API    
 - [X] Service Worker    
-- [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878     
+- [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
 - [X] Background Sync    
 - [ ] Socket Live Sync    
 - [ ] Median Cut (To Fix)    
@@ -24,3 +24,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [ ] Equalize volume    
 - [ ] Equalizer    
 - [ ] Track data volume    
+
+### Notes
+Background Fetch : 
+I noticed that Background Fetch works in chrome mobile with `experimental web platform features` flag on.

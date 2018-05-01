@@ -1,4 +1,4 @@
-import cache from './cache';
+import { get, set, del } from 'idb-keyval';
 
 class Chromecaster {
   constructor () {
@@ -23,12 +23,12 @@ class Chromecaster {
 
     // 2. set the connection, save the presentation id in cache in order to allow reconnection
     this.connection = evt.connection;
-    await cache.set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id);
+    await set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id);
 
     // event listeners
     this.connection.onclose = _ => this.connection = null;
     this.connection.onterminate = _ => {
-      cache.delete(Chromecaster.CHROMECAST_IDB_KEY).then(_ => this.connection = null);
+      del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => this.connection = null);
     }
   }
 
@@ -41,7 +41,7 @@ class Chromecaster {
   }
 
   reconnect () {
-    cache.get(Chromecaster.CHROMECAST_IDB_KEY).then(id => {
+    get(Chromecaster.CHROMECAST_IDB_KEY).then(id => {
       if (!id) {
         return;
       }

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
+import { clear } from 'idb-keyval';
 import TopBarHamburger from '../components/topbar-hamburger';
 import Range from '../components/range';
 import Switch from '../components/switch';
@@ -114,6 +115,16 @@ const DataVolumeRange = styled.section`
   will-change: opacity;
 `;
 
+const SettingsButton = styled.button`
+  display: flex;
+  align-self: center;
+  margin: 10px;
+  padding: 10px 25px;
+  border-radius: 5px;
+  background: ${props => props.theme.primaryColor};
+  color: #FFF;
+`;
+
 const Logout = styled.button`
   display: flex;
   align-self: center;
@@ -205,6 +216,11 @@ class Settings extends Component {
     this.props.setMaxDataVolume(value);
   }
 
+  clearCache (evt) {
+    // clear idb cache
+    clear();
+  }
+
   logout (evt) {
     if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
       // disable auto signin next visite
@@ -284,7 +300,8 @@ class Settings extends Component {
               <Circle percentage={percentage} volume={volume} dataMax={dataMax} />
             }
           </DataVolume>
-          <Logout onClick={this.logout} aria-label="logout">Déconnexion</Logout>
+          <SettingsButton onClick={this.clearCache} aria-label="clear cache">Vider le cache</SettingsButton>
+          <SettingsButton onClick={this.logout} aria-label="logout">Déconnexion</SettingsButton>
         </SettingsContainer>
       </Container>
     )

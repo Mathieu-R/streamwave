@@ -1,4 +1,4 @@
-import idb from '../utils/cache';
+import { set, get } from 'idb-keyval';
 
 class SettingsManager {
   constructor () {
@@ -10,7 +10,7 @@ class SettingsManager {
   }
 
   async init () {
-    let settings = await idb.get(SettingsManager.IDB_KEY);
+    let settings = await get(SettingsManager.IDB_KEY);
     if (settings) {
       return;
     }
@@ -24,22 +24,22 @@ class SettingsManager {
     settings['limit-data'] = false;
     settings['data-max'] = 0;
 
-    return idb.set(SettingsManager.IDB_KEY, settings);
+    return set(SettingsManager.IDB_KEY, settings);
   }
 
   getAll () {
-    return idb.get(SettingsManager.IDB_KEY);
+    return get(SettingsManager.IDB_KEY);
   }
 
   async get (key) {
-    const settings = await idb.get(SettingsManager.IDB_KEY);
+    const settings = await get(SettingsManager.IDB_KEY);
     return settings[key];
   }
 
   async set (key, value) {
-    const settings = await idb.get(SettingsManager.IDB_KEY);
+    const settings = await get(SettingsManager.IDB_KEY);
     settings[key] = value;
-    return idb.set(SettingsManager.IDB_KEY, settings);
+    return set(SettingsManager.IDB_KEY, settings);
   }
 }
 

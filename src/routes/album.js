@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import shallowCompare from 'shallow-compare';
-import idb from '../utils/cache';
+import { get, set } from 'idb-keyval';
 import Constants from '../constants';
 import Track from '../components/track';
 import Switch from '../components/switch';
@@ -102,7 +102,7 @@ class Album extends Component {
 
     // 1. Try to retrieve album infos
     // from the cache
-    idb.get(IDB_KEY).then(response => {
+    get(IDB_KEY).then(response => {
       if (response) {
         console.log(response);
         this.props.setPrimaryColor(response.primaryColor);
@@ -115,7 +115,7 @@ class Album extends Component {
     }).catch(err => console.error(err));
 
     // check if album is downloaded
-    idb.get(id).then(album => {
+    get(id).then(album => {
       this.setState({downloaded: album && album.downloaded});
     });
   }
@@ -133,7 +133,7 @@ class Album extends Component {
       this.setState({...response});
       return response;
     })
-    .then(response => idb.set(idbKey, response));
+    .then(response => set(idbKey, response));
   }
 
   download (evt) {
@@ -162,7 +162,7 @@ class Album extends Component {
         downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
           // put in cache that we have downloaded the album
           // so we can update the UI (e.g. show downloaded toggle at app launch)
-          idb.set(id, {downloaded: true}).then(_ => {
+          set(id, {downloaded: true}).then(_ => {
             this.setState({downloaded: true});
             this.isDownloading = false;
           });
