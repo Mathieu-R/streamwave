@@ -1,10 +1,6 @@
 import { set, get } from 'idb-keyval';
 
 class SettingsManager {
-  constructor () {
-
-  }
-
   static get IDB_KEY () {
     return 'streamwave-settings';
   }
@@ -20,6 +16,7 @@ class SettingsManager {
     settings['fade'] = 0;
     settings['equalize-volume'] = false;
     settings['equalizer'] = 'none';
+    settings['download-mobile-network'] = false;
     settings['download-quality'] = 256;
     settings['limit-data'] = false;
     settings['data-max'] = 0;

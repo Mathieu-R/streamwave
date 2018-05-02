@@ -14,12 +14,14 @@ import {
   getFade,
   getEqualizeVolume,
   getEq,
+  getDownloadWithMobileNetwork,
   getQuality,
   getLimitDataStatus,
   getDataMax,
   setFade,
   setEqualizeVolume,
   setEqualizer,
+  setDownloadWithMobileNetwork,
   setDownloadQuality,
   setLimitDataStatus,
   setMaxDataVolume,
@@ -52,10 +54,6 @@ const Label = styled.label`
 const LabelInline = styled.label`
 `;
 
-// const Select = styled.select`
-//   color: #000;
-// `;
-
 const RangeBound = styled.span`
   display: flex;
   padding: 0 5px;
@@ -82,6 +80,8 @@ const EqualizeVolume = styled.section`
   min-height: 50px;
   padding: 10px 0;
 `;
+
+const DownloadWithMobileNetwork = styled(EqualizeVolume);
 
 const EQ = styled.section`
   display: flex;
@@ -139,6 +139,7 @@ const mapStateToProps = state => ({
   fade: getFade(state),
   equalizeVolume: getEqualizeVolume(state),
   eq: getEq(state),
+  downloadWithMobileNetwork: getDownloadWithMobileNetwork(state),
   quality: getQuality(state),
   limitData: getLimitDataStatus(state),
   dataMax: getDataMax(state),
@@ -149,6 +150,7 @@ const mapDispatchToProps = dispatch => ({
   setFade: value => dispatch(setFade(value)),
   setEqualizeVolume: status => dispatch(setEqualizeVolume(status)),
   setEqualizer: value => dispatch(setEqualizer(value)),
+  setDownloadWithMobileNetwork: value => dispatch(setDownloadWithMobileNetwork(value)),
   setDownloadQuality: quality => dispatch(setDownloadQuality(quality)),
   setLimitDataStatus: status => dispatch(setLimitDataStatus(status)),
   setMaxDataVolume: value => dispatch(setMaxDataVolume(value))
@@ -202,6 +204,11 @@ class Settings extends Component {
     this.props.setEqualizer(value);
   }
 
+  onDownloadWithMobileNetworkChange (evt) {
+    const {value} = evt.target;
+    this.props.setDownloadWithMobileNetwork(value);
+  }
+
   onQualityChange (evt) {
     const {value} = evt.target;
     this.props.setDownloadQuality(value)
@@ -232,7 +239,7 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, equalizeVolume, eq, quality, limitData, dataMax}, {volume, percentage}) {
+  render ({fade, equalizeVolume, eq, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume, percentage}) {
     console.log('LIMIT DATA', limitData);
     console.log('DATA MAX', dataMax);
     console.log('VOLUME DOWNLOADED', volume);
@@ -261,6 +268,13 @@ class Settings extends Component {
               value={equalizeVolume}
             />
           </EqualizeVolume>
+          <DownloadWithMobileNetwork>
+            <Switch
+              label="Télécharger à l'aide du réseau mobile"
+              onChange={this.onDownloadWithMobileNetworkChange}
+              value={downloadWithMobileNetwork}
+            />
+          </DownloadWithMobileNetwork>
           <EQ>
           <LabelInline htmlFor="quality">Equaliseur</LabelInline>
             <Select native onChange={this.onEqualizerChange} value={eq} style={{color: '#FFF'}}>

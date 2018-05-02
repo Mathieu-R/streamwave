@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
+import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 import { toasting } from '../../store/toast';
@@ -47,15 +47,9 @@ class Register extends Component {
       })
     });
 
-    // bad typing, password not strong enough or email already used
-    if (response.status === 400) {
-      const errors = data.error.map(err => err.msg);
-      this.props.toasting(errors);
-      return;
-    }
-
     if (response.status === 204) {
       this.props.toasting(['Cet utilisateur existe déjà...']);
+      return;
     }
 
     // server error
@@ -66,6 +60,13 @@ class Register extends Component {
 
     const data = await response.json();
 
+    // bad typing, password not strong enough or email already used
+    if (response.status === 400) {
+      const errors = Object.keys(data.error).map(err => data.error[err].msg);
+      this.props.toasting(errors, 8000);
+      return;
+    }
+
     // user created, mail sent
     this.props.toasting(data.message);
   }
@@ -74,17 +75,17 @@ class Register extends Component {
     return (
       <Container>
         <Form onSubmit={this.register}>
-          <InputWrapper class="register-form__email input-wrapper">
-            <Label for="email">E-mail</Label>
-            <input ref={input => this.email = input} type="email" id="email" class="register-form__email__input" autocomplete="email"/>
+          <InputWrapper>
+            <Label htmlFor="email">E-mail</Label>
+            <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
           </InputWrapper>
-          <InputWrapper class="register-form__password input-wrapper">
-            <Label for="password">Mot de passe</Label>
-            <input ref={input => this.password = input} type="password" id="password" class="register-form__password__input" autocomplete="new-password"/>
+          <InputWrapper>
+            <Label htmlFor="password">Mot de passe</Label>
+            <input ref={input => this.password = input} type="password" id="password" autocomplete="new-password"/>
           </InputWrapper>
-          <InputWrapper class="register-form__password-confirm input-wrapper">
-            <Label for="password-confirm">Confirmation du mot de passe</Label>
-            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" class="register-form__password-confirm__input" autocomplete="new-password"/>
+          <InputWrapper>
+            <Label htmlFor="password-confirm">Confirmation du mot de passe</Label>
+            <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" autocomplete="new-password"/>
           </InputWrapper>
           <FormButton type="submit" aria-label="register">
             Créer un compte

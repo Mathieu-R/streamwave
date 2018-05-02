@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import shallowCompare from 'shallow-compare';
 import { get, set } from 'idb-keyval';
 import Constants from '../constants';
 import Track from '../components/track';
@@ -22,6 +21,10 @@ import {
 import {
   toasting
 } from '../store/toast';
+
+import {
+  getDownloadWithMobileNetwork
+} from '../store/settings';
 
 const Container = styled.div``;
 
@@ -69,7 +72,8 @@ const Tracks = styled.section`
 
 const mapStateToProps = state => ({
   shuffle: isShuffle(state),
-  downloads: getDownloads(state)
+  downloads: getDownloads(state),
+  downloadWithMobileNetwork: getDownloadWithMobileNetwork(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,10 +94,6 @@ class Album extends Component {
     this.state = {
       downloaded: false
     }
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
   }
 
   componentWillMount () {
@@ -137,6 +137,16 @@ class Album extends Component {
   }
 
   download (evt) {
+    // if user is on mobile, on mobile network
+    // and do not want to download on mobile network
+    if (navigator.connection.type
+      && (navigator.connection.type !== 'wifi' || navigator.connection.type !== 'Ethernet')
+      && !this.props.downloadWithMobileNetwork
+    ) {
+      this.props.toasting(['Vous êtes sur un réseau mobile', 'Autorisez le téchargement sur ce type de réseau et réessayez']);
+      return;
+    }
+
     if (!Constants.SUPPORT_BACKGROUND_SYNC) {
       this.props.toasting(['Votre navigateur ne supporte pas le téléchargement de musiques...']);
       return;

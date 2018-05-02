@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
+import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 class Reset extends Component {
