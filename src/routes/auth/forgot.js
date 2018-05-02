@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../../constants';
 import styled from 'styled-components';
-import { Container, Wrapper as Form, FormButton } from '../../components/ui';
+import { Container, Form, FormButton } from '../../components/ui';
 
 import {
   toasting

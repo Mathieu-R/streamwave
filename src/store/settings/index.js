@@ -1,4 +1,3 @@
-import { createSelector } from 'reselect';
 import SettingsManager from '../../utils/settings-manager';
 const manager = new SettingsManager();
 
@@ -7,6 +6,7 @@ const RESTORE_SETTINGS = 'RESTORE_SETTINGS';
 const SET_FADE = 'SET_FADE';
 const SET_EQUALIZE_VOLUME = 'SET_EQUALIZE_VOLUME';
 const SET_EQUALIZER = 'SET_EQUALIZER';
+const SET_DOWNLOAD_WITH_MOBILE_NETWORK = 'SET_DOWNLOAD_WITH_MOBILE_NETWORK';
 const SET_DOWNLOAD_QUALITY = 'SET_DOWNLOAD_QUALITY';
 const SET_LIMIT_DATA_STATUS = 'SET_LIMIT_DATA_STATUS';
 const SET_DATA_VOLUME_MAX = 'SET_DATA_VOLUME_MAX';
@@ -58,6 +58,17 @@ export function setEqualizer (eq) {
   }
 }
 
+export function setDownloadWithMobileNetwork (status) {
+  return dispatch => {
+    manager.set('download-mobile-network', status).then(_ => {
+      dispatch({
+        type: SET_DOWNLOAD_WITH_MOBILE_NETWORK,
+        status
+      })
+    });
+  }
+}
+
 export function setDownloadQuality (quality) {
   return dispatch => {
     manager.set('download-quality', quality).then(_ => {
@@ -96,6 +107,7 @@ export const getFade = state => state.settings.fade;
 export const getEqualizeVolume = state => state.settings.equalizeVolume;
 export const getEq = state => state.settings.eq;
 export const getQuality = state => state.settings.downloadQuality;
+export const getDownloadWithMobileNetwork = state => state.settings.downloadWithMobileNetwork;
 export const getLimitDataStatus = state => state.settings.limitData;
 export const getDataMax = state => state.settings.dataMax;
 
@@ -110,6 +122,7 @@ export default (state = {}, action) => {
         fade: action.settings['fade'],
         equalizeVolume: action.settings['equalize-volume'],
         eq: action.settings['equalizer'],
+        downloadWithMobileNetwork: action.settings['download-mobile-network'],
         downloadQuality: action.settings['download-quality'],
         limitData: action.settings['limit-data'],
         dataMax: action.settings['data-max']
@@ -131,6 +144,12 @@ export default (state = {}, action) => {
       return {
         ...state,
         eq: action.eq
+      }
+
+    case SET_DOWNLOAD_WITH_MOBILE_NETWORK:
+      return {
+        ...state,
+        downloadWithMobileNetwork: action.status
       }
 
     case SET_DOWNLOAD_QUALITY:

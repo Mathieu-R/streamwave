@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Container, Wrapper as Form, InputWrapper, Label, FormButton } from '../../components/ui';
+import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 import {
@@ -87,12 +87,12 @@ class Login extends Component {
       <Container>
         <Form onSubmit={this.login}>
           <InputWrapper>
-            <Label for="email" class="login-form__email__label">E-mail</Label>
-            <input ref={input => this.email = input} type="email" id="email" class="login-form__email__input" autocomplete="email"/>
+            <Label htmlFor="email">E-mail</Label>
+            <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
           </InputWrapper>
           <InputWrapper>
-            <Label for="password" class="login-form__password__label">Mot de passe</Label>
-            <input ref={input => this.password = input} type="password" id="password" class="login-form__password__input" autocomplete="current-password"/>
+            <Label htmlFor="password">Mot de passe</Label>
+            <input ref={input => this.password = input} type="password" id="password" autocomplete="current-password"/>
           </InputWrapper>
           <FormButton aria-label="login">
             Se connecter
