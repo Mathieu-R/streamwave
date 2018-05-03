@@ -104,7 +104,6 @@ class Album extends Component {
     // from the cache
     get(IDB_KEY).then(response => {
       if (response) {
-        console.log(response);
         this.props.setPrimaryColor(response.primaryColor);
         this.setState({...response});
         return;
@@ -137,14 +136,17 @@ class Album extends Component {
   }
 
   download (evt) {
+    console.log(navigator.connection, navigator.connection.type);
     // if user is on mobile, on mobile network
     // and do not want to download on mobile network
-    if (navigator.connection.type
-      && (navigator.connection.type !== 'wifi' || navigator.connection.type !== 'Ethernet')
-      && !this.props.downloadWithMobileNetwork
-    ) {
-      this.props.toasting(['Vous êtes sur un réseau mobile', 'Autorisez le téchargement sur ce type de réseau et réessayez']);
-      return;
+    if (Constants.SUPPORT_NETWORK_INFORMATION_API) {
+      if (navigator.connection.type
+        && (navigator.connection.type !== 'wifi' || navigator.connection.type !== 'ethernet')
+        && !this.props.downloadWithMobileNetwork
+      ) {
+        this.props.toasting(['Vous êtes sur un réseau mobile', 'Autorisez le téchargement sur ce type de réseau et réessayez']);
+        return;
+      }
     }
 
     if (!Constants.SUPPORT_BACKGROUND_SYNC) {
@@ -169,7 +171,8 @@ class Album extends Component {
           .catch(err => console.error(err));
       } else {
         // download the album in foreground
-        downloadTracklist({tracklist: this.state.tracks, album: this.state.title, cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
+        downloadTracklist({tracklist: this.state.tracks, album: this.state.title,
+          cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
           // put in cache that we have downloaded the album
           // so we can update the UI (e.g. show downloaded toggle at app launch)
           set(id, {downloaded: true}).then(_ => {
