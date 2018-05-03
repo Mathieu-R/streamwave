@@ -56,11 +56,9 @@ class Library extends Component {
         return;
       }
 
-      return Promise.all([
-        set('library', response),
-        this.props.storeLibrary(response)
-      ]);
+      return set('library', response);
     })
+    .then(_ => this.props.storeLibrary(response))
     .then(_ => this.lazyLoadArtworks())
     .catch(err => console.error(err));
   }
@@ -119,7 +117,7 @@ class Library extends Component {
     target.src = src;
   }
 
-  render ({library}, {}) {
+  render ({library}) {
     return (
       <div>
         <TopBarHamburger />
