@@ -56,9 +56,9 @@ class Library extends Component {
         return;
       }
 
+      this.props.storeLibrary(response);
       return set('library', response);
     })
-    .then(_ => this.props.storeLibrary(response))
     .then(_ => this.lazyLoadArtworks())
     .catch(err => console.error(err));
   }

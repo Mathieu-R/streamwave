@@ -62,6 +62,8 @@ self.onbackgroundfetchfail = event => {
 
 self.onsync = event => {
   if (event.tag === 'foreground-download') {
+    // TODO: delay bg-sync if we are on cellular network
+    // and it is not allowed to download with that network
     event.waitUntil(downloadInForeground())
   }
 }
@@ -69,12 +71,28 @@ self.onsync = event => {
 self.onnotificationclick = event => {
   // close notification
   event.notification.close();
-  // redirect user to album
+  // redirect user
   clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
 }
 
 const downloadInForeground = async () => {
   try {
+    // seems like chrome (hopefully other browsers - to test) will retry until 3 times
+    // if promise reject (lost connection,...)
+    // https://notes.eellson.com/2018/02/11/chrome-the-background-sync-api-and-exponential-backoff/
+    // check if mobile network downloading is allowed by user
+    // and if we are on mobile network
+    console.log(navigator, navigator.connection);
+    const mobileNetworkAllowed = await idbKeyVal.get('download-mobile-network');
+
+    if (!mobileNetworkAllowed && isOnMobileNetwork()) {
+      self.registration.showNotification('You have not allowed to download on mobile network.', {
+        body: 'You\'re on mobile network.\n Allow downloading on mobile network in settings or activated Wifi.',
+        data: {type: 'settings'}
+      });
+      return Promise.reject();
+    }
+
     const toCache = await idbKeyval.get('bg-sync-queue');
 
     // download each tracklist
@@ -137,7 +155,6 @@ const createRangedResponse = (request, response, rangeHeader) => {
   });
 }
 
-
 const trackDownload = (responses, tracklistId) => {
   let totalDownload, downloaded = 0;
 
@@ -171,3 +188,7 @@ const trackDownload = (responses, tracklistId) => {
     reader.read().then(onStream);
   });
 }
+
+// network information api is not available in every browser for now
+// connection.type seems to be possibly undefined in some case (desktop ?)
+const isOnMobileNetwork = () => navigator.connection && navigator.connection.type && navigator.connection.type === 'cellular';

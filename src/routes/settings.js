@@ -268,13 +268,16 @@ class Settings extends Component {
               value={equalizeVolume}
             />
           </EqualizeVolume>
-          <DownloadWithMobileNetwork>
-            <Switch
-              label="Télécharger à l'aide du réseau mobile"
-              onChange={this.onDownloadWithMobileNetworkChange}
-              value={downloadWithMobileNetwork}
-            />
-          </DownloadWithMobileNetwork>
+          {
+            Constants.SUPPORT_NETWORK_INFORMATION_API &&
+            <DownloadWithMobileNetwork>
+              <Switch
+                label="Télécharger à l'aide du réseau mobile"
+                onChange={this.onDownloadWithMobileNetworkChange}
+                value={downloadWithMobileNetwork}
+              />
+            </DownloadWithMobileNetwork>
+          }
           <EQ>
           <LabelInline htmlFor="quality">Equaliseur</LabelInline>
             <Select native onChange={this.onEqualizerChange} value={eq} style={{color: '#FFF'}}>
