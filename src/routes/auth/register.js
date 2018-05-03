@@ -73,6 +73,13 @@ class Register extends Component {
       return;
     }
 
+    // user not created
+    // likely because mail sending failed
+    if (response.status === 422) {
+      this.props.toasting([data.error], 8000);
+      return;
+    }
+
     // user created, mail sent
     this.props.toasting(data.message);
   }
