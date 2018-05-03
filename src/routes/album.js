@@ -136,12 +136,12 @@ class Album extends Component {
   }
 
   download (evt) {
-    console.log(navigator.connection, navigator.connection.type);
+    console.log('connection type:', navigator.connection.type);
     // if user is on mobile, on mobile network
     // and do not want to download on mobile network
     if (Constants.SUPPORT_NETWORK_INFORMATION_API) {
       if (navigator.connection.type
-        && (navigator.connection.type !== 'wifi' || navigator.connection.type !== 'ethernet')
+        && navigator.connection.type === 'cellular'
         && !this.props.downloadWithMobileNetwork
       ) {
         this.props.toasting(['Vous êtes sur un réseau mobile', 'Autorisez le téchargement sur ce type de réseau et réessayez']);

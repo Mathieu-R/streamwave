@@ -47,15 +47,16 @@ class Library extends Component {
       this.getGalleryFromCache(),
       // If fetch is faster but reject, trying to get stuff from the cache
       this.fetchGallery().catch(_ => this.getGalleryFromCache())
-    ]).then(response => {
-      console.log(response);
-      // If nor response from catch or from fail
-      // Gallery not stored + No connectivity.
-      // TODO: show message on screen (e.g. No internet connection)
+    ])
+    .then(response => {
+      // If nor response from cache or from fetch
+      // idb seems buggy in Firefox, fetch data.
       if (!response) {
-        return;
+        return this.fetchGallery();
       }
-
+      return response;
+    })
+    .then(response => {
       this.props.storeLibrary(response);
       return set('library', response);
     })

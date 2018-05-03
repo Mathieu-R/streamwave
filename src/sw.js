@@ -82,8 +82,7 @@ const downloadInForeground = async () => {
     // https://notes.eellson.com/2018/02/11/chrome-the-background-sync-api-and-exponential-backoff/
     // check if mobile network downloading is allowed by user
     // and if we are on mobile network
-    console.log(navigator, navigator.connection);
-    const mobileNetworkAllowed = await idbKeyVal.get('download-mobile-network');
+    const mobileNetworkAllowed = await idbKeyval.get('download-mobile-network');
 
     if (!mobileNetworkAllowed && isOnMobileNetwork()) {
       self.registration.showNotification('You have not allowed to download on mobile network.', {
