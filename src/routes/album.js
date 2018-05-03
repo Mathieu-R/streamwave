@@ -136,7 +136,7 @@ class Album extends Component {
   }
 
   download (evt) {
-    console.log(navigator.connection, navigator.connection.type);
+    console.log('connection type:', navigator.connection.type);
     // if user is on mobile, on mobile network
     // and do not want to download on mobile network
     if (Constants.SUPPORT_NETWORK_INFORMATION_API) {
