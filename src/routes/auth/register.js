@@ -60,10 +60,16 @@ class Register extends Component {
 
     const data = await response.json();
 
-    // bad typing, password not strong enough or email already used
+    // bad typing, password not strong enough
     if (response.status === 400) {
       const errors = Object.keys(data.error).map(err => data.error[err].msg);
       this.props.toasting(errors, 8000);
+      return;
+    }
+
+    // email already used
+    if (response.status === 409) {
+      this.props.toasting([data.error], 8000);
       return;
     }
 
