@@ -34,7 +34,7 @@ self.onfetch = event => {
     const rangeHeader = event.request.headers.get('Range');
 
     if (rangeHeader) {
-      return createRangedResponse(event.request, response);
+      return createRangedResponse(event.request, response, rangeHeader);
     }
 
     return response;
@@ -48,7 +48,6 @@ self.onbackgroundfetched = event => {
     const cache = await caches.open(MUSIC_CACHE_NAME);
     // put the downloaded stuff in the cache
     await Promise.all(event.fetches.map(({request, response}) => cache.put(request, response)));
-
     // update UI. Yeah, there's an event for that !
     event.updateUI('Tracklist downloaded');
   }());
@@ -104,15 +103,10 @@ const downloadInForeground = async () => {
   }
 }
 
-const createRangedResponse = (request, response) => {
-  if (!response.status !== 200) {
-    //return response;
-  }
-
+const createRangedResponse = (request, response, rangeHeader) => {
   return response.arrayBuffer().then(buffer => {
-    let start, end;
     // aaa-bbb, aaa, bbb
-    [full, start, end] = /(\d*)-(\d*)/.exec(rangeHeader);
+    let [full, start, end] = /(\d*)-(\d*)/.exec(rangeHeader);
 
     if (start === '') {
       start = buffer.byteLength - Number(end);
