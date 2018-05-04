@@ -85,8 +85,8 @@ const downloadInForeground = async () => {
     const mobileNetworkAllowed = await idbKeyval.get('download-mobile-network');
 
     if (!mobileNetworkAllowed && isOnMobileNetwork()) {
-      self.registration.showNotification('You have not allowed to download on mobile network.', {
-        body: 'You\'re on mobile network.\n Allow downloading on mobile network in settings or activated Wifi.',
+      self.registration.showNotification('Vouss n\'avez pas autorisé le téléchargement sur réseau mobile.', {
+        body: 'Vous êtes sur un réseau mobile.\n Autorisez le téléchargement sur ce type de réseau dans les paramètres ou activez le Wifi.',
         data: {type: 'settings'}
       });
       return Promise.reject();
@@ -104,9 +104,9 @@ const downloadInForeground = async () => {
       trackDownload(responses, tracklistId);
       const cache = await caches.open(MUSIC_CACHE_NAME);
       await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
-      self.registration.showNotification('Tracklist downloaded.', {
+      self.registration.showNotification('Tracklist téléchargée.', {
         // could show more infos.
-        body: 'access the tracklist.',
+        body: 'Accéder à la tracklist.',
         // usefull to redirect user when
         // he clicks on the notification
         data: {type: 'album', id: tracklistId}

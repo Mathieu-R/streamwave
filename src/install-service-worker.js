@@ -16,18 +16,6 @@ import {
 export default (store) => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
-
-      const isReloading = false;
-      navigator.serviceWorker.oncontrollerchange = evt => {
-        if (isReloading) {
-          return;
-        }
-
-        // refresh the page
-        window.location.reload();
-        isReloading = true;
-      }
-
       // if an update is found
       // we should have a service-worker installing
       registration.onupdatefound = event => {
@@ -51,6 +39,17 @@ export default (store) => {
 
           console.log(`Service Worker ${event.target.state}`);
         }
+      }
+
+      const isReloading = false;
+      navigator.serviceWorker.oncontrollerchange = evt => {
+        if (isReloading) {
+          return;
+        }
+
+        // refresh the page
+        window.location.reload();
+        isReloading = true;
       }
 
       navigator.serviceWorker.onmessage = event => {

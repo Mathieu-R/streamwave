@@ -58,7 +58,7 @@ class Constants {
   }
 
   static get SUPPORT_NETWORK_INFORMATION_API () {
-    return 'connection' in navigator;
+    return ('connection' in navigator && navigator.connection.type !== undefined);
   }
 
   static get SUPPORT_BACKGROUND_SYNC () {
