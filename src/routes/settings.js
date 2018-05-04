@@ -167,6 +167,10 @@ class Settings extends Component {
     this.onQualityChange = this.onQualityChange.bind(this);
     this.onLimitDataStatusChange = this.onLimitDataStatusChange.bind(this);
     this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
+
+    this.state = {
+      volume: 0
+    }
   }
 
   componentWillMount () {
@@ -175,12 +179,10 @@ class Settings extends Component {
     }
 
     getDataVolumeDownloaded({
-      userId: this.props.userId,
-      dataMax: this.props.dataMax
-    }).then(({volume, percentage}) => {
+      userId: this.props.userId
+    }).then(({volume}) => {
       this.setState({
-        volume,
-        percentage
+        volume
       });
     })
   }
@@ -314,7 +316,7 @@ class Settings extends Component {
             {/* SVG arc with data consumed until today */}
             {
               limitData &&
-              <Circle percentage={percentage} volume={volume} dataMax={dataMax} />
+              <Circle volume={volume} dataMax={dataMax} />
             }
           </DataVolume>
           <SettingsButton onClick={this.clearCache} aria-label="clear cache">Vider le cache</SettingsButton>

@@ -158,27 +158,24 @@ export function updateDataVolume ({userId, value}) {
   }).catch(err => console.error(err));
 }
 
-export function getDataVolumeDownloaded ({userId, dataMax}) {
+export function getDataVolumeDownloaded ({userId}) {
   return get(`data-volume_${userId}`).then(volume => {
     console.log('UTILS - VOLUME', volume);
-    let volumeInMo, percentage;
+    let volumeInMo;
 
     // user has no data downloaded
     if (!volume) {
       volumeInMo = 0;
-      percentage = 0;
     } else {
       // volume in bytes
       // 1 byte = 8bits
       volumeInMo = volume / (1000 * 1024);
-      percentage = volumeInMo / dataMax;
     }
 
     console.log('UTILS - VOLUME IN MO', volumeInMo);
     console.log('UTILS - PERCENTAGE', percentage);
     return {
-      volume: parseFloat(volumeInMo.toFixed(2)),
-      percentage
+      volume: parseFloat(volumeInMo.toFixed(2))
     }
   }).catch(err => console.error(err));
 }

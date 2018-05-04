@@ -32,7 +32,6 @@ class Circle extends Component {
     super();
     this.container = null;
     this.canvas = null;
-    this.drawProgressively = this.drawProgressively.bind(this);
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
 
@@ -52,6 +51,7 @@ class Circle extends Component {
   }
 
   componentDidUpdate () {
+    console.log('update');
     requestAnimationFrame(() => this.draw());
   }
 
@@ -72,24 +72,13 @@ class Circle extends Component {
     this.draw();
   }
 
-  drawProgressively () {
-    this.setState({drawing: true});
-
-    for (let percentage = 0.1; percentage <= this.props.percentage * 100; percentage += 0.1) {
-      requestAnimationFrame(_ => {
-        setTimeout(_ => {
-          this.draw(percentage, (this.props.volume / 100) * percentage);
-        }, 50 * (percentage + 1));
-      });
-    }
-  }
-
   draw () {
     const TAU = Math.PI * 2;
     const mid = this.canvas.height / 4;
     const lineWidth = 15;
     const radius = (this.canvas.height - lineWidth) / 4;
     const innerRadius = radius - lineWidth;
+    const percentage = this.props.volume / this.props.dataMax;
 
     // remove old canvas
     this.ctx.save();
@@ -112,12 +101,11 @@ class Circle extends Component {
     this.ctx.translate(-mid, -mid);
 
     // filled circle
-    console.log(this.props.percentage * TAU);
     this.ctx.beginPath();
     this.ctx.moveTo(mid, mid);
-    this.ctx.arc(mid, mid, radius, 0, this.props.percentage * TAU);
+    this.ctx.arc(mid, mid, radius, 0, percentage * TAU);
     this.ctx.lineWidth = lineWidth;
-    this.ctx.fillStyle = `rgb(${Math.round(this.props.percentage * 255)}, 255 , 128)`;
+    this.ctx.fillStyle = `rgb(${Math.round(percentage * 255)}, 255 , 128)`;
     this.ctx.closePath();
     this.ctx.fill();
 
@@ -162,7 +150,6 @@ class Circle extends Component {
 
 /**
  * Props
- * percentage => [0, 1]
  * volume => 2 decimal float in Mo
  * dataMax => integer in Mo
  */
