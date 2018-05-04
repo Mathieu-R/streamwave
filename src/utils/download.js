@@ -50,11 +50,15 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
 }
 
 export async function removeTracklistFromCache (tracklist, id) {
-  return;
   const cache = await caches.open(MUSIC_CACHE_NAME);
+  const keys = await cache.keys();
   await Promise.all(
     tracklist.map(([audio256URL, manifestURL, playlistHLSURL]) => {
-      //cache.delete(audio256URL) // regex ?
+      // remove "-quality.mp4"
+      const normalizedAudioURL = audio256URL.replace(/-[^-]*$/, '');
+      // find request for that url
+      const request = await keys.find(request => request.url.startsWith(`${Constants.CDN_URL}/${normalizedAudioURL}`));
+      cache.delete(request);
       cache.delete(manifestURL);
       cache.delete(playlistHLSURL);
   }));

@@ -15,17 +15,26 @@ workbox.skipWaiting();
 workbox.clientsClaim();
 
 self.onfetch = event => {
+  // https://github.com/paulirish/caltrainschedule.io/pull/51
+  // seems kind of a bug with chrome devtools open
+  if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+    return;
+  }
+
+  const url = new URL(event.request);
+
+  // api call
+  if (url.hostname === 'api.streamwave.be') {
+    // get something from the cache
+    // then update it
+    staleWhileRevalidate(event.request);
+    return;
+  }
+
   event.respondWith(async function () {
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
 
-    // https://github.com/paulirish/caltrainschedule.io/pull/51
-    // seems kind of a bug with chrome devtools open
-    if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
-      return;
-    }
-
-    // api call
     if (!response) {
       return fetch(event.request);
     }
@@ -73,6 +82,52 @@ self.onnotificationclick = event => {
   event.notification.close();
   // redirect user
   clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
+}
+
+const staleWhileRevalidate = (event) => {
+  const {request} = event;
+  const cached = caches.match(request);
+  const fetched = fetch(request);
+  // perform a copy a fetched version
+  // as we could consume it twice (fetch + put in cache)
+  const fetchedClone = fetched.then(response = response.clone());
+
+  event.waitUntil(async function () {
+    try {
+      // try to get response from the cache and from the network
+      // fastest response will be returned
+      // if offline, fetch could fail before we get something from the cache
+      // in that case => return cached version
+      const response = await Promise.race([
+        cached,
+        fetched.catch(_ => cached)
+      ]);
+
+      // if cached version fails
+      // fetch request
+      if (!response) {
+        return fetched;
+      }
+
+      return response;
+    } catch (err) {
+      // offline + nothing in the cache
+      // 404
+      return new Response(null, {status: 404});
+    }
+  }());
+
+  event.respondWith(async function () {
+    try {
+      const response = await fetchedClone;
+      const cache = await caches.open('streamwave-api');
+      cache.put(request, response);
+    } catch (err) {
+      console.error(err);
+    }
+  }())
+
+
 }
 
 const downloadInForeground = async () => {
