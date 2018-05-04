@@ -90,7 +90,7 @@ const staleWhileRevalidate = (event) => {
   const fetched = fetch(request);
   // perform a copy a fetched version
   // as we could consume it twice (fetch + put in cache)
-  const fetchedClone = fetched.then(response = response.clone());
+  const fetchedClone = fetched.then(response => response.clone());
 
   event.waitUntil(async function () {
     try {
