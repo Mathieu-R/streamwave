@@ -123,7 +123,6 @@ class Circle extends Component {
 
     // text => downloaded - max data allowed
     const fontSize = (this.canvas.width / 2) < 200 ? '12px' : '18px';
-    console.log(this.canvas.width);
     this.ctx.translate(mid, mid);
     this.ctx.rotate(Math.PI / 2);
     this.ctx.translate(-mid, -mid);
