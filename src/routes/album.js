@@ -72,7 +72,7 @@ const Artist = styled.h2`
   margin: 0;
 
   @media(max-width: ${props => props.theme.mobile}) {
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
@@ -82,7 +82,7 @@ const Line = styled.div`
   font-size: 14px;
 
   @media(max-width: ${props => props.theme.mobile}) {
-    font-size: 12px;
+    font-size: 10px;
   }
 `;
 
