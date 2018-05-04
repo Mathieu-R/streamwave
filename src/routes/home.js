@@ -35,7 +35,6 @@ const Settings = Loadable({
   timeout: 10000
 });
 
-
 import About from './about';
 import Licences from './licences';
 import Search from './search';

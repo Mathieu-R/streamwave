@@ -161,12 +161,19 @@ export function updateDataVolume ({userId, value}) {
 export function getDataVolumeDownloaded ({userId, dataMax}) {
   return get(`data-volume_${userId}`).then(volume => {
     console.log('UTILS - VOLUME', volume);
-    // user hasn't chosen to limit data
-    if (!volume) return;
-    // volume in bytes
-    // 1 byte = 8bits
-    const volumeInMo = volume / (1000 * 1024);
-    const percentage = volumeInMo / dataMax;
+    let volumeInMo, percentage;
+
+    // user has no data downloaded
+    if (!volume) {
+      volumeInMo = 0;
+      percentage = 0;
+    } else {
+      // volume in bytes
+      // 1 byte = 8bits
+      volumeInMo = volume / (1000 * 1024);
+      percentage = volumeInMo / dataMax;
+    }
+
     console.log('UTILS - VOLUME IN MO', volumeInMo);
     console.log('UTILS - PERCENTAGE', percentage);
     return {
