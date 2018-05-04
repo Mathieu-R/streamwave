@@ -31,40 +31,84 @@ const Container = styled.div``;
 const Infos = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   height: 150px;
+`;
+
+const InfosWrapper = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+const Details = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  margin: 15px;
+`;
+
+const Cover = styled.img`
+  max-height: 100px;
+  object-fit: contain;
 `;
 
 const Title = styled.h1`
   font-size: 22px;
   font-weight: bold;
   margin: 5px 0;
+
+  @media(max-width: ${props => props.theme.mobile}) {
+    font-size: 18px;
+  }
 `;
 
 const Artist = styled.h2`
-  font-size: 18px;
-  color: #7C7C7C;
+  font-size: 14px;
+  color: #D4D4D4;
   margin: 0;
+
+  @media(max-width: ${props => props.theme.mobile}) {
+    font-size: 10px;
+  }
+`;
+
+const Line = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  @media(max-width: ${props => props.theme.mobile}) {
+    font-size: 12px;
+  }
+`;
+
+const Year = styled.span`
+  margin: 5px 5px 5px 0;
+`;
+
+const TracksCount = styled.span`
+  margin: 5px;
+`;
+
+const Genre = styled.span`
+  margin: 5px;
 `;
 
 const Download = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 5px;
+  position: relative;
+  margin-right: 5px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   min-height: 35px;
   width: 100%;
 `;
 
-const SwitchContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
+const SwitchContainer = styled.div``;
 
 const Tracks = styled.section`
   margin: 0 10px;
@@ -194,8 +238,7 @@ class Album extends Component {
     //this.listenToTrack()
   }
 
-  listenToTrack (artist, title, coverURL, track) {
-    console.log(title, track.title);
+  listenToTrack (artist, album, coverURL, track) {
     const {tracks} = this.state;
     const {manifestURL, playlistHLSURL} = track;
 
@@ -205,14 +248,13 @@ class Album extends Component {
     this.props.setQueue(queue);
     this.props.setTrack({
       artist,
-      album: title,
+      album,
       coverURL,
       track,
       index
     });
 
-    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL})
-      //.then(_ => this.props.crossFade());
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album: title, title: track.title, coverURL});
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
@@ -221,8 +263,20 @@ class Album extends Component {
       <Container>
         <TopBarBack />
         <Infos>
-          <Title>{title}</Title>
-          <Artist>{artist}</Artist>
+          <InfosWrapper>
+            <Cover alt="cover" src={`${Constants.CDN_URL}/${coverURL}`} />
+            <Details>
+              <Title>{title}</Title>
+              <Artist>{artist}</Artist>
+              <Line>
+                <Year>{year ? year : 'année de parution inconnue'}</Year>
+                •
+                <TracksCount>{tracks.length} titres</TracksCount>
+                •
+                <Genre>{genre}</Genre>
+              </Line>
+            </Details>
+          </InfosWrapper>
           <Download>
             {
               downloads[this.props.match.params.id] ?

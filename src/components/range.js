@@ -99,14 +99,12 @@ class Range extends Component {
     this.onChange = this.onChange.bind(this);
 
     this.state = {
-      dragging: false,
-      bcr: null,
-      position: 0
+      position: 0,
+      active: false
     }
   }
 
   componentDidMount () {
-    console.log('RANGE - COMPONENT DID MOUNT - VALUE', this.props.value);
     requestAnimationFrame(() => this.update(this.props.value));
   }
 
@@ -127,11 +125,8 @@ class Range extends Component {
   }
 
   update (value) {
-    console.log('RANGE - VALUE', value);
-    console.log('range element', this.range);
     const { min, max } = this.range;
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
-    console.log('RANGE - POSITION', position)
     this.setState({position});
   }
 

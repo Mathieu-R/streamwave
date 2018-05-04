@@ -174,6 +174,7 @@ class Settings extends Component {
   }
 
   componentWillMount () {
+    console.log(this.props.dataMax);
     if (!this.props.dataMax) {
       return;
     }
@@ -241,11 +242,7 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, equalizeVolume, eq, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume, percentage}) {
-    console.log('LIMIT DATA', limitData);
-    console.log('DATA MAX', dataMax);
-    console.log('VOLUME DOWNLOADED', volume);
-    console.log('PERCENTAGE DOWNLOADED', percentage);
+  render ({fade, equalizeVolume, eq, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
     return (
       <Container>
         <TopBarHamburger />

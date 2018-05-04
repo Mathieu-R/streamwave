@@ -34,11 +34,6 @@ class Circle extends Component {
     this.canvas = null;
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
-
-    this.state = {
-      volume: 0,
-      drawing: false
-    }
   }
 
   componentDidMount () {
@@ -51,7 +46,6 @@ class Circle extends Component {
   }
 
   componentDidUpdate () {
-    console.log('update');
     requestAnimationFrame(() => this.draw());
   }
 
@@ -139,7 +133,7 @@ class Circle extends Component {
     this.ctx.restore();
   }
 
-  render({dataMax}, {volume}) {
+  render () {
     return (
       <AverageCircle innerRef={container => this.container = container}>
         <canvas ref={canvas => this.canvas = canvas}></canvas>
