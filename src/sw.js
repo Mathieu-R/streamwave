@@ -21,7 +21,7 @@ self.onfetch = event => {
     return;
   }
 
-  const url = new URL(event.request);
+  const url = new URL(event.request.url);
 
   // api call
   if (url.hostname === 'api.streamwave.be') {

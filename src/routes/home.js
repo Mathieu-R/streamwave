@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import shaka from 'shaka-player';
 import debounce from 'debounce';
 import { updateDataVolume } from '../utils/download'
-import settingsManager from '../utils/settings-manager';
+import SettingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
@@ -94,7 +94,7 @@ class Home extends Component {
     this.source = null;
 
     this.chromecaster = null;
-    this.settings = new SettingsManager();
+    this.settings = new SettingsManager();;
 
     this.audio = null;
     this.player = null;
