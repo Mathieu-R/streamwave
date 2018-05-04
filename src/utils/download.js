@@ -50,11 +50,15 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
 }
 
 export async function removeTracklistFromCache (tracklist, id) {
-  return;
   const cache = await caches.open(MUSIC_CACHE_NAME);
+  const keys = await cache.keys();
   await Promise.all(
     tracklist.map(([audio256URL, manifestURL, playlistHLSURL]) => {
-      //cache.delete(audio256URL) // regex ?
+      // remove "-quality.mp4"
+      const normalizedAudioURL = audio256URL.replace(/-[^-]*$/, '');
+      // find request for that url
+      const request = await keys.find(request => request.url.startsWith(`${Constants.CDN_URL}/${normalizedAudioURL}`));
+      cache.delete(request);
       cache.delete(manifestURL);
       cache.delete(playlistHLSURL);
   }));
@@ -102,7 +106,7 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   }
 
   // dispatch toasting so we inform the user in UI
-  store.dispatch(toasting(['Your tracklist is gonna download in background.', 'You can close the app if you want to.'], 5000));
+  store.dispatch(toasting(['Votre tracklist va se être téléchargée en arrière-plan.', 'Vous pouvez fermer l\'application si vous le désirez.'], 5000));
 
   // store the tracklist in idb in case we would lost internet connection
   //await idb.set(`background-fetch-${id}`, tracklist);
@@ -124,7 +128,7 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   const options = {
     // could also put the icon of the app in icons property
     icons,
-    title: `Downloading ${album} in background for offline listening.`
+    title: `Téléchargement de "${album}" en arrière-plan pour la lecture hors-ligne.`
   }
 
   // get requests urls

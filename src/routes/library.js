@@ -43,19 +43,20 @@ class Library extends Component {
   componentWillMount () {
     // NOTE: trying some stuff here. Different than logic in album view
     // 1. Try to fetch and get gallery from the cache, get the faster one.
-    Promise.race([
-      this.getGalleryFromCache(),
-      // If fetch is faster but reject, trying to get stuff from the cache
-      this.fetchGallery().catch(_ => this.getGalleryFromCache())
-    ])
-    .then(response => {
-      // If nor response from cache or from fetch
-      // idb seems buggy in Firefox, fetch data.
-      if (!response) {
-        return this.fetchGallery();
-      }
-      return response;
-    })
+    // Promise.race([
+    //   this.getGalleryFromCache(),
+    //   // If fetch is faster but reject, trying to get stuff from the cache
+    //   this.fetchGallery().catch(_ => this.getGalleryFromCache())
+    // ])
+    // .then(response => {
+    //   // If nor response from cache or from fetch
+    //   // idb seems buggy in Firefox, fetch data.
+    //   if (!response) {
+    //     return this.fetchGallery();
+    //   }
+    //   return response;
+    // })
+    this.fetchGallery()
     .then(response => {
       this.props.storeLibrary(response);
       return set('library', response);

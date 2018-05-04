@@ -15,17 +15,26 @@ workbox.skipWaiting();
 workbox.clientsClaim();
 
 self.onfetch = event => {
+  // https://github.com/paulirish/caltrainschedule.io/pull/51
+  // seems kind of a bug with chrome devtools open
+  if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+    return;
+  }
+
+  const url = new URL(event.request);
+
+  // api call
+  if (url.hostname === 'api.streamwave.be') {
+    // get something from the cache
+    // then update it
+    staleWhileRevalidate(event.request);
+    return;
+  }
+
   event.respondWith(async function () {
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
 
-    // https://github.com/paulirish/caltrainschedule.io/pull/51
-    // seems kind of a bug with chrome devtools open
-    if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
-      return;
-    }
-
-    // api call
     if (!response) {
       return fetch(event.request);
     }
@@ -75,6 +84,52 @@ self.onnotificationclick = event => {
   clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
 }
 
+const staleWhileRevalidate = (event) => {
+  const {request} = event;
+  const cached = caches.match(request);
+  const fetched = fetch(request);
+  // perform a copy a fetched version
+  // as we could consume it twice (fetch + put in cache)
+  const fetchedClone = fetched.then(response = response.clone());
+
+  event.waitUntil(async function () {
+    try {
+      // try to get response from the cache and from the network
+      // fastest response will be returned
+      // if offline, fetch could fail before we get something from the cache
+      // in that case => return cached version
+      const response = await Promise.race([
+        cached,
+        fetched.catch(_ => cached)
+      ]);
+
+      // if cached version fails
+      // fetch request
+      if (!response) {
+        return fetched;
+      }
+
+      return response;
+    } catch (err) {
+      // offline + nothing in the cache
+      // 404
+      return new Response(null, {status: 404});
+    }
+  }());
+
+  event.respondWith(async function () {
+    try {
+      const response = await fetchedClone;
+      const cache = await caches.open('streamwave-api');
+      cache.put(request, response);
+    } catch (err) {
+      console.error(err);
+    }
+  }())
+
+
+}
+
 const downloadInForeground = async () => {
   try {
     // seems like chrome (hopefully other browsers - to test) will retry until 3 times
@@ -85,8 +140,8 @@ const downloadInForeground = async () => {
     const mobileNetworkAllowed = await idbKeyval.get('download-mobile-network');
 
     if (!mobileNetworkAllowed && isOnMobileNetwork()) {
-      self.registration.showNotification('You have not allowed to download on mobile network.', {
-        body: 'You\'re on mobile network.\n Allow downloading on mobile network in settings or activated Wifi.',
+      self.registration.showNotification('Vouss n\'avez pas autorisé le téléchargement sur réseau mobile.', {
+        body: 'Vous êtes sur un réseau mobile.\n Autorisez le téléchargement sur ce type de réseau dans les paramètres ou activez le Wifi.',
         data: {type: 'settings'}
       });
       return Promise.reject();
@@ -104,9 +159,9 @@ const downloadInForeground = async () => {
       trackDownload(responses, tracklistId);
       const cache = await caches.open(MUSIC_CACHE_NAME);
       await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
-      self.registration.showNotification('Tracklist downloaded.', {
+      self.registration.showNotification('Tracklist téléchargée.', {
         // could show more infos.
-        body: 'access the tracklist.',
+        body: 'Accéder à la tracklist.',
         // usefull to redirect user when
         // he clicks on the notification
         data: {type: 'album', id: tracklistId}

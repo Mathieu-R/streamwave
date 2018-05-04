@@ -94,6 +94,7 @@ class Home extends Component {
     this.source = null;
 
     this.chromecaster = null;
+    this.settings = new SettingsManager();
 
     this.audio = null;
     this.player = null;
@@ -149,7 +150,6 @@ class Home extends Component {
 
     // listen to errors
     this.player.addEventListener('error', err => console.error(err));
-    //this.player.addEventListener('buffering', evt => console.log(evt));
 
     // register a response filter in order to track streaming
     // chunk downloaded
@@ -157,11 +157,15 @@ class Home extends Component {
     const networkEngine = this.player.getNetworkingEngine();
     const updateDataVolumeDebounced = debounce(updateDataVolume, 300);
     networkEngine.registerResponseFilter((type, response) => {
+      // user does not want to limit-data => do not track.
+      this.settings.get('limit-data').then(ok => {
+        if (!ok) return;
+      });
+
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
         // bytes downloaded
         const value = response.data.byteLength;
-        console.log(value, this.props.userId);
         // update idb cache to save the user data volume consumed
          updateDataVolumeDebounced({userId: this.props.userId, value});
       }
