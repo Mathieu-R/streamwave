@@ -160,7 +160,7 @@ export function updateDataVolume ({userId, value}) {
 
 export function getDataVolumeDownloaded ({userId}) {
   return get(`data-volume_${userId}`).then(volume => {
-    console.log('UTILS - VOLUME', volume);
+    console.log('volume', volume);
     let volumeInMo;
 
     // user has no data downloaded
@@ -172,8 +172,6 @@ export function getDataVolumeDownloaded ({userId}) {
       volumeInMo = volume / (1000 * 1024);
     }
 
-    console.log('UTILS - VOLUME IN MO', volumeInMo);
-    console.log('UTILS - PERCENTAGE', percentage);
     return {
       volume: parseFloat(volumeInMo.toFixed(2))
     }

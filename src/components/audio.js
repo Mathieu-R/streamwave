@@ -27,6 +27,12 @@ class Audio extends Component {
     this.onEnded = this.onEnded.bind(this);
   }
 
+  shouldComponentUpdate () {
+    // audio has no ui
+    // should not rerender
+    return false;
+  }
+
   onTimeUpdate (evt) {
     const {duration, currentTime} = this.audio;
     // onTimeUpdate fires up even when no audio is played.

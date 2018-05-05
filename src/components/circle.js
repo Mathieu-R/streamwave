@@ -34,11 +34,6 @@ class Circle extends Component {
     this.canvas = null;
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
-
-    this.state = {
-      volume: 0,
-      drawing: false
-    }
   }
 
   componentDidMount () {
@@ -51,7 +46,6 @@ class Circle extends Component {
   }
 
   componentDidUpdate () {
-    console.log('update');
     requestAnimationFrame(() => this.draw());
   }
 
@@ -128,18 +122,19 @@ class Circle extends Component {
     this.ctx.restore();
 
     // text => downloaded - max data allowed
+    const fontSize = (this.canvas.width / 2) < 200 ? '12px' : '18px';
     this.ctx.translate(mid, mid);
     this.ctx.rotate(Math.PI / 2);
     this.ctx.translate(-mid, -mid);
     this.ctx.fillStyle = '#FFF';
-    this.ctx.font = '18px Helvetica Neue';
+    this.ctx.font = `${fontSize} Helvetica Neue`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'center';
     this.ctx.fillText(`${this.props.volume} mo / ${this.props.dataMax} mo`, mid, mid);
     this.ctx.restore();
   }
 
-  render({dataMax}, {volume}) {
+  render () {
     return (
       <AverageCircle innerRef={container => this.container = container}>
         <canvas ref={canvas => this.canvas = canvas}></canvas>

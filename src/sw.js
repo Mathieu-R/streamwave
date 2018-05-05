@@ -27,7 +27,7 @@ self.onfetch = event => {
   if (url.hostname === 'api.streamwave.be') {
     // get something from the cache
     // then update it
-    staleWhileRevalidate(event.request);
+    staleWhileRevalidate(event);
     return;
   }
 
@@ -201,7 +201,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
       headers: response.headers
     });
 
-    console.log(`ranged response from service-worker from ${start} to ${end}`);
+    //console.log(`ranged response from service-worker from ${start} to ${end}`);
 
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
