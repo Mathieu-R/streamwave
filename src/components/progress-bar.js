@@ -74,51 +74,49 @@ const ProgressRound = styled.div`
 class ProgressBar extends Component {
   constructor () {
     super();
+
+    this.bcr = null;
+    this.dragging = false;
+    this.clampedPosition = null;
+
     this.onResize = this.onResize.bind(this);
     this.updatePosition = this.updatePosition.bind(this);
     this.onSwipeStart = this.onSwipeStart.bind(this);
     this.onSwipeMove = this.onSwipeMove.bind(this);
     this.onSwipeEnd = this.onSwipeEnd.bind(this);
-
-    this.state = {
-      dragging: false,
-      bcr: null
-    }
   }
 
   componentDidMount () {
-    document.addEventListener('touchmove', this.onSwipeMove);
-    document.addEventListener('touchend', this.onSwipeEnd);
-    document.addEventListener('mousemove', this.onSwipeMove);
-    document.addEventListener('mouseup', this.onSwipeEnd);
+    document.addEventListener('touchmove', this.onSwipeMove, {passive: true});
+    document.addEventListener('touchend', this.onSwipeEnd, {passive: true});
+    document.addEventListener('mousemove', this.onSwipeMove, {passive: true});
+    document.addEventListener('mouseup', this.onSwipeEnd, {passive: true});
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
 
   componentWillUnmount () {
-    document.removeEventListener('touchmove', this.onSwipeMove);
-    document.removeEventListener('touchend', this.onSwipeEnd);
-    document.removeEventListener('mousemove', this.onSwipeMove);
-    document.removeEventListener('mouseup', this.onSwipeEnd);
+    document.removeEventListener('touchmove', this.onSwipeMove, {passive: true});
+    document.removeEventListener('touchend', this.onSwipeEnd, {passive: true});
+    document.removeEventListener('mousemove', this.onSwipeMove, {passive: true});
+    document.removeEventListener('mouseup', this.onSwipeEnd, {passive: true});
     window.removeEventListener('resize', this.onResize);
   }
 
-  // shouldComponentUpdate (nextProps) {
-  //   if (nextProps.duration !== this.props.duration) return false;
-  //   if (nextProps.currentTime !== this.props.currentTime) return false;
-  //   return true;
-  // }
-
   componentWillReceiveProps (nextProps) {
-    if (!this.state.bcr) {
+    if (!this.bcr) {
       this.onResize();
     }
+  }
+
+  componentDidUpdate () {
+    this.clampedPosition = this.props.currentTime / this.props.duration;
   }
 
   onResize () {
     if (!this.container) return;
     const bcr = this.container.getBoundingClientRect();
-    this.setState({bcr});
+    this.bcr = bcr;
   }
 
   findCandidate (evt) {
@@ -135,7 +133,7 @@ class ProgressBar extends Component {
 
   updatePosition (evt) {
     const position = this.findCandidate(evt).pageX;
-    const normalizedPosition = ((position - this.state.bcr.left) / this.state.bcr.width);
+    const normalizedPosition = ((position - this.bcr.left) / this.bcr.width);
     const clampedPosition = Math.max(0, Math.min(normalizedPosition, 1));
     const currentTime = clampedPosition * this.props.duration;
     this.props.setCurrentTime(currentTime);
@@ -144,36 +142,32 @@ class ProgressBar extends Component {
 
   onSwipeStart (evt) {
     evt.stopPropagation();
-
     this.roundContainer.focus();
-    this.setState({dragging: true});
+    this.dragging = true;
   }
 
   onSwipeMove (evt) {
     evt.stopPropagation();
-    if (!this.state.dragging) {
+    if (!this.dragging) {
       return;
     }
 
-    this.updatePosition(evt);
+    requestAnimationFrame(() => this.updatePosition(evt));
   }
 
   onSwipeEnd (evt) {
     evt.stopPropagation();
-    if (!this.state.dragging) {
+    if (!this.dragging) {
       return;
     }
 
-    //this.roundContainer.blur();
-    this.setState({dragging: false});
-    this.updatePosition(evt);
+    this.dragging = false;
+    requestAnimationFrame(() => this.updatePosition(evt));
   }
 
-  render ({duration, currentTime}, {dragging}) {
+  render ({duration, currentTime, borderRadius}) {
     // do not render component if not necessary
     if (!duration && !currentTime) return null;
-
-    const clampedPosition = currentTime / duration;
 
     return (
       <ProgressBarContainer
@@ -182,9 +176,9 @@ class ProgressBar extends Component {
         onMouseDown={this.onSwipeStart}
         borderRadius={this.props.borderRadius}
       >
-        <ProgressTrack position={clampedPosition} borderRadius={this.props.borderRadius} />
-        <ProgressRoundContainer position={clampedPosition} innerRef={container => this.roundContainer = container}>
-          <ProgressRound className="progress-bar" active={dragging} />
+        <ProgressTrack position={this.clampedPosition} borderRadius={borderRadius} />
+        <ProgressRoundContainer position={this.clampedPosition} innerRef={container => this.roundContainer = container}>
+          <ProgressRound active={this.dragging} />
         </ProgressRoundContainer>
       </ProgressBarContainer>
     )
