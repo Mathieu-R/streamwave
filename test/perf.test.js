@@ -1,3 +1,4 @@
+const dotenv = require('dotenv').config();
 const puppeteer = require('puppeteer');
 const lighthouse = require('lighthouse');
 const log = require('lighthouse-logger');
@@ -7,44 +8,42 @@ const debugPort = 2000;
 let results;
 
 const launchBrowser = async () => {
-  const browser = await puppeteer.launch({
-    slowMo: 50,
+  return puppeteer.launch({
+    slowMo: 100,
     // https://github.com/GoogleChrome/lighthouse/blob/master/docs/readme.md#testing-on-a-site-with-authentication
     args: [`--remote-debugging-port=${debugPort}`]
   });
-  return browser;
 }
 
 const login = async (browser) => {
-  const url = 'https://www.streamwave.be/auth/login';
+  const url = 'https://staging.streamwave.be/auth/login';
   const page = await browser.newPage();
   await page.goto(url);
   await page.waitForSelector('input[type="email"]', { visible: true });
 
-  const emailInput = await page.$('input[type="email"]');
-  const passwordInput = await page.$('input[type="password"]');
-
-  await Promise.all([
-    emailInput.type(EMAIL),
-    passwordInput.type(PASSWORD)
-  ]);
-
-  await passwordInput.press('Enter');
-  await page.close();
+  await page.type('input[type="email"]', EMAIL);
+  await page.type('input[type="password"]', PASSWORD);
+  await page.click('button');
+  return page;
 }
 
 describe('Performance', () => {
   beforeAll(async () => {
-    const url = 'https://www.streamwave.be';
-    const browser = await launchBrowser();
-    await login(browser);
+    try {
+      const url = 'https://staging.streamwave.be/';
+      // launch a browser and authenticate
+      const browser = await launchBrowser();
+      const page = await login(browser);
+      await page.close();
 
-    // show the lighthouse output
-    log.setLevel('info');
+      // show the lighthouse output
+      log.setLevel('info');
 
-    // get the results
-    results = await lighthouse(url, {port: debugPort, disableStorageReset: true}, null);
-    console.log(results);
+      // get the results for home page
+      results = await lighthouse(url, {port: debugPort, disableStorageReset: true});
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   it.skip('FMI should be lower than 3s on 3g network', () => {

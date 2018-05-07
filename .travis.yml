@@ -11,12 +11,18 @@ addons:
 before_install:
   - openssl aes-256-cbc -K $encrypted_e01d503bebb6_key -iv $encrypted_e01d503bebb6_iv -in .travis/deploy_rsa.enc -out /tmp/deploy_rsa -d
 before_script:
+  - npm install --save-dev dotenv
   - npm install -g jest-cli
   - npm install -g https://github.com/ebidel/lighthouse-ci
   - chmod +x ./.travis/deploy-pr.sh
+  # deploy on staging server
+  - ./.travis/deploy-pr.sh
 script:
+  # test build for bundlesize
   - npm run build
+  # test perf of the new build
+  # deployed on staging server
   - jest test --ci --colors
 after_success:
-  - ./.travis/deploy-pr.sh
+  # run lightouse-ci against staging server
   - lighthouse-ci --score=85 staging.streamwave.be
