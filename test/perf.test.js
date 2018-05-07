@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 const lighthouse = require('lighthouse');
 const log = require('lighthouse-logger');
-//const perfConfig = require('lighthouse/lighthouse-core/config/perf-config.js');
 const { EMAIL, PASSWORD } = process.env;
 const debugPort = 2000;
 
@@ -48,11 +47,12 @@ describe('Performance', () => {
     console.log(results);
   });
 
-  it('FMI should be lower than 3s on 3g network', () => {
+  it.skip('FMI should be lower than 3s on 3g network', () => {
+    expect(results).toMatchSnapshot();
     expect(results.audits['first-meaningful-paint'].rawValue).toBeLessThanOrEqual(3000);
   });
 
-  it('TTI (effectively: consistently interactive) should be lower than 5s on 3g network', () => {
+  it.skip('TTI (effectively: consistently interactive) should be lower than 5s on 3g network', () => {
     expect(results.audits['consistently-interactive'].rawValue).toBeLessThanOrEqual(5000);
   });
 
@@ -62,5 +62,5 @@ describe('Performance', () => {
 
   it.skip('Perf score should be greater 90', () => {
     expect(results.audits);
-  })
+  });
 })
