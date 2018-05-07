@@ -103,8 +103,6 @@ const staleWhileRevalidate = (event) => {
         fetched.catch(_ => cached)
       ]);
 
-      console.log(response);
-
       // if cached version fails
       // fetch request
       if (!response) {
@@ -115,6 +113,7 @@ const staleWhileRevalidate = (event) => {
     } catch (err) {
       // offline + nothing in the cache
       // 404
+      console.error(err);
       return new Response(null, {status: 404});
     }
   }());

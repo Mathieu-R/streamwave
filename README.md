@@ -12,15 +12,12 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] NodeJS    
 - [X] Basic auth + Google Oauth2     
 - [X] Credential Management API    
-- [ ] Presentation API (Chromecast) (Work in progress...)    
+- [ ] Presentation API (Chromecast) https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
 - [X] Media Session API    
 - [X] Service Worker    
 - [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
 - [X] Background Sync     
 - [ ] Median Cut (To Fix)   
-- [ ] Crossfade (extra-buffering or sample ?)     
-- [ ] Equalize volume    
-- [ ] Equalizer    
 - [X] Track data volume    
 
 ### Notes

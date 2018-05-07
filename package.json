@@ -5,7 +5,8 @@
   "scripts": {
     "start": "webpack-dev-server --config build/webpack.config.js",
     "build:analyse": "rm -rf ./dist && NODE_ENV=production webpack --profile --json > stats.json --config build/webpack.config.js -p && webpack-bundle-analyzer stats.json",
-    "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p"
+    "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p",
+    "test": "jest test"
   },
   "bundlesize": [
     {
@@ -63,11 +64,14 @@
     "debounce": "^1.1.0",
     "idb-keyval": "^3.0.3",
     "jwt-decode": "^2.2.0",
+    "lighthouse": "^2.9.4",
+    "lighthouse-logger": "^1.0.1",
     "material-ui": "^1.0.0-beta.44",
     "nodent": "^3.2.4",
     "preact": "^8.2.9",
     "preact-compat": "^3.18.0",
     "prop-types": "^15.6.1",
+    "puppeteer": "^1.3.0",
     "react-loadable": "^5.4.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
