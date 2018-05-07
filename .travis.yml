@@ -11,6 +11,7 @@ before_install:
 before_script:
   - npm install -g jest-cli
   - npm install -g https://github.com/ebidel/lighthouse-ci
+  - chmod +x ./.travis/deploy-pr.sh
 script:
   - npm run build
   - jest test --ci --colors
