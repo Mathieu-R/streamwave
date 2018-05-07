@@ -13,7 +13,7 @@ before_script:
   - npm install -g https://github.com/ebidel/lighthouse-ci
 script:
   - npm run build
-  #- jest test --ci --colors
-after_sucess:
+  - jest test --ci --colors
+after_success:
   - ./.travis/deploy-pr.sh
   - lighthouse-ci --score=85 staging.streamwave.be
