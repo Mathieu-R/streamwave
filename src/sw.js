@@ -92,7 +92,7 @@ const staleWhileRevalidate = (event) => {
   // as we could consume it twice (fetch + put in cache)
   const fetchedClone = fetched.then(response => response.clone());
 
-  event.waitUntil(async function () {
+  event.respondWith(async function () {
     try {
       // try to get response from the cache and from the network
       // fastest response will be returned
@@ -119,11 +119,11 @@ const staleWhileRevalidate = (event) => {
     }
   }());
 
-  event.respondWith(async function () {
+  event.waitUntil(async function () {
     try {
       const response = await fetchedClone;
       const cache = await caches.open('streamwave-api');
-      cache.put(request, JSON.stringify(response));
+      cache.put(request, response);
     } catch (err) {
       console.error(err);
     }
