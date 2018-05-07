@@ -103,10 +103,12 @@ const staleWhileRevalidate = (event) => {
         fetched.catch(_ => cached)
       ]);
 
+      console.log(response);
+
       // if cached version fails
       // fetch request
       if (!response) {
-        return fetched;
+        return await fetched;
       }
 
       return response;
@@ -121,7 +123,7 @@ const staleWhileRevalidate = (event) => {
     try {
       const response = await fetchedClone;
       const cache = await caches.open('streamwave-api');
-      cache.put(request, response);
+      cache.put(request, JSON.stringify(response));
     } catch (err) {
       console.error(err);
     }

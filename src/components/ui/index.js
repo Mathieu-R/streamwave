@@ -24,6 +24,9 @@ export const TopBarContainer = styled.div`
   align-items: center;
   height: 50px;
   width: 100%;
+  background: #191818;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
 `;
 
 export const TopBarButton = styled.img`
