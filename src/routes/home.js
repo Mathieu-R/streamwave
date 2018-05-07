@@ -29,6 +29,12 @@ const Album = Loadable({
   timeout: 10000
 });
 
+const Playlists = Loadable({
+  loader: () => import('./playlists', /* webpackPrefetch: true, webpackChunkName: "route-playlists" */),
+  loading: Loading,
+  timeout: 10000
+});
+
 const Settings = Loadable({
   loader: () => import('./settings', /* webpackPrefetch: true, webpackChunkName: "route-settings" */),
   loading: Loading,
@@ -348,6 +354,7 @@ class Home extends Component {
           <Route exact path="/album/:id"
             render={props => <Album listen={this.listen} {...props} />}
           />
+          <Route exact path="/playlists" component={Playlists} />
           <Route exact path="/search" component={Search} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />

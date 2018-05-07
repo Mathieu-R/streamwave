@@ -16,14 +16,12 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] Media Session API    
 - [X] Service Worker    
 - [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
-- [X] Background Sync    
-- [ ] Socket Live Sync    
-- [ ] Median Cut (To Fix)    
-- [ ] Elastic Search    
+- [X] Background Sync     
+- [ ] Median Cut (To Fix)   
 - [ ] Crossfade (extra-buffering or sample ?)     
 - [ ] Equalize volume    
 - [ ] Equalizer    
-- [ ] Track data volume    
+- [X] Track data volume    
 
 ### Notes
 Background Fetch : 
