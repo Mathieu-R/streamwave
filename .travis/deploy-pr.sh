@@ -1,17 +1,9 @@
 #!/bin/bash
-
-# (c) nickbclifford
-# Thanks to https://gist.github.com/nickbclifford/16c5be884c8a15dca02dca09f65f97bd
-
-eval "$(ssh-agent -s)" # Start ssh-agent cache
-chmod 600 /tmp/travis_deploy # Allow read access to the private key
-ssh-add /tmp/travis_deploy # Add the private key to SSH
-
-git config --global push.default matching
+set -e
+git config --global push.default simple
 git remote add deploy ssh://git@$IP:$PORT$DEPLOY_STAGING_DIR
-git push deploy master
+git push deploy dev
 
-# Skip this command if you don't need to execute any additional commands after deploying.
 ssh apps@$IP -p $PORT <<EOF
   cd $DEPLOY_STAGING_DIR
   npm install
