@@ -9,8 +9,7 @@ cache:
 addons:
   ssh_known_hosts: vps506664.ovh.net
 before_install:
-  - openssl aes-256-cbc -K $encrypted_e01d503bebb6_key -iv $encrypted_e01d503bebb6_iv
-    -in .travis/travis_deploy.enc -out /tpm/travis_deploy -d
+  - openssl aes-256-cbc -K $encrypted_e01d503bebb6_key -iv $encrypted_e01d503bebb6_iv -in .travis/travis_deploy.enc -out /tpm/travis_deploy -d
 before_script:
   - npm install --save-dev dotenv
   - npm install -g jest-cli
