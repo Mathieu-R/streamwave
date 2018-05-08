@@ -2,7 +2,6 @@ const config = require('../config.js');
 const path = require('path');
 const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
-const TidyHtmlWebpackPlugin = require('tidy-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
@@ -11,7 +10,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const WebpackBar = require('webpackbar');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const production = process.env.NODE_ENV === 'production';
 
 const sw = path.join(__dirname, '../src/sw.js');
