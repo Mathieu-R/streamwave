@@ -9,8 +9,8 @@
   },
   "bundlesize": [
     {
-      "path": "./build/bundle.*.js",
-      "maxSize": "220kB"
+      "path": "./dist/*.bundle.*.js",
+      "maxSize": "250kB"
     }
   ],
   "devDependencies": {
@@ -27,6 +27,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
+    "dotenv": "^5.0.1",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "fast-async": "^6.3.7",
     "file-loader": "^1.1.11",
@@ -40,22 +41,21 @@
     "preact-perf-profiler": "^1.0.2",
     "preload-webpack-plugin": "^3.0.0-alpha.3",
     "progress-bar-webpack-plugin": "^1.11.0",
+    "pwmetrics": "^3.2.1",
     "resource-hints-webpack-plugin": "0.0.1",
     "sass-loader": "^6.0.7",
     "script-ext-html-webpack-plugin": "^2.0.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.3",
     "svg-url-loader": "^2.3.2",
-    "tidy-html-webpack-plugin": "^0.1.2",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
-    "webpack": "^4.6.0",
+    "webpack": "^4.8.1",
     "webpack-bundle-analyzer": "^2.11.1",
-    "webpack-cli": "^2.1.2",
+    "webpack-cli": "^2.1.3",
     "webpack-dev-middleware": "^3.1.3",
     "webpack-dev-server": "^3.1.4",
     "webpack-externals-plugin": "^1.0.0",
-    "why-did-you-update": "^0.1.1",
     "workbox-webpack-plugin": "^3.2.0"
   },
   "dependencies": {
@@ -63,7 +63,7 @@
     "debounce": "^1.1.0",
     "idb-keyval": "^3.0.3",
     "jwt-decode": "^2.2.0",
-    "material-ui": "^1.0.0-beta.44",
+    "material-ui": "^1.0.0-beta.45",
     "nodent": "^3.2.4",
     "preact": "^8.2.9",
     "preact-compat": "^3.18.0",

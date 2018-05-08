@@ -120,7 +120,7 @@ class Home extends Component {
   }
 
   componentDidMount () {
-    this.initWebAudioApi();
+    //this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
     this.props.restoreSettings();
