@@ -182,6 +182,9 @@ class Album extends Component {
   }
 
   download (evt) {
+    const id = this.props.match.params.id;
+    const checked = evt.target.checked;
+
     console.log('connection type:', navigator.connection.type);
     // if user is on mobile, on mobile network
     // and do not want to download on mobile network
@@ -200,37 +203,45 @@ class Album extends Component {
       return;
     }
 
-    const id = this.props.match.params.id;
-    const checked = evt.target.checked;
-
-    if (checked) {
-      // prevent multiples downloads of the same album to happen at the same time.
-      if (this.isDownloading) {
-        return;
-      }
-
-      this.isDownloading = true
-
-      if (Constants.SUPPORT_BACKGROUND_FETCH) {
-        // download the album in background
-        downloadTracklistInBackground({tracklist: this.state.tracks, cover: this.state.coverURL, id})
-          .catch(err => console.error(err));
-      } else {
-        // download the album in foreground
-        downloadTracklist({tracklist: this.state.tracks, album: this.state.title,
-          cover: this.state.coverURL, id: this.props.match.params.id}).then(_ => {
-          // put in cache that we have downloaded the album
-          // so we can update the UI (e.g. show downloaded toggle at app launch)
-          set(id, {downloaded: true}).then(_ => {
-            this.setState({downloaded: true});
-            this.isDownloading = false;
-          });
-        }).catch(err => console.error(err));
-      }
+    if (!checked) {
+      removeTracklistFromCache(this.state.tracks, id);
       return;
     }
 
-    removeTracklistFromCache(this.state.tracks, this.props.match.params.id);
+    const options = {
+      tracklist: this.state.tracks,
+      album: this.state.title,
+      cover: this.state.coverURL,
+      id
+    };
+
+    // prevent multiples downloads of the same album
+    // to happen at the same time.
+    if (this.isDownloading) {
+      return;
+    }
+
+    let promise;
+    this.isDownloading = true
+
+    if (Constants.SUPPORT_BACKGROUND_FETCH) {
+      // download the album in background
+      promise = downloadTracklistInBackground(options);
+    } else {
+      // download the album in foreground
+      promise = downloadTracklist(options);
+    }
+
+    promise.then(_ => {
+      // put in cache that we have downloaded the album
+      // so we can update the UI (e.g. show downloaded toggle at app launch)
+      return set(id, {downloaded: true});
+    }).then(_ => {
+      this.setState({downloaded: true});
+      this.isDownloading = false;
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   handleTrackClick () {
