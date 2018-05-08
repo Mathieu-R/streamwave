@@ -112,21 +112,26 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   store.dispatch(toasting(['Votre tracklist va être téléchargée en arrière-plan.', 'Vous pouvez fermer l\'application si vous le désirez.'], 5000));
 
   // store the tracklist in idb in case we would lost internet connection
-  //await idb.set(`background-fetch-${id}`, tracklist);
+  //await set(`background-fetch-${id}`, tracklist);
 
   // background fetch options
   const icons = [
     {
-      "src": "/assets/icons/android-chrome-192x192.png",
+      "src": "/assets/icons/icon-128x128.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/assets/icons/android-chrome-512x512.png",
+      "src": "/assets/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/icons/icon-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
-  ]
+  ];
 
   const options = {
     // could also put the icon of the app in icons property
