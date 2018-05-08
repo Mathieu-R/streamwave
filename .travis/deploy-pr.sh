@@ -4,8 +4,8 @@
 # Thanks to https://gist.github.com/nickbclifford/16c5be884c8a15dca02dca09f65f97bd
 
 eval "$(ssh-agent -s)" # Start ssh-agent cache
-chmod 600 /tmp/deploy_rsa # Allow read access to the private key
-ssh-add /tmp/deploy_rsa # Add the private key to SSH
+chmod 600 /tmp/travis_deploy # Allow read access to the private key
+ssh-add /tmp/travis_deploy # Add the private key to SSH
 
 git config --global push.default matching
 git remote add deploy ssh://git@$IP:$PORT$DEPLOY_STAGING_DIR
