@@ -124,8 +124,15 @@ class Library extends Component {
       <div>
         <TopBarHamburger />
         <Gallery innerRef={gallery => this.gallery = gallery}>
-          {library.map(({artist, title, coverURL, _id}) => (
-              <Cover key={_id} artist={artist} title={title} coverURL={coverURL} id={_id} />
+          {library.map(({artist, title, coverURL, primaryColor, _id}) => (
+            <Cover
+              key={_id}
+              artist={artist}
+              title={title}
+              coverURL={coverURL}
+              primaryColor={primaryColor}
+              id={_id}
+            />
           ))}
         </Gallery>
       </div>

@@ -14,7 +14,7 @@ class Chromecaster {
     return 'chromecast_presentation_id';
   }
 
-  async onConnectionAvailbale (evt) {
+  async onConnectionAvailable (evt) {
     console.log(evt);
     // 1. disconnect from existing presentation if any
     if (this.connection && this.connection !== evt.connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
@@ -35,7 +35,7 @@ class Chromecaster {
   cast (url) {
     this.request = new PresentationRequest([url]);
     navigator.presentation.defaultRequest = this.request;
-    navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailbale;
+    navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
 
     return this.request.start();
   }
@@ -46,7 +46,7 @@ class Chromecaster {
         return;
       }
 
-      return navigator.presentation.defaultRequest.reconnect(id).then(this.onConnectionAvailbale);
+      return navigator.presentation.defaultRequest.reconnect(id).then(this.onConnectionAvailable);
     });
   }
 
