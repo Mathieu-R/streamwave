@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import pure from 'recompose/pure';
 import styled, { keyframes } from 'styled-components';
+import { getRGBCssFromObject } from '../utils';
 import Constants from '../constants';
 
 import playIcon from '../assets/svg/play.svg';
@@ -34,8 +35,10 @@ const CoverLink = styled(Link)`
 
 const ArtworkContainer = styled.div`
   position: relative;
-  /* background as a placeholder */
-  background: #000;
+  width: 150px;
+  height: 150px;
+  /* background as placeholder (primary-color ?) */
+  background: ${props => props.placeholderRGB};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s cubic-bezier(0, 0, 0.3, 1);
   will-change: transform;
@@ -46,8 +49,8 @@ const ArtworkContainer = styled.div`
 `;
 
 const Artwork = styled.img`
-  max-height: 150px;
-  min-height: 100px;
+  width: 100%;
+  height: 100%;
 `;
 
 const Play = styled.button`
@@ -84,12 +87,13 @@ const Artist = styled.div`
 `;
 
 class Cover extends Component {
-  render ({artist, title, coverURL, id}) {
+  render ({artist, title, coverURL, id, primaryColor}) {
+    const placeholderRGB = getRGBCssFromObject(primaryColor);
     return (
       <Container>
         <CoverLink to={`/album/${id}`} >
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
-          <ArtworkContainer>
+          <ArtworkContainer placeholderRGB={placeholderRGB}>
             <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork" />
           </ArtworkContainer>
           <InfosContainer>

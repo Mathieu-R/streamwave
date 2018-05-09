@@ -14,7 +14,7 @@ class Chromecaster {
     return 'chromecast_presentation_id';
   }
 
-  async onConnectionAvailbale (evt) {
+  async onConnectionAvailable (evt) {
     console.log(evt);
     // 1. disconnect from existing presentation if any
     if (this.connection && this.connection !== evt.connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
@@ -35,9 +35,18 @@ class Chromecaster {
   cast (url) {
     this.request = new PresentationRequest([url]);
     navigator.presentation.defaultRequest = this.request;
-    navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailbale;
+    navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
 
     return this.request.start();
+  }
+
+  send (data) {
+    if (!this.connection) {
+      console.warn('[Presentation API] no active connection...');
+      return;
+    }
+
+    this.connection.send(JSON.stringify(data));
   }
 
   reconnect () {
@@ -46,7 +55,7 @@ class Chromecaster {
         return;
       }
 
-      return navigator.presentation.defaultRequest.reconnect(id).then(this.onConnectionAvailbale);
+      return navigator.presentation.defaultRequest.reconnect(id).then(this.onConnectionAvailable);
     });
   }
 
@@ -56,7 +65,7 @@ class Chromecaster {
     }
 
     // stop() still allow to reconnect unlike terminate()
-    this.connection.stop();
+    return this.connection.stop();
   }
 
   /* Remote Playback API - not available in chrome desktop for now */

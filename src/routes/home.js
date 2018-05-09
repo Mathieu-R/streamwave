@@ -56,6 +56,7 @@ import {
 import {
   setPlayingStatus,
   switchPlayingStatus,
+  setChromecastStatus,
   setPrevTrack,
   setNextTrack
 } from '../store/player';
@@ -86,6 +87,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   restoreSettings: _ => dispatch(restoreSettings()),
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
+  setChromecastStatus: payload => dispatch(setChromecastStatus(payload)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
   setNextTrack: payload => dispatch(setNextTrack(payload)),
   switchPlayingStatus: _ => dispatch(switchPlayingStatus())
@@ -99,7 +101,7 @@ class Home extends Component {
     this.source = null;
 
     this.chromecaster = null;
-    this.settings = new SettingsManager();;
+    this.settings = new SettingsManager();
 
     this.audio = null;
     this.player = null;
@@ -116,6 +118,7 @@ class Home extends Component {
     this.chromecast = this.chromecast.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
+    this.seekInChromecastIfNeeded = this.seekInChromecastIfNeeded.bind(this);
     this.crossFade = this.crossFade.bind(this);
   }
 
@@ -294,23 +297,44 @@ class Home extends Component {
   }
 
   pause () {
-    this.audio.base.pause();
+    return this.audio.base.pause();
   }
 
   seekBackward () {
-    this.audio.base.currentTime = Math.max(0, this.audio.base.currentTime - this.skipTime);
+    const time = Math.max(0, this.audio.base.currentTime - this.skipTime);
+    this.audio.base.currentTime = time;
+    this.seekInChromecastIfNeeded(time);
   }
 
   seekForward () {
-    this.audio.base.currentTime = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
+    const time = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
+    this.audio.base.currentTime = time;
+    this.seekInChromecastIfNeeded(time);
   }
 
   changeVolume (volume) {
     this.audio.base.volume = volume / 100;
+
+    // change volume in chromecast if needed
+    // could do better than force here
+    this.chromecaster.send(JSON.stringify({
+      type: 'volume',
+      volume: volume / 100
+    }));
   }
 
   seek (time) {
-    this.audio.base.currentTime = time
+    this.audio.base.currentTime = time;
+    this.seekInChromecastIfNeeded(time);
+  }
+
+  seekInChromecastIfNeeded (time) {
+    // seek in chromecast if needed
+    // could do better than force here
+    this.chromecaster.send(JSON.stringify({
+      type: 'seek',
+      currentTime: time
+    }))
   }
 
   setPrevTrack () {
@@ -333,15 +357,18 @@ class Home extends Component {
     });
   }
 
-  chromecast ({chromecasting}) {
+  chromecast ({chromecasting, data}) {
     if (chromecasting) {
-      this.chromecaster.stop();
+      this.chromecaster.stop().then(_ => {
+        this.props.setChromecastStatus({chromecasting: false});
+      });
       return;
     }
 
-    const url = '/chromecast';
+    const url = '/presentation';
     this.chromecaster.cast(url)
-      .then(connexion => console.log(connexion))
+      .then(connection => connection.send(JSON.stringify(data)))
+      .then(() => this.props.setChromecastStatus({chromecasting: true}))
       .catch(err => console.error(err));
   }
 
