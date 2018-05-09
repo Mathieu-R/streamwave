@@ -39,6 +39,7 @@ const ProgressTrack = styled.div.attrs({
   height: 100%;
   background: #FFF;
   border-radius: ${props => props.borderRadius ? '5px' : 0};
+  transform: translate(0, -50%);
   transform-origin: 0 50%;
   will-change: transform;
 `;

@@ -40,6 +40,15 @@ class Chromecaster {
     return this.request.start();
   }
 
+  send (data) {
+    if (!this.connection) {
+      console.warn('[Presentation API] no active connection...');
+      return;
+    }
+
+    this.connection.send(JSON.stringify(data));
+  }
+
   reconnect () {
     get(Chromecaster.CHROMECAST_IDB_KEY).then(id => {
       if (!id) {
@@ -56,7 +65,7 @@ class Chromecaster {
     }
 
     // stop() still allow to reconnect unlike terminate()
-    this.connection.stop();
+    return this.connection.stop();
   }
 
   /* Remote Playback API - not available in chrome desktop for now */

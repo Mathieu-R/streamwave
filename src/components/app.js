@@ -1,14 +1,25 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import Player from './player';
+import Loadable from 'react-loadable';
+import Loading from './loading';
 import styled from 'styled-components';
 import PrivateRoute from '../guard/private-route';
 
 import Toast from './toast';
-
-import Home from '../routes/home';
 import Auth from '../routes/auth';
+
+const Home = Loadable({
+  loader: () => import('../routes/home' /* webpackPrefetch: true, webpackChunkName: "route-presentation" */),
+  loading: Loading,
+  timeout: 10000
+})
+
+const Presentation = Loadable({
+  loader: () => import('./presentation' /* webpackChunkName: "route-presentation" */),
+  loading: Loading,
+  timeout: 10000
+});
 
 const Container = styled.div`
   min-height: 100vh;
@@ -77,15 +88,8 @@ const App = () => (
     <Container>
       <Switch>
         <Route path="/auth" component={Auth} />
-        {/* Trying some stuff with chromecast, should try to protect this route later */}
-        <Route exact path="/chromecast"
-          render={
-            props =>
-            <Player
-              //onPlayClick={this.onPlayClick}
-            />
-          }
-        />
+        {/* Trying some stuff with chromecast */}
+        <Route exact path="/presentation" component={Presentation} />
         <PrivateRoute path="/" component={Home} />
       </Switch>
       <Toast />

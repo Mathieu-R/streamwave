@@ -144,18 +144,6 @@ class Album extends Component {
     const id = this.props.match.params.id;
     const IDB_KEY = `album-${id}`;
 
-    // // 1. Try to retrieve album infos
-    // // from the cache
-    // get(IDB_KEY).then(response => {
-    //   if (response) {
-    //     this.props.setPrimaryColor(response.primaryColor);
-    //     this.setState({...response});
-    //     return;
-    //   }
-
-    //   // 2. If not in the cache, fetch it, store in the cache.
-    //   return this.fetchAlbumAndStoreInTheCache(id, IDB_KEY)
-    // }).catch(err => console.error(err));
     Promise.all([
       this.fetchAlbumAndStoreInTheCache(id, IDB_KEY),
       // check if album is downloaded
