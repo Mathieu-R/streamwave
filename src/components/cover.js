@@ -37,7 +37,7 @@ const ArtworkContainer = styled.div`
   position: relative;
   width: 150px;
   height: 150px;
-  /* background as placeholder (primary-color ?) */
+  /* background as placeholder (primary-color) */
   background: ${props => props.placeholderRGB};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s cubic-bezier(0, 0, 0.3, 1);
@@ -51,6 +51,7 @@ const ArtworkContainer = styled.div`
 const Artwork = styled.img`
   width: 100%;
   height: 100%;
+  opacity: 1;
 `;
 
 const Play = styled.button`
@@ -94,7 +95,7 @@ class Cover extends Component {
         <CoverLink to={`/album/${id}`} >
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
           <ArtworkContainer placeholderRGB={placeholderRGB}>
-            <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork" />
+            <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork lazy" />
           </ArtworkContainer>
           <InfosContainer>
             <Title>{title}</Title>

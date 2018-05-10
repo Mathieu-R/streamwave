@@ -117,7 +117,7 @@ class Home extends Component {
     this.chromecast = this.chromecast.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
-    this.seekInChromecastIfNeeded = this.seekInChromecastIfNeeded.bind(this);
+    this.seekInChromecast = this.seekInChromecast.bind(this);
     this.crossFade = this.crossFade.bind(this);
   }
 

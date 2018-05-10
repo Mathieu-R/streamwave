@@ -15,9 +15,9 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [ ] Presentation API (Chromecast) https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
 - [X] Media Session API    
 - [X] Service Worker    
-- [ ] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
+- [X] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
 - [X] Background Sync     
-- [ ] Median Cut (To Fix)   
+- [X] Median Cut 
 - [X] Track data volume    
 
 ### Notes

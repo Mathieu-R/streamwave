@@ -22,33 +22,25 @@ const ProgressBarContainer = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
-  height: 100%;
+  height: 8px;
   background: rgba(255,255,255,0.5);
   border-radius: ${props => props.borderRadius ? '5px' : 0};
 `;
 
-const ProgressTrack = styled.div.attrs({
-  style: props => ({
-    transform: `translate(0, -50%) scaleX(${props.position})`
-  })
-})`
+const ProgressTrack = styled.div`
   position: absolute;
   top: 50%;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 8px;
   background: #FFF;
   border-radius: ${props => props.borderRadius ? '5px' : 0};
-  transform: translate(0, -50%);
+  transform: translate(0, -50%) scale(0);
   transform-origin: 0 50%;
   will-change: transform;
 `;
 
-const ProgressRoundContainer = styled.div.attrs({
-  style: props => ({
-    transform: `translateX(${props.position * 100}%)`
-  })
-})`
+const ProgressRoundContainer = styled.div`
   position: relative;
   width: 100%;
   background: 0 0;
@@ -66,8 +58,8 @@ const ProgressRound = styled.div`
   outline: 0;
   border-radius: 50%;
   background: #FFF;
-  box-shadow: ${props => props.active ? '0 0 0 5px rgba(255, 255, 255, 0.2)' : '0 0 4px rgba(0, 0, 0, 0.5)'};
-  transform: translateY(-50%) scale(${props => props.active ? 1 : 0.7});
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(-50%) scale(0.7);
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
   will-change: transform;
 `;
@@ -111,7 +103,8 @@ class ProgressBar extends Component {
   }
 
   componentDidUpdate () {
-    this.clampedPosition = this.props.currentTime / this.props.duration;
+    const position = this.props.currentTime / this.props.duration;
+    requestAnimationFrame(() => this.update(position));
   }
 
   onResize () {
@@ -141,10 +134,16 @@ class ProgressBar extends Component {
     this.props.seek(currentTime);
   }
 
+  update (position) {
+    this.track.style.transform = `translate(0, -50%) scaleX(${position})`;
+    this.round.style.transform = `translateX(${position * 100}%)`;
+  }
+
   onSwipeStart (evt) {
     evt.stopPropagation();
-    this.roundContainer.focus();
+    this.round.focus();
     this.dragging = true;
+    this.innerRound.classList.add('highlight-round');
   }
 
   onSwipeMove (evt) {
@@ -163,6 +162,7 @@ class ProgressBar extends Component {
     }
 
     this.dragging = false;
+    this.innerRound.classList.remove('highlight-round');
     requestAnimationFrame(() => this.updatePosition(evt));
   }
 
@@ -176,10 +176,11 @@ class ProgressBar extends Component {
         onTouchStart={this.onSwipeStart}
         onMouseDown={this.onSwipeStart}
         borderRadius={this.props.borderRadius}
+        className="progress-bar"
       >
-        <ProgressTrack position={this.clampedPosition} borderRadius={borderRadius} />
-        <ProgressRoundContainer position={this.clampedPosition} innerRef={container => this.roundContainer = container}>
-          <ProgressRound active={this.dragging} />
+        <ProgressTrack innerRef={track => this.track = track} borderRadius={borderRadius} />
+        <ProgressRoundContainer innerRef={round => this.round = round}>
+          <ProgressRound innerRef={round => this.innerRound = round} />
         </ProgressRoundContainer>
       </ProgressBarContainer>
     )

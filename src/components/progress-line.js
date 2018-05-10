@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const ProgressLineContainer = styled.div`
@@ -15,11 +14,7 @@ const ProgressLineContainer = styled.div`
   width: 100%;
 `;
 
-const ProgressTrack = styled.div.attrs({
-  style: props => ({
-    transform: `translate(0, -50%) scaleX(${props.progress})`
-  })
-})`
+const ProgressTrack = styled.div`
   position: absolute;
   top: 50%;
   left: 0;
@@ -27,15 +22,28 @@ const ProgressTrack = styled.div.attrs({
   height: 100%;
   background: #FFF;
   border-radius: ${props => props.borderRadius ? '5px' : 0};
+  transform: translate(0, -50%) scaleX(0);
   transform-origin: 0 50%;
   transition: transform 0.2s linear;
-  will-change: transform;
 `;
 
-const ProgressLine = ({progress, value}) => (
-  <ProgressLineContainer>
-    <ProgressTrack progress={progress} />
-  </ProgressLineContainer>
-)
+class ProgressLine extends Component {
+  shouldComponentUpdate () {
+    return false;
+  }
 
-export default pure(ProgressLine);
+  componentWillReceiveProps (props) {
+    const {progress} = props;
+    this.track.style.transform = `translate(0, -50%) scaleX(${progress})`;
+  }
+
+  render () {
+    return (
+      <ProgressLineContainer>
+        <ProgressTrack innerRef={track => this.track = track} />
+      </ProgressLineContainer>
+    )
+  }
+}
+
+export default ProgressLine;

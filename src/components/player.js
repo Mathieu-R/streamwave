@@ -132,10 +132,10 @@ const ProgressWrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 5px;
+  height: 50px;
   width: 100%;
   max-width: 800px;
-  margin: 35px 0;
+  margin: 5px 0;
 `;
 
 const VolumeWrapper = styled.section`
@@ -191,7 +191,7 @@ const VolumeMute = styled.div`
   background-size: 18px 18px;
   width: 18px;
   height: 18px;
-  margin: 0 5px;
+  margin: 0 10px;
 `;
 
 const VolumeMax = styled.div`
@@ -199,7 +199,7 @@ const VolumeMax = styled.div`
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
-  margin: 0 5px;
+  margin: 0 10px;
 `;
 
 const mapStateToProps = state => ({

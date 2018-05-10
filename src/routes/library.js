@@ -41,21 +41,6 @@ class Library extends Component {
   }
 
   componentWillMount () {
-    // NOTE: trying some stuff here. Different than logic in album view
-    // 1. Try to fetch and get gallery from the cache, get the faster one.
-    // Promise.race([
-    //   this.getGalleryFromCache(),
-    //   // If fetch is faster but reject, trying to get stuff from the cache
-    //   this.fetchGallery().catch(_ => this.getGalleryFromCache())
-    // ])
-    // .then(response => {
-    //   // If nor response from cache or from fetch
-    //   // idb seems buggy in Firefox, fetch data.
-    //   if (!response) {
-    //     return this.fetchGallery();
-    //   }
-    //   return response;
-    // })
     this.fetchGallery()
     .then(response => {
       this.props.storeLibrary(response);
@@ -85,13 +70,12 @@ class Library extends Component {
     // 2. detect IO feature
     if (Constants.SUPPORT_INTERSECTION_OBSERVER) {
       const config = {
-        rootMargin: '50px 0px',
+        rootMargin: '150px 0px',
         treshold: 0.01
       };
 
       // 3. create a new observer
-      this.observer = new IntersectionObserver(this.onIntersection, config);
-      //console.log(this.observer);
+      this.observer = new IntersectionObserver(this.onIntersection);
 
       // 4. observe
       artworks.forEach(artwork => this.observer.observe(artwork));
@@ -101,12 +85,10 @@ class Library extends Component {
   }
 
   onIntersection (entries) {
-    //console.log(entries);
     // Loop all entries
     entries.forEach(entry => {
       // If we are in viewport
-      if (entry.intersectionRatio > 0) {
-        //console.log(entry)
+      if (entry.isIntersecting) {
         // stop observe and load image
         this.observer.unobserve(entry.target);
         this.preloadImage(entry.target);
@@ -117,6 +99,7 @@ class Library extends Component {
   preloadImage (target) {
     const src = target.dataset.src;
     target.src = src;
+    target.classList.remove('lazy');
   }
 
   render ({library}) {
