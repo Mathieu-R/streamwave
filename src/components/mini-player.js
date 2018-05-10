@@ -2,13 +2,15 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
-import ProgressBar from '../components/progress-bar';
+import ProgressBar from '../components/progress-bar-presentation';
 import Constants from '../constants';
 
 import {
   getCoverURL,
   getArtist,
   getTrack,
+  getDuration,
+  getCurrentTime,
   isMusicPlaying,
   isMusicChromecasting,
   switchPlayingStatus,
@@ -85,7 +87,9 @@ const mapStateToProps = state => ({
   artist: getArtist(state),
   track: getTrack(state),
   playing: isMusicPlaying(state),
-  chromecasting: isMusicChromecasting(state)
+  chromecasting: isMusicChromecasting(state),
+  duration: getDuration(state),
+  currentTime: getCurrentTime(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -104,15 +108,11 @@ class MiniPlayer extends Component {
     this.onChromecastClick = this.onChromecastClick.bind(this);
   }
 
-  componentWillUpdate () {
-    console.log('Update is coming...');
-  }
-
-  componentDidUpdate () {
-    console.log('Component updated.');
-  }
-
   showPlayer (evt) {
+    if (!this.props.track) {
+      return;
+    }
+
     this.props.switchPlayerStatus({show: true});
   }
 
@@ -147,12 +147,13 @@ class MiniPlayer extends Component {
 
   render ({
     coverURL, artist, track,
-    playing, chromecasting
+    playing, chromecasting, duration,
+    currentTime
   }) {
     return (
       <Container onClick={this.showPlayer}>
         <ProgressContainer onClick={this.doNotShowPlayerWhenSwipingProgressBar}>
-          <ProgressBar seek={this.props.seek} borderRadius={false} />
+          <ProgressBar duration={duration} currentTime={currentTime} borderRadius={false} />
         </ProgressContainer>
 
         {

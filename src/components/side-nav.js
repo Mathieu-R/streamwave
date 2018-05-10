@@ -1,7 +1,6 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import pure from 'recompose/pure';
 import styled from 'styled-components';
 import { Overlay } from './ui';
 
@@ -25,8 +24,8 @@ const Container = styled.aside`
   max-width: 400px;
   background: #0e1325;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
-  transform: translateX(${props => props.show ? 0 : '-102%'});
-  opacity: ${props => props.show ? 1 : 0};
+  transform: translateX(-102%);
+  opacity: 0;
   transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
   will-change: opacity, transform;
   z-index: 1;
@@ -124,26 +123,48 @@ const mapDispatchToProps = dispatch => ({
   hideSideNav: _ => dispatch(hideSideNav())
 });
 
-const SideNav = ({showSideNav, hideSideNav, user}) => (
-  <Overlay show={showSideNav}>
-    <Container show={showSideNav}>
-      <HamburgerContainer>
-        <Hamburger onClick={hideSideNav} aria-label="hide sidenav"/>
-      </HamburgerContainer>
-      <User>
-        <Avatar src={user.avatar} alt="avatar" />
-        <Infos>
-          <Username>{user.username}</Username>
-          <Mail>{user.email ? user.email : ''}</Mail>
-        </Infos>
-      </User>
-      <Menu>
-        <Element><CustomLink to="/" onClick={hideSideNav} aria-label="home">Home</CustomLink></Element>
-        <Element><CustomLink to="/about" onClick={hideSideNav} aria-label="about">A propos</CustomLink></Element>
-        <Element><CustomLink to="/licences" onClick={hideSideNav} aria-label="licences">Licenses musicales</CustomLink></Element>
-      </Menu>
-    </Container>
-  </Overlay>
-);
+class SideNav extends Component {
+  shouldComponentUpdate (nextProps) {
+    if (nextProps.user !== this.props.user) {
+      return true;
+    }
+    return false;
+  }
+
+  componentWillReceiveProps (props) {
+    if (props.showSideNav) {
+      this.overlay.classList.add('overlay--visible');
+      this.container.classList.add('side-nav--visible');
+      return;
+    }
+
+    this.overlay.classList.remove('overlay--visible');
+    this.container.classList.remove('side-nav--visible');
+  }
+
+  render ({hideSideNav, user}) {
+    return (
+      <Overlay innerRef={overlay => this.overlay = overlay} className="overlay">
+        <Container innerRef={container => this.container = container} className="side-nav">
+          <HamburgerContainer>
+            <Hamburger onClick={hideSideNav} aria-label="hide sidenav"/>
+          </HamburgerContainer>
+          <User>
+            <Avatar src={user.avatar} alt="avatar" />
+            <Infos>
+              <Username>{user.username}</Username>
+              <Mail>{user.email ? user.email : ''}</Mail>
+            </Infos>
+          </User>
+          <Menu>
+            <Element><CustomLink to="/" onClick={hideSideNav} aria-label="home">Home</CustomLink></Element>
+            <Element><CustomLink to="/about" onClick={hideSideNav} aria-label="about">A propos</CustomLink></Element>
+            <Element><CustomLink to="/licences" onClick={hideSideNav} aria-label="licences">Licenses musicales</CustomLink></Element>
+          </Menu>
+        </Container>
+      </Overlay>
+    );
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideNav);

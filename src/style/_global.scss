@@ -64,3 +64,25 @@ a {
 .cover__artwork.lazy {
   opacity: 0;
 }
+
+.progress-bar .highlight-round,
+.range-bar .highlight-round {
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1);
+}
+
+.range-bar .show-tooltip {
+  transform: translateY(-170%) scale(1);
+}
+
+.side-nav.side-nav--visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.overlay.overlay--visible {
+  pointer-events: auto;
+  &::before {
+    opacity: 1;
+  }
+}

@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import shaka from 'shaka-player';
 import ProgressBar from './progress-bar-presentation';
 import { formatDuration, getRGBCssFromObject } from '../utils';
@@ -17,26 +17,6 @@ const Container = styled.div`
   align-items: center;
   background: ${props => props.theme.background};
   overflow: hidden;
-`;
-
-const fade = keyframes`
-  from: {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const Play = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 50px;
-  width: 50px;
-  opacity: 0;
-  animation: ${fade} linear 0.3s;
 `;
 
 const CoverContainer = styled.section`
@@ -245,26 +225,6 @@ class Presentation extends Component {
               <TotalTime>{formatDuration(totalTime)}</TotalTime>
             </AllInfos>
           </Footer>
-        <Play aria-label="play or pause track">
-          {
-            playing ?
-            <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0h24v24H0z" fill="none"/>
-              <path
-                d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2
-                  12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-4h2V8h-2v8z"
-              />
-            </svg>
-            :
-            <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0h24v24H0z" fill="none"/>
-              <path
-                d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48
-                  10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-              />
-            </svg>
-          }
-          </Play>
         <audio preload="metadata" ref={audio => this.audio = audio} onTimeUpdate={this.updateTime}></audio>
       </Container>
     );

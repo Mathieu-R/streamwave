@@ -30,30 +30,24 @@ const Track = styled.div`
   pointer-events: none;
 `;
 
-const RangeTrack = styled.div.attrs({
-  style: props => ({
-    transform: `translate(0, -50%) scaleX(${props.position})`
-  })
-})`
+const RangeTrack = styled.div`
   position: absolute;
   top: 50%;
   left: 0;
   width: 100%;
   height: 100%;
   background: #FFF;
+  transform: translate(0, -50%) scale(0);
   transform-origin: 0 50%;
 `;
 
-const RangeRoundContainer = styled.div.attrs({
-  style: props => ({
-    transform: `translate(${props.position * 100}%, -35%)`
-  })
-})`
+const RangeRoundContainer = styled.div`
   position: relative;
   width: 100%;
   background: 0 0;
   border: none;
   outline: none;
+  transform: translate(0, -50%);
 `;
 
 const RangeToolTip = styled.div`
@@ -70,8 +64,7 @@ const RangeToolTip = styled.div`
   color: #000;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
   opacity: ${props => props.active ? 1 : 0};
-  transform: scale(${props => props.active ? 1 : 0.2})
-    translateY(${props => props.active ? '-170%' : '-50%'});
+  transform: translateY(-50%) scale(0.2);
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
 `;
 
@@ -84,18 +77,17 @@ const RangeRound = styled.div`
   outline: 0;
   border-radius: 50%;
   background: #FFF;
-  box-shadow: ${props => props.active ? '0 0 0 5px rgba(255, 255, 255, 0.2)' : '0 0 4px rgba(0, 0, 0, 0.5)'};
-  transform: translateY(-35%) scale(${props => props.active ? 1 : 0.7});
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(-35%) scale(0.7);
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: transform;
 `;
 
 class Range extends Component {
   constructor (props) {
     super(props);
 
-    this.showBigRound = this.showBigRound.bind(this);
-    this.removeBigRound = this.removeBigRound.bind(this);
+    this.highlight = this.highlight.bind(this);
+    this.unhighlight = this.unhighlight.bind(this);
     this.onChange = this.onChange.bind(this);
 
     this.state = {
@@ -108,14 +100,16 @@ class Range extends Component {
     requestAnimationFrame(() => this.update(this.props.value));
   }
 
-  showBigRound (evt) {
+  highlight (evt) {
     evt.target.focus();
-    this.setState({active: true});
+    this.tooltip.classList.add('show-tooltip');
+    this.innerRound.classList.add('highlight-round');
   }
 
-  removeBigRound (evt) {
+  unhighlight (evt) {
     evt.target.blur();
-    this.setState({active: false});
+    this.tooltip.classList.remove('show-tooltip');
+    this.innerRound.classList.remove('highlight-round');
   }
 
   onChange (evt) {
@@ -127,13 +121,15 @@ class Range extends Component {
   update (value) {
     const { min, max } = this.range;
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
-    this.setState({position});
+    this.track.style.transform = `translate(0, -50%) scaleX(${position})`;
+    this.round.style.transform = `translate(${position * 100}%, -35%)`;
   }
 
   render ({min, max, onChange, value, showToolTip}, {position, active}) {
     return (
       <Container
         innerRef={container => this.container = container}
+        className="range-bar"
       >
         <Input
           innerRef={range => this.range = range}
@@ -141,17 +137,17 @@ class Range extends Component {
           min={min}
           max={max}
           onChange={this.onChange}
-          onMouseDown={this.showBigRound}
-          onMouseUp={this.removeBigRound}
+          onMouseDown={this.unhighlight}
+          onMouseUp={this.highlight}
           onTouchStart={this.showBigRound}
           onTouchEnd={this.removeBigRound}
           value={value}
         />
         <Track>
-          <RangeTrack position={position} />
-          <RangeRoundContainer position={position} >
-            <RangeToolTip active={active} show={showToolTip}>{value}</RangeToolTip>
-            <RangeRound active={active} />
+          <RangeTrack innerRef={track => this.track = track} />
+          <RangeRoundContainer innerRef={round => this.round = round} >
+            <RangeToolTip innerRef={tooltip => this.tooltip = tooltip}>{value}</RangeToolTip>
+            <RangeRound innerRef={round => this.innerRound = round} />
           </RangeRoundContainer>
         </Track>
       </Container>
@@ -164,6 +160,5 @@ Range.defaultProps = {
   value: 100,
   showToolTip: true
 }
-
 
 export default pure(Range);

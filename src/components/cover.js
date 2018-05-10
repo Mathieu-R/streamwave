@@ -37,7 +37,7 @@ const ArtworkContainer = styled.div`
   position: relative;
   width: 150px;
   height: 150px;
-  /* background as placeholder (primary-color ?) */
+  /* background as placeholder (primary-color) */
   background: ${props => props.placeholderRGB};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s cubic-bezier(0, 0, 0.3, 1);
