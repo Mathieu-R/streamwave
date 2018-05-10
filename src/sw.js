@@ -127,8 +127,6 @@ const staleWhileRevalidate = (event) => {
       console.error(err);
     }
   }())
-
-
 }
 
 const downloadInForeground = async () => {

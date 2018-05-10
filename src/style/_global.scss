@@ -52,9 +52,15 @@ input[type="email"], input[type="password"] {
 
 a {
   text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 ::placeholder {
   color: #FFF;
   opacity: 0.5;
+}
+
+/* class for lazy-loaded images */
+.cover__artwork.lazy {
+  opacity: 0;
 }
