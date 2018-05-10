@@ -87,7 +87,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   restoreSettings: _ => dispatch(restoreSettings()),
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
-  setChromecastStatus: payload => dispatch(setChromecastStatus(payload)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
   setNextTrack: payload => dispatch(setNextTrack(payload)),
   switchPlayingStatus: _ => dispatch(switchPlayingStatus())
@@ -127,8 +126,6 @@ class Home extends Component {
     this.initShakaPlayer();
     this.initMediaSession();
     this.props.restoreSettings();
-
-    this.chromecaster = new Chromecaster();
   }
 
   initWebAudioApi () {
@@ -177,7 +174,7 @@ class Home extends Component {
         // update idb cache to save the user data volume consumed
          updateDataVolumeDebounced({userId: this.props.userId, value});
       }
-    })
+    });
   }
 
   initMediaSession () {
@@ -315,26 +312,29 @@ class Home extends Component {
   changeVolume (volume) {
     this.audio.base.volume = volume / 100;
 
-    // change volume in chromecast if needed
-    // could do better than force here
-    this.chromecaster.send(JSON.stringify({
-      type: 'volume',
-      volume: volume / 100
-    }));
+    if (this.chromecaster) {
+      // change volume in chromecast
+      this.chromecaster.send({
+        type: 'volume',
+        volume: volume / 100
+      });
+    }
   }
 
   seek (time) {
     this.audio.base.currentTime = time;
-    this.seekInChromecastIfNeeded(time);
+
+    if (this.chromecaster) {
+      this.seekInChromecast(time);
+    }
   }
 
-  seekInChromecastIfNeeded (time) {
-    // seek in chromecast if needed
-    // could do better than force here
-    this.chromecaster.send(JSON.stringify({
+  seekInChromecast (time) {
+    // seek in chromecast
+    this.chromecaster.send({
       type: 'seek',
       currentTime: time
-    }))
+    });
   }
 
   setPrevTrack () {
@@ -359,17 +359,13 @@ class Home extends Component {
 
   chromecast ({chromecasting, data}) {
     if (chromecasting) {
-      this.chromecaster.stop().then(_ => {
-        this.props.setChromecastStatus({chromecasting: false});
-      });
+      this.chromecaster.stop();
       return;
     }
 
     const url = '/presentation';
-    this.chromecaster.cast(url)
-      .then(connection => connection.send(JSON.stringify(data)))
-      .then(() => this.props.setChromecastStatus({chromecasting: true}))
-      .catch(err => console.error(err));
+    this.chromecaster = new Chromecaster(url);
+    this.chromecaster.send(data);
   }
 
   render () {
