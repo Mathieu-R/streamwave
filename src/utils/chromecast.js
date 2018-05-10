@@ -1,9 +1,16 @@
 import { get, set, del } from 'idb-keyval';
+import store from '../store';
+
+import {
+  setChromecastStatus
+} from '../store/player';
 
 class Chromecaster {
-  constructor () {
+  constructor (url) {
     this.request = null;
     this.connection = null;
+
+    this.cast(url);
   }
 
   static get CLOSED_STATE () {
@@ -37,7 +44,9 @@ class Chromecaster {
     navigator.presentation.defaultRequest = this.request;
     navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
 
-    return this.request.start();
+    return this.request.start().then(() => {
+      store.dispatch(setChromecastStatus({chromecasting: true}));
+    }).catch(err => console.error(err));
   }
 
   send (data) {
@@ -65,7 +74,9 @@ class Chromecaster {
     }
 
     // stop() still allow to reconnect unlike terminate()
-    return this.connection.stop();
+    return this.connection.stop().then(() => {
+      store.dispatch(setChromecastStatus({chromecasting: false}));
+    });
   }
 
   /* Remote Playback API - not available in chrome desktop for now */
