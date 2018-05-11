@@ -77,6 +77,7 @@ class ProgressBar extends Component {
     this.onSwipeStart = this.onSwipeStart.bind(this);
     this.onSwipeMove = this.onSwipeMove.bind(this);
     this.onSwipeEnd = this.onSwipeEnd.bind(this);
+    this.seek = this.seek.bind(this);
   }
 
   componentDidMount () {
@@ -125,12 +126,16 @@ class ProgressBar extends Component {
     return evt;
   }
 
-  updatePosition (evt) {
+  updatePosition () {
     const position = this.findCandidate(evt).pageX;
     const normalizedPosition = ((position - this.bcr.left) / this.bcr.width);
     const clampedPosition = Math.max(0, Math.min(normalizedPosition, 1));
     const currentTime = clampedPosition * this.props.duration;
     this.props.setCurrentTime(currentTime);
+    return currentTime;
+  }
+
+  seek (evt) {
     this.props.seek(currentTime);
   }
 
@@ -152,7 +157,7 @@ class ProgressBar extends Component {
       return;
     }
 
-    requestAnimationFrame(() => this.updatePosition(evt));
+    this.updatePosition(evt);
   }
 
   onSwipeEnd (evt) {
@@ -163,7 +168,8 @@ class ProgressBar extends Component {
 
     this.dragging = false;
     this.innerRound.classList.remove('highlight-round');
-    requestAnimationFrame(() => this.updatePosition(evt));
+    const currentTime = this.updatePosition(evt);
+    this.seek(currentTime);
   }
 
   render ({duration, currentTime, borderRadius}) {

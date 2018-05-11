@@ -90,6 +90,9 @@ class ProgressBar extends Component {
   }
 
   render ({duration, currentTime}) {
+    // do not render component if not necessary
+    if (!duration && !currentTime) return null;
+
     return (
       <ProgressBarContainer
         innerRef={container => this.container = container}
