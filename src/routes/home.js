@@ -167,12 +167,20 @@ class Home extends Component {
         if (!ok) return;
       });
 
+      // TODO: bail if response comes from service-worker cache
+
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
         // bytes downloaded
         const value = response.data.byteLength;
         // update idb cache to save the user data volume consumed
          updateDataVolumeDebounced({userId: this.props.userId, value});
+         // fire an event for live-update
+         const evt = new CustomEvent('data-volume', {
+           detail: {value}, bubbles: true, cancelable: true
+         });
+
+         document.body.dispatchEvent(evt);
       }
     });
   }
@@ -203,9 +211,11 @@ class Home extends Component {
    * @param {Object} trackInfos {artist, album, title, coverURL}
    */
   listen (manifest, m3u8playlist, trackInfos) {
+    // TODO: bail if user exceed data limit
     // 1. Load the player
     return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
+      //return Promise.reject();
       return this.play();
     })
     // 2. Set media notification (Media Session API)

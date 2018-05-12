@@ -53,8 +53,8 @@ const ProgressRound = styled.div`
   position: absolute;
   top: 50%;
   left: -5px;
-  height: 15px;
-  width: 15px;
+  height: 20px;
+  width: 20px;
   outline: 0;
   border-radius: 50%;
   background: #FFF;
@@ -126,7 +126,7 @@ class ProgressBar extends Component {
     return evt;
   }
 
-  updatePosition () {
+  updatePosition (evt) {
     const position = this.findCandidate(evt).pageX;
     const normalizedPosition = ((position - this.bcr.left) / this.bcr.width);
     const clampedPosition = Math.max(0, Math.min(normalizedPosition, 1));
@@ -135,7 +135,7 @@ class ProgressBar extends Component {
     return currentTime;
   }
 
-  seek (evt) {
+  seek (currentTime) {
     this.props.seek(currentTime);
   }
 

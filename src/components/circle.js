@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const AverageCircle = styled.div`
@@ -32,21 +31,35 @@ class Circle extends Component {
     super();
     this.container = null;
     this.canvas = null;
+    // get initial volume on page load
+    // then live update
+    this.volume = 0;
+
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.onVolumeDownloading = this.onVolumeDownloading.bind(this);
   }
 
   componentDidMount () {
     window.addEventListener('resize', this.onResize);
+    document.addEventListener('data-volume', this.onVolumeDownloading);
     requestAnimationFrame(() => this.onResize());
   }
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('data-volume', this.onVolumeDownloading);
   }
 
   componentDidUpdate () {
-    requestAnimationFrame(() => this.draw());
+    this.volume = this.props.volume;
+  }
+
+  onVolumeDownloading (evt) {
+    console.log(evt);
+    // volume in mo
+    const volume = evt.value / (1000 * 1024);
+    this.volume += volume;
   }
 
   onResize () {
@@ -67,12 +80,13 @@ class Circle extends Component {
   }
 
   draw () {
+    //requestAnimationFrame(() => this.draw());
     const TAU = Math.PI * 2;
     const mid = this.canvas.height / 4;
     const lineWidth = 15;
     const radius = (this.canvas.height - lineWidth) / 4;
     const innerRadius = radius - lineWidth;
-    const percentage = this.props.volume / this.props.dataMax;
+    const percentage = this.volume / this.props.dataMax;
 
     // remove old canvas
     this.ctx.save();
@@ -149,4 +163,4 @@ class Circle extends Component {
  * dataMax => integer in Mo
  */
 
-export default pure(Circle);
+export default Circle;

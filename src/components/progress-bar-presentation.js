@@ -55,8 +55,6 @@ class ProgressBar extends Component {
   }
 
   componentDidMount () {
-    const clampedPosition = this.props.currentTime / this.props.duration;
-    requestAnimationFrame(() => this.update(clampedPosition));
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -65,7 +63,15 @@ class ProgressBar extends Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  shouldComponentUpdate () {
+  shouldComponentUpdate (nextProps) {
+    if (this.props.duration === null && nextProps.duration !== null) {
+      return true;
+    }
+
+    if (this.props.currentTime === null && nextProps.currentTime !== null) {
+      return true;
+    }
+
     return false;
   }
 
