@@ -255,9 +255,9 @@ class Player extends Component {
     //console.log(this.props.showPlayer, nextProps.showPlayer)
 
     // do not rerender if player is not shown
-    if (!this.props.showPlayer && !nextProps.showPlayer) {
-      return false;
-    }
+    // if (!this.props.showPlayer && !nextProps.showPlayer) {
+    //   return false;
+    // }
 
     return true;
   }
@@ -523,9 +523,9 @@ class Player extends Component {
           </VolumeWrapper>
         </ProgressAndControlsContainer>
         <PlaylistModal
-          //show={showPlaylistModal}
-          //removePlaylistModal={this.removePlaylistModal}
-          //track={track}
+          show={showPlaylistModal}
+          removePlaylistModal={this.removePlaylistModal}
+          track={track}
         />
       </Container>
     );
