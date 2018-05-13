@@ -126,6 +126,8 @@ const ProgressAndControlsContainer = styled.section`
   justify-content: center;
   align-items: center;
   padding: 20px;
+  /* prevent focus on time when moving progress-bar */
+  user-select: none;
 `;
 
 const ProgressWrapper = styled.section`

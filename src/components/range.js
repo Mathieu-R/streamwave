@@ -137,8 +137,8 @@ class Range extends Component {
           min={min}
           max={max}
           onChange={this.onChange}
-          onMouseDown={this.unhighlight}
-          onMouseUp={this.highlight}
+          onMouseDown={this.highlight}
+          onMouseUp={this.unhighlight}
           onTouchStart={this.showBigRound}
           onTouchEnd={this.removeBigRound}
           value={value}

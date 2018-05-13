@@ -39,7 +39,6 @@ const Label = styled.label`
     right: 5px;
     opacity: 0.5;
     transform: translateY(-50%);
-    will-change: opacity;
   }
 
   &::after {
@@ -55,7 +54,6 @@ const Label = styled.label`
     background: #FFF;
     transition: transform .3s cubic-bezier(0, 0, 0.3, 1);
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-    will-change: transform;
   }
 `;
 

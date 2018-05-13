@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import shaka from 'shaka-player';
 import debounce from 'debounce';
-import { updateDataVolume } from '../utils/download'
+import { updateDataVolume, getDataVolumeDownloaded } from '../utils/download'
 import SettingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
@@ -118,11 +118,9 @@ class Home extends Component {
     this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
     this.seekInChromecast = this.seekInChromecast.bind(this);
-    this.crossFade = this.crossFade.bind(this);
   }
 
   componentDidMount () {
-    //this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
     this.props.restoreSettings();
@@ -167,7 +165,13 @@ class Home extends Component {
         if (!ok) return;
       });
 
-      // TODO: bail if response comes from service-worker cache
+      // Bail if response comes from service-worker cache
+      const fromServiceWorker = response.headers.find(header => header === 'x-from-cache: true');
+      console.log(response.headers);
+      console.log(fromServiceWorker);
+      if (fromServiceWorker) {
+        return;
+      }
 
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
@@ -212,10 +216,24 @@ class Home extends Component {
    */
   listen (manifest, m3u8playlist, trackInfos) {
     // TODO: bail if user exceed data limit
+    this.settings.get('limit-data').then(limit => {
+      if (limit) {
+        Promise.all([
+          getDataVolumeDownloaded({userId: this.props.userId}),
+          this.settings.get('data-max')
+        ]).then(([volume, max]) => {
+          // if user has exceed data limit
+          // prevent streaming
+          if (volume > max) {
+            return;
+          }
+        });
+      }
+    });
+
     // 1. Load the player
     return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
-      //return Promise.reject();
       return this.play();
     })
     // 2. Set media notification (Media Session API)
@@ -251,40 +269,6 @@ class Home extends Component {
     });
   }
 
-  crossFade (fade) {
-    const FADE_TIME = fade;
-    const audio = this.audio.base;
-
-    // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
-    this.context.resume().then(_ => {
-      // gain node
-      const gainNode = this.context.createGain();
-      // current time
-      const currentTime = audio.currentTime;
-      // duration
-      const duration = audio.duration;
-
-      // fade in launched track
-      gainNode.gain.linearRampToValueAtTime(0, currentTime);
-      gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
-
-      // fade out
-      gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
-      gainNode.gain.linearRampToValueAtTime(0, duration);
-
-      // call this function when current music is finished playing (next is playing so ;))
-      //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
-    });
-  }
-
-  equalizeVolume () {
-
-  }
-
-  setEqualizer () {
-
-  }
-
   onPlayClick ({playing}) {
     // switch status in store
     this.props.switchPlayingStatus();
@@ -294,13 +278,6 @@ class Home extends Component {
 
   play () {
     return this.audio.base.play();
-    // const settings = await (new settingsManager().getAll());
-    // const fade = settings['fade'];
-
-    // // if fade = 0, we consider it as disabled
-    // if (fade > 0) {
-    //   this.crossFade(fade);
-    // }
   }
 
   pause () {
@@ -394,6 +371,7 @@ class Home extends Component {
           <Route exact path="/licences" component={Licences} />
         </Switch>
         <Player
+          ref={player => this.playerEl = player}
           onPlayClick={this.onPlayClick}
           prev={this.setPrevTrack}
           next={this.setNextTrack}

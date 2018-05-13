@@ -56,20 +56,25 @@ class Circle extends Component {
   }
 
   onVolumeDownloading (evt) {
-    console.log(evt);
+    return;
     // volume in mo
-    const volume = evt.value / (1000 * 1024);
+    const volume = evt.detail.value / (1000 * 1024);
     this.volume += volume;
+    console.log(this.volume);
+    requestAnimationFrame(() => this.draw());
   }
 
   onResize () {
     // remove the canvas to avoid screen flickering
+    // TODO: height = 0 because container = O pixels height
     this.canvas.style.display = 'none';
 
     const DPR = window.devicePixelRatio || 1;
     const containerBCR = this.container.getBoundingClientRect();
     this.canvas.width = this.canvas.height = containerBCR.height * DPR;
     this.canvas.style.width = this.canvas.style.height = `${containerBCR.height}px`;
+
+    console.log(containerBCR);
 
     this.ctx = this.canvas.getContext('2d');
     this.ctx.scale(DPR, DPR);
@@ -80,11 +85,11 @@ class Circle extends Component {
   }
 
   draw () {
-    //requestAnimationFrame(() => this.draw());
+    console.log(this, this.canvas)
     const TAU = Math.PI * 2;
-    const mid = this.canvas.height / 4;
+    const mid = this.canvas.height / 2;
     const lineWidth = 15;
-    const radius = (this.canvas.height - lineWidth) / 4;
+    const radius = (this.canvas.height - lineWidth) / 2;
     const innerRadius = radius - lineWidth;
     const percentage = this.volume / this.props.dataMax;
 
@@ -136,7 +141,7 @@ class Circle extends Component {
     this.ctx.restore();
 
     // text => downloaded - max data allowed
-    const fontSize = (this.canvas.width / 2) < 200 ? '12px' : '18px';
+    const fontSize = (this.canvas.width / 2) < 200 ? '16px' : '18px';
     this.ctx.translate(mid, mid);
     this.ctx.rotate(Math.PI / 2);
     this.ctx.translate(-mid, -mid);
@@ -144,7 +149,7 @@ class Circle extends Component {
     this.ctx.font = `${fontSize} Helvetica Neue`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'center';
-    this.ctx.fillText(`${this.props.volume} mo / ${this.props.dataMax} mo`, mid, mid);
+    this.ctx.fillText(`${this.volume} mo / ${this.props.dataMax} mo`, mid, mid);
     this.ctx.restore();
   }
 

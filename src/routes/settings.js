@@ -34,9 +34,7 @@ import {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
-  height: 100vh;
 `;
 
 const SettingsContainer = styled.div`
@@ -81,7 +79,13 @@ const EqualizeVolume = styled.section`
   padding: 10px 0;
 `;
 
-const DownloadWithMobileNetwork = styled(EqualizeVolume);
+const DownloadWithMobileNetwork = styled.section`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 0;
+`;
 
 const EQ = styled.section`
   display: flex;
@@ -114,7 +118,6 @@ const DataVolumeRange = styled.section`
   min-height: 50px;
   opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
 `;
 
 const SettingsButton = styled.button`

@@ -145,7 +145,7 @@ class Album extends Component {
     const IDB_KEY = `album-${id}`;
 
     Promise.all([
-      this.fetchAlbumAndStoreInTheCache(id, IDB_KEY),
+      this.fetchAlbum(id, IDB_KEY),
       // check if album is downloaded
       get(id)
     ]).then(([_, album]) => {
@@ -153,7 +153,7 @@ class Album extends Component {
     });
   }
 
-  fetchAlbumAndStoreInTheCache (id, idbKey) {
+  fetchAlbum (id) {
     return fetch(`${Constants.API_URL}/album/${id}`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
@@ -161,12 +161,10 @@ class Album extends Component {
     })
     .then(response => response.json())
     .then(response => {
-      // TODO: refactoring.
       this.props.setPrimaryColor(response.primaryColor);
       this.setState({...response});
       return response;
-    })
-    .then(response => set(idbKey, response));
+    });
   }
 
   download (evt) {

@@ -104,6 +104,10 @@ class ProgressBar extends Component {
   }
 
   componentDidUpdate () {
+    if (this.dragging) {
+      return;
+    }
+
     const position = this.props.currentTime / this.props.duration;
     requestAnimationFrame(() => this.update(position));
   }
@@ -132,6 +136,7 @@ class ProgressBar extends Component {
     const clampedPosition = Math.max(0, Math.min(normalizedPosition, 1));
     const currentTime = clampedPosition * this.props.duration;
     this.props.setCurrentTime(currentTime);
+    requestAnimationFrame(() => this.update(clampedPosition));
     return currentTime;
   }
 

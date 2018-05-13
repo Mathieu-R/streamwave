@@ -19,7 +19,6 @@ const ProgressTrack = styled.div`
   background: #FFF;
   transform: translate(0, -50%);
   transform-origin: 0 50%;
-  will-change: transform;
 `;
 
 const ProgressRoundContainer = styled.div`
@@ -42,7 +41,6 @@ const ProgressRound = styled.div`
   background: #FFF;
   transform: translateY(-50%) scale(0.7);
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: transform;
 `;
 
 class ProgressBar extends Component {
