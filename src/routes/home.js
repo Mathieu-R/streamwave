@@ -23,8 +23,8 @@ const Library = Loadable({
   timeout: 10000
 });
 
-const Album = Loadable({
-  loader: () => import('./album' /* webpackPrefetch: true, webpackChunkName: "route-album" */),
+const TrackList = Loadable({
+  loader: () => import('./tracklist' /* webpackPrefetch: true, webpackChunkName: "route-tracklist" */),
   loading: Loading,
   timeout: 10000
 });
@@ -152,7 +152,9 @@ class Home extends Component {
     window.player = this.player;
 
     // listen to errors
-    this.player.addEventListener('error', err => console.error(err));
+    this.player.addEventListener('error', evt => {
+      evt.detail.map(err => console.error(err));
+    });
 
     // register a response filter in order to track streaming
     // chunk downloaded
@@ -164,14 +166,6 @@ class Home extends Component {
       this.settings.get('limit-data').then(ok => {
         if (!ok) return;
       });
-
-      // Bail if response comes from service-worker cache
-      const fromServiceWorker = response.headers.find(header => header === 'x-from-cache: true');
-      console.log(response.headers);
-      console.log(fromServiceWorker);
-      if (fromServiceWorker) {
-        return;
-      }
 
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
@@ -362,9 +356,12 @@ class Home extends Component {
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
-            render={props => <Album listen={this.listen} {...props} />}
+            render={props => <TrackList listen={this.listen} type='album' {...props} />}
           />
-          <Route exact path="/playlists" component={Playlists} />
+          <Route exact path="/playlist/:id"
+            render={props => <TrackList listen={this.listen} type='playlist' {...props} />}
+          />
+          <Route exact path="/playlist" component={Playlists} />
           <Route exact path="/search" component={Search} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />

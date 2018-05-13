@@ -192,7 +192,7 @@ export const getTrack = state => state.player.track;
 export const getArtist = state => state.player.artist;
 export const getAlbum = state => state.player.album;
 export const getTrackName = state => getTrack(state) && getTrack(state).title;
-export const getCoverURL = state => state.player.coverURL;
+export const getCoverURL = state => getTrack(state) && getTrack(state).coverURL; /*state.player.coverURL;*/
 export const isMusicPlaying = state => state.player.playing;
 export const isMusicChromecasting = state => state.player.chromecasting;
 export const isShuffle = state => state.player.shuffle;

@@ -54,7 +54,7 @@ const LabelInline = styled.label`
 
 const RangeBound = styled.span`
   display: flex;
-  padding: 0 5px;
+  padding: 0 10px;
   font-weight: bold;
 `;
 
@@ -106,7 +106,7 @@ const DataVolume = styled.section`
   flex-direction: column;
   flex: 1;
   min-height: 100px;
-  max-height: 300px;
+  max-height: 400px;
   width: 100%;
   min-height: 50px;
   padding: 10px 0;
@@ -179,7 +179,6 @@ class Settings extends Component {
   }
 
   componentWillMount () {
-    console.log(this.props.dataMax);
     if (!this.props.dataMax) {
       return;
     }
@@ -190,7 +189,7 @@ class Settings extends Component {
       this.setState({
         volume
       });
-    })
+    });
   }
 
   onFadeChange (value) {
@@ -311,6 +310,7 @@ class Settings extends Component {
                 min={200}
                 max={2000}
                 value={dataMax}
+                showTooltip={true}
                 onChange={this.onMaxDataVolumeChange}
               />
               <RangeBound>2000mo</RangeBound>

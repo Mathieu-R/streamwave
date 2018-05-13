@@ -58,7 +58,7 @@ const RangeToolTip = styled.div`
   top: 50%;
   left: -10px;
   height: 20px;
-  width: 30px;
+  width: 40px;
   background: #DEDEDE;
   border-radius: 5px;
   color: #000;
@@ -146,7 +146,7 @@ class Range extends Component {
         <Track>
           <RangeTrack innerRef={track => this.track = track} />
           <RangeRoundContainer innerRef={round => this.round = round} >
-            <RangeToolTip innerRef={tooltip => this.tooltip = tooltip}>{value}</RangeToolTip>
+            <RangeToolTip innerRef={tooltip => this.tooltip = tooltip} show={showToolTip}>{value}</RangeToolTip>
             <RangeRound innerRef={round => this.innerRound = round} />
           </RangeRoundContainer>
         </Track>

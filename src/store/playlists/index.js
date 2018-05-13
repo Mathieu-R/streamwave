@@ -52,7 +52,7 @@ export function fetchPlaylists () {
   }
 }
 
-export function addTrackToPlaylist ({playlistId, trackId}) {
+export function addTrackToPlaylist ({playlistId, track}) {
   return dispatch => {
     return new Promise((resolve, reject) => {
       return fetch(`${Constants.API_URL}/playlist/${playlistId}`, {
@@ -61,13 +61,13 @@ export function addTrackToPlaylist ({playlistId, trackId}) {
           'content-type': 'application/json',
           'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
         },
-        body: JSON.stringify({
-          trackId
-        })
+        body: JSON.stringify(track)
       })
       .then(response => response.json())
       .then(response => {
-        if (!response) reject();
+        if (!response) {
+          reject();
+        }
         resolve();
       });
     })

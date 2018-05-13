@@ -2,7 +2,26 @@ import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Constants from '../constants';
-import { Container } from '../components/ui';
+import { pluralize } from '../utils';
+import { Container as UIContainer } from '../components/ui';
+import TopBarHamburger from '../components/topbar-hamburger';
+
+const Wrapper = styled(UIContainer)`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;
+
+const CustomLink = styled(Link)`
+  width: 100%;
+  text-decoration: none;
+  color: #FFF;
+  padding: 10px 5px;
+
+  &:hover, &:focus {
+    background: #22242d;
+  }
+`;
 
 const Playlist = styled.div`
   display: flex;
@@ -35,21 +54,24 @@ class Playlists extends Component {
       }
     })
     .then(response => response.json())
-    .then(response => console.log(responses));
+    .then(playlists => this.setState({playlists}));
   }
 
   render ({}, {playlists}) {
     return (
-      <Container>
-        {playlists.map((playlist, index) => (
-          <Link to={`/playlist/:${playlist._id}`} key={playlist._id}>
-            <Playlist>
-              <Title>{playlist.title}</Title>
-              <Counter>{100} titres</Counter>
-            </Playlist>
-          </Link>
-        ))}
-      </Container>
+      <div>
+        <TopBarHamburger />
+        <Wrapper>
+          {playlists.map((playlist, index) => (
+            <CustomLink to={`/playlist/${playlist._id}`} key={playlist._id}>
+              <Playlist>
+                <Title>{playlist.title}</Title>
+                <Counter>{playlist.tracks.length} {pluralize('titres', playlist.tracks.length)}</Counter>
+              </Playlist>
+            </CustomLink>
+          ))}
+        </Wrapper>
+      </div>
     )
   }
 }

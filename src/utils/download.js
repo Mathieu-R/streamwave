@@ -177,7 +177,7 @@ export function getDataVolumeDownloaded ({userId}) {
     }
 
     return {
-      volume: parseFloat(volumeInMo.toFixed(2))
+      volume: parseFloat(volumeInMo.toFixed(1))
     }
   }).catch(err => console.error(err));
 }
