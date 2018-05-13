@@ -41,7 +41,6 @@ const ArtworkContainer = styled.div`
   background: ${props => props.placeholderRGB};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: transform;
 
   &:hover {
     transform: scale(1.05);

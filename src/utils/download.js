@@ -165,7 +165,6 @@ export function updateDataVolume ({userId, value}) {
 
 export function getDataVolumeDownloaded ({userId}) {
   return get(`data-volume_${userId}`).then(volume => {
-    console.log('volume', volume);
     let volumeInMo;
 
     // user has no data downloaded
@@ -178,7 +177,7 @@ export function getDataVolumeDownloaded ({userId}) {
     }
 
     return {
-      volume: parseFloat(volumeInMo.toFixed(2))
+      volume: parseFloat(volumeInMo.toFixed(1))
     }
   }).catch(err => console.error(err));
 }

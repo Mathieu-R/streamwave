@@ -126,6 +126,8 @@ const ProgressAndControlsContainer = styled.section`
   justify-content: center;
   align-items: center;
   padding: 20px;
+  /* prevent focus on time when moving progress-bar */
+  user-select: none;
 `;
 
 const ProgressWrapper = styled.section`
@@ -244,9 +246,16 @@ class Player extends Component {
     }
   }
 
-  shouldComponentUpdate (prevProps, prevState) {
+  shouldComponentUpdate (nextProps, nextState) {
     // do not rerender if track list changed
-    if (this.props.tracks !== prevProps.tracks) {
+    if (this.props.tracks !== nextProps.tracks) {
+      return false;
+    }
+
+    //console.log(this.props.showPlayer, nextProps.showPlayer)
+
+    // do not rerender if player is not shown
+    if (!this.props.showPlayer && !nextProps.showPlayer) {
       return false;
     }
 
@@ -513,7 +522,11 @@ class Player extends Component {
             <VolumeMax />
           </VolumeWrapper>
         </ProgressAndControlsContainer>
-        <PlaylistModal show={showPlaylistModal} removePlaylistModal={this.removePlaylistModal} trackId={track._id} />
+        <PlaylistModal
+          //show={showPlaylistModal}
+          //removePlaylistModal={this.removePlaylistModal}
+          //track={track}
+        />
       </Container>
     );
   }

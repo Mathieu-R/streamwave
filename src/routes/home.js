@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import shaka from 'shaka-player';
 import debounce from 'debounce';
-import { updateDataVolume } from '../utils/download'
+import { updateDataVolume, getDataVolumeDownloaded } from '../utils/download'
 import SettingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
@@ -23,8 +23,8 @@ const Library = Loadable({
   timeout: 10000
 });
 
-const Album = Loadable({
-  loader: () => import('./album' /* webpackPrefetch: true, webpackChunkName: "route-album" */),
+const TrackList = Loadable({
+  loader: () => import('./tracklist' /* webpackPrefetch: true, webpackChunkName: "route-tracklist" */),
   loading: Loading,
   timeout: 10000
 });
@@ -118,11 +118,9 @@ class Home extends Component {
     this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
     this.seekInChromecast = this.seekInChromecast.bind(this);
-    this.crossFade = this.crossFade.bind(this);
   }
 
   componentDidMount () {
-    //this.initWebAudioApi();
     this.initShakaPlayer();
     this.initMediaSession();
     this.props.restoreSettings();
@@ -154,7 +152,9 @@ class Home extends Component {
     window.player = this.player;
 
     // listen to errors
-    this.player.addEventListener('error', err => console.error(err));
+    this.player.addEventListener('error', evt => {
+      evt.detail.map(err => console.error(err));
+    });
 
     // register a response filter in order to track streaming
     // chunk downloaded
@@ -173,6 +173,12 @@ class Home extends Component {
         const value = response.data.byteLength;
         // update idb cache to save the user data volume consumed
          updateDataVolumeDebounced({userId: this.props.userId, value});
+         // fire an event for live-update
+         const evt = new CustomEvent('data-volume', {
+           detail: {value}, bubbles: true, cancelable: true
+         });
+
+         document.body.dispatchEvent(evt);
       }
     });
   }
@@ -203,6 +209,22 @@ class Home extends Component {
    * @param {Object} trackInfos {artist, album, title, coverURL}
    */
   listen (manifest, m3u8playlist, trackInfos) {
+    // TODO: bail if user exceed data limit
+    this.settings.get('limit-data').then(limit => {
+      if (limit) {
+        Promise.all([
+          getDataVolumeDownloaded({userId: this.props.userId}),
+          this.settings.get('data-max')
+        ]).then(([volume, max]) => {
+          // if user has exceed data limit
+          // prevent streaming
+          if (volume > max) {
+            return;
+          }
+        });
+      }
+    });
+
     // 1. Load the player
     return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
@@ -241,40 +263,6 @@ class Home extends Component {
     });
   }
 
-  crossFade (fade) {
-    const FADE_TIME = fade;
-    const audio = this.audio.base;
-
-    // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
-    this.context.resume().then(_ => {
-      // gain node
-      const gainNode = this.context.createGain();
-      // current time
-      const currentTime = audio.currentTime;
-      // duration
-      const duration = audio.duration;
-
-      // fade in launched track
-      gainNode.gain.linearRampToValueAtTime(0, currentTime);
-      gainNode.gain.linearRampToValueAtTime(1, currentTime + FADE_TIME);
-
-      // fade out
-      gainNode.gain.linearRampToValueAtTime(1, duration - FADE_TIME / 2);
-      gainNode.gain.linearRampToValueAtTime(0, duration);
-
-      // call this function when current music is finished playing (next is playing so ;))
-      //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
-    });
-  }
-
-  equalizeVolume () {
-
-  }
-
-  setEqualizer () {
-
-  }
-
   onPlayClick ({playing}) {
     // switch status in store
     this.props.switchPlayingStatus();
@@ -284,13 +272,6 @@ class Home extends Component {
 
   play () {
     return this.audio.base.play();
-    // const settings = await (new settingsManager().getAll());
-    // const fade = settings['fade'];
-
-    // // if fade = 0, we consider it as disabled
-    // if (fade > 0) {
-    //   this.crossFade(fade);
-    // }
   }
 
   pause () {
@@ -375,15 +356,19 @@ class Home extends Component {
         <Switch>
           <Route exact path="/" component={Library} />
           <Route exact path="/album/:id"
-            render={props => <Album listen={this.listen} {...props} />}
+            render={props => <TrackList listen={this.listen} type='album' {...props} />}
           />
-          <Route exact path="/playlists" component={Playlists} />
+          <Route exact path="/playlist/:id"
+            render={props => <TrackList listen={this.listen} type='playlist' {...props} />}
+          />
+          <Route exact path="/playlist" component={Playlists} />
           <Route exact path="/search" component={Search} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />
         </Switch>
         <Player
+          ref={player => this.playerEl = player}
           onPlayClick={this.onPlayClick}
           prev={this.setPrevTrack}
           next={this.setNextTrack}

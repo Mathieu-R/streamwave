@@ -23,6 +23,8 @@ self.onfetch = event => {
 
   const url = new URL(event.request.url);
 
+  // TODO: handle google avatar
+
   // api call
   if (url.hostname === 'api.streamwave.be') {
     // get something from the cache
@@ -202,6 +204,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
 
     //console.log(`ranged response from service-worker from ${start} to ${end}`);
 
+    slicedResponse.headers.set('x-from-cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
     return slicedResponse;

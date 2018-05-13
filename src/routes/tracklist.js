@@ -127,7 +127,7 @@ const mapDispatchToProps = dispatch => ({
   setPrimaryColor: primaryColor => dispatch(setPrimaryColor(primaryColor))
 });
 
-class Album extends Component {
+class TrackList extends Component {
   constructor () {
     super();
 
@@ -142,31 +142,28 @@ class Album extends Component {
 
   componentWillMount () {
     const id = this.props.match.params.id;
-    const IDB_KEY = `album-${id}`;
-
     Promise.all([
-      this.fetchAlbumAndStoreInTheCache(id, IDB_KEY),
+      this.fetchTracklist(id),
       // check if album is downloaded
       get(id)
-    ]).then(([_, album]) => {
-      this.setState({downloaded: album && album.downloaded});
+    ]).then(([_, tracklist]) => {
+      this.setState({downloaded: tracklist && tracklist.downloaded});
     });
   }
 
-  fetchAlbumAndStoreInTheCache (id, idbKey) {
-    return fetch(`${Constants.API_URL}/album/${id}`, {
+  fetchTracklist (id) {
+    return fetch(`${Constants.API_URL}/${this.props.type}/${id}`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
     })
     .then(response => response.json())
     .then(response => {
-      // TODO: refactoring.
+      console.log(response);
       this.props.setPrimaryColor(response.primaryColor);
       this.setState({...response});
       return response;
-    })
-    .then(response => set(idbKey, response));
+    });
   }
 
   download (evt) {
@@ -211,6 +208,8 @@ class Album extends Component {
 
     let promise;
     this.isDownloading = true
+
+    // TODO: support simple caching without bg-sync
 
     if (Constants.SUPPORT_BACKGROUND_FETCH) {
       // download the album in background
@@ -263,7 +262,7 @@ class Album extends Component {
         <TopBarBack />
         <Infos>
           <InfosWrapper>
-            <Cover alt="cover" src={`${Constants.CDN_URL}/${coverURL}`} />
+            {coverURL && <Cover alt="cover" src={`${Constants.CDN_URL}/${coverURL}`} />}
             <Details>
               <Title>{title}</Title>
               <Artist>{artist}</Artist>
@@ -272,7 +271,7 @@ class Album extends Component {
                 •
                 <TracksCount>{tracks.length} titres</TracksCount>
                 •
-                <Genre>{genre}</Genre>
+                <Genre>{genre ? genre : 'playlist'}</Genre>
               </Line>
             </Details>
           </InfosWrapper>
@@ -301,4 +300,4 @@ class Album extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Album);
+export default connect(mapStateToProps, mapDispatchToProps)(TrackList);

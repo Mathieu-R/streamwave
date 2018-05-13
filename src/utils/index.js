@@ -26,3 +26,7 @@ export function flatten(arr) {
 export function getRGBCssFromObject ({r, g, b}) {
   return `rgb(${r}, ${g}, ${b})`;
 }
+
+export function pluralize (string, len) {
+  return (len > 1 ? string + 's' : string);
+}

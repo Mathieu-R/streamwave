@@ -1,11 +1,11 @@
 import { h, Component } from 'preact';
-import pure from 'recompose/pure';
 import styled from 'styled-components';
 
 const AverageCircle = styled.div`
   margin: 0 auto;
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  max-width: 90%;
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,20 +32,36 @@ class Circle extends Component {
     super();
     this.container = null;
     this.canvas = null;
+    // get initial volume on page load
+    // then live update
+    this.volume = 0;
+
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.onVolumeDownloading = this.onVolumeDownloading.bind(this);
   }
 
   componentDidMount () {
     window.addEventListener('resize', this.onResize);
+    document.addEventListener('data-volume', this.onVolumeDownloading);
     requestAnimationFrame(() => this.onResize());
   }
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('data-volume', this.onVolumeDownloading);
   }
 
   componentDidUpdate () {
+    this.volume = this.props.volume;
+    requestAnimationFrame(() => this.draw());
+  }
+
+  onVolumeDownloading (evt) {
+    //return;
+    // volume in mo
+    const volume = evt.detail.value / (1000 * 1024);
+    this.volume += volume;
     requestAnimationFrame(() => this.draw());
   }
 
@@ -72,7 +88,7 @@ class Circle extends Component {
     const lineWidth = 15;
     const radius = (this.canvas.height - lineWidth) / 4;
     const innerRadius = radius - lineWidth;
-    const percentage = this.props.volume / this.props.dataMax;
+    const percentage = this.volume / this.props.dataMax;
 
     // remove old canvas
     this.ctx.save();
@@ -122,7 +138,7 @@ class Circle extends Component {
     this.ctx.restore();
 
     // text => downloaded - max data allowed
-    const fontSize = (this.canvas.width / 2) < 200 ? '12px' : '18px';
+    const fontSize = (this.canvas.width / 2) < 200 ? '16px' : '18px';
     this.ctx.translate(mid, mid);
     this.ctx.rotate(Math.PI / 2);
     this.ctx.translate(-mid, -mid);
@@ -130,7 +146,7 @@ class Circle extends Component {
     this.ctx.font = `${fontSize} Helvetica Neue`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'center';
-    this.ctx.fillText(`${this.props.volume} mo / ${this.props.dataMax} mo`, mid, mid);
+    this.ctx.fillText(`${Math.round(this.volume)} mo / ${this.props.dataMax} mo`, mid, mid);
     this.ctx.restore();
   }
 
@@ -139,7 +155,7 @@ class Circle extends Component {
       <AverageCircle innerRef={container => this.container = container}>
         <canvas ref={canvas => this.canvas = canvas}></canvas>
       </AverageCircle>
-    )
+    );
   }
 }
 
@@ -149,4 +165,4 @@ class Circle extends Component {
  * dataMax => integer in Mo
  */
 
-export default pure(Circle);
+export default Circle;

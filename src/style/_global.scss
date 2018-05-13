@@ -71,7 +71,12 @@ a {
   transform: translateY(-50%) scale(1);
 }
 
+.range-bar .highlight-round {
+  transform: translateY(-40%) scale(1);
+}
+
 .range-bar .show-tooltip {
+  opacity: 1;
   transform: translateY(-170%) scale(1);
 }
 

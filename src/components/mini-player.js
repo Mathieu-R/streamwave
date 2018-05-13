@@ -116,10 +116,6 @@ class MiniPlayer extends Component {
     this.props.switchPlayerStatus({show: true});
   }
 
-  doNotShowPlayerWhenSwipingProgressBar (evt) {
-    evt.stopPropagation();
-  }
-
   onPrevClick (evt) {
     // prevent parent onclick event to fire (show fullscreen player)
     evt.stopPropagation();
@@ -152,7 +148,7 @@ class MiniPlayer extends Component {
   }) {
     return (
       <Container onClick={this.showPlayer}>
-        <ProgressContainer onClick={this.doNotShowPlayerWhenSwipingProgressBar}>
+        <ProgressContainer>
           <ProgressBar duration={duration} currentTime={currentTime} borderRadius={false} />
         </ProgressContainer>
 

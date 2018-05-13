@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Overlay, Button } from './ui';
 import Constants from '../constants';
 
-import backIcon from '../assets/svg/arrow.svg';
+import backIcon from '../assets/svg/arrow-black.svg';
 
 import {
   toasting
@@ -90,6 +90,7 @@ const Back = styled.button`
 const Playlists = styled.section`
   display: flex;
   flex-direction: column;
+  flex: 1;
   width: 100%;
   overflow: auto;
 `;
@@ -113,6 +114,17 @@ const Title = styled.span`
 
 const TracksCounter = styled.span`
   font-size: 12px;
+`;
+
+const Cancel = styled.button`
+  width: 100%;
+  min-height: 50px;
+  background: #296BB7;
+  color: #FFF;
+  border: none;
+  border-radius: 3px;
+  margin: 5px 10px;
+  padding: 15px;
 `;
 
 const mapStateToProps = state => ({
@@ -141,8 +153,17 @@ class PlaylistModal extends Component {
     }
   }
 
+  shouldComponentUpdate (nextProps) {
+    //return this.props.show !== nextProps.show;
+    console.log(this.props.show, nextProps.show);
+  }
+
+  componentDidUpdate () {
+    //this.props.fetchPlaylists();
+  }
+
   componentDidMount () {
-    this.props.fetchPlaylists();
+    //this.props.fetchPlaylists();
   }
 
   blockClick (evt) {
@@ -176,8 +197,8 @@ class PlaylistModal extends Component {
   }
 
   addTrackToPlaylist (playlistId) {
-    this.props.addTrackToPlaylist({playlistId, trackId: this.props.trackId})
-      .then(() => toasting(['Titre ajouté à la playliste']))
+    this.props.addTrackToPlaylist({playlistId, track: this.props.track})
+      .then(() => toasting(['Titre ajouté à la playlist']))
       .then(() => this.props.removePlaylistModal())
       .catch(err => console.error(err));
   }
@@ -208,6 +229,7 @@ class PlaylistModal extends Component {
               )
             }
           </Playlists>
+          <Cancel onClick={removePlaylistModal}>Annuler</Cancel>
         </Container>
       </Overlay>
     );

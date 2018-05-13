@@ -19,7 +19,6 @@ const ProgressTrack = styled.div`
   background: #FFF;
   transform: translate(0, -50%);
   transform-origin: 0 50%;
-  will-change: transform;
 `;
 
 const ProgressRoundContainer = styled.div`
@@ -42,7 +41,6 @@ const ProgressRound = styled.div`
   background: #FFF;
   transform: translateY(-50%) scale(0.7);
   transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: transform;
 `;
 
 class ProgressBar extends Component {
@@ -55,8 +53,6 @@ class ProgressBar extends Component {
   }
 
   componentDidMount () {
-    const clampedPosition = this.props.currentTime / this.props.duration;
-    requestAnimationFrame(() => this.update(clampedPosition));
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -65,7 +61,15 @@ class ProgressBar extends Component {
     window.removeEventListener('resize', this.onResize);
   }
 
-  shouldComponentUpdate () {
+  shouldComponentUpdate (nextProps) {
+    if (this.props.duration === null && nextProps.duration !== null) {
+      return true;
+    }
+
+    if (this.props.currentTime === null && nextProps.currentTime !== null) {
+      return true;
+    }
+
     return false;
   }
 
@@ -90,6 +94,9 @@ class ProgressBar extends Component {
   }
 
   render ({duration, currentTime}) {
+    // do not render component if not necessary
+    if (!duration && !currentTime) return null;
+
     return (
       <ProgressBarContainer
         innerRef={container => this.container = container}

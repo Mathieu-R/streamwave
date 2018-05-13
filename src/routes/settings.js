@@ -34,9 +34,7 @@ import {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
-  height: 100vh;
 `;
 
 const SettingsContainer = styled.div`
@@ -56,7 +54,7 @@ const LabelInline = styled.label`
 
 const RangeBound = styled.span`
   display: flex;
-  padding: 0 5px;
+  padding: 0 10px;
   font-weight: bold;
 `;
 
@@ -81,7 +79,13 @@ const EqualizeVolume = styled.section`
   padding: 10px 0;
 `;
 
-const DownloadWithMobileNetwork = styled(EqualizeVolume);
+const DownloadWithMobileNetwork = styled.section`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 0;
+`;
 
 const EQ = styled.section`
   display: flex;
@@ -101,6 +105,8 @@ const DataVolume = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 100px;
+  max-height: 400px;
   width: 100%;
   min-height: 50px;
   padding: 10px 0;
@@ -112,7 +118,6 @@ const DataVolumeRange = styled.section`
   min-height: 50px;
   opacity: ${props => props.show ? 1 : 0};
   transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
 `;
 
 const SettingsButton = styled.button`
@@ -174,7 +179,6 @@ class Settings extends Component {
   }
 
   componentWillMount () {
-    console.log(this.props.dataMax);
     if (!this.props.dataMax) {
       return;
     }
@@ -185,7 +189,7 @@ class Settings extends Component {
       this.setState({
         volume
       });
-    })
+    });
   }
 
   onFadeChange (value) {
@@ -247,7 +251,7 @@ class Settings extends Component {
       <Container>
         <TopBarHamburger />
         <SettingsContainer>
-          <FadeContainer>
+          {/* <FadeContainer>
             <Label htmlFor="fade">Fondu enchainé</Label>
             <Fade>
               <RangeBound>off</RangeBound>
@@ -266,7 +270,7 @@ class Settings extends Component {
               onChange={this.onEqualizeVolumeChange}
               value={equalizeVolume}
             />
-          </EqualizeVolume>
+          </EqualizeVolume> */}
           {
             Constants.SUPPORT_NETWORK_INFORMATION_API &&
             <DownloadWithMobileNetwork>
@@ -277,7 +281,7 @@ class Settings extends Component {
               />
             </DownloadWithMobileNetwork>
           }
-          <EQ>
+          {/* <EQ>
           <LabelInline htmlFor="quality">Equaliseur</LabelInline>
             <Select native onChange={this.onEqualizerChange} value={eq} style={{color: '#FFF'}}>
               <option value="none">Aucun</option>
@@ -285,7 +289,7 @@ class Settings extends Component {
               <option value="pop">Pop</option>
               <option value="jazz">Jazz</option>
             </Select>
-          </EQ>
+          </EQ> */}
           <DownloadQuality>
             <LabelInline htmlFor="quality">Qualité de téléchargement</LabelInline>
             <Select native onChange={this.onQualityChange} value={quality.toString()} style={{color: '#FFF'}}>
@@ -306,6 +310,7 @@ class Settings extends Component {
                 min={200}
                 max={2000}
                 value={dataMax}
+                showTooltip={true}
                 onChange={this.onMaxDataVolumeChange}
               />
               <RangeBound>2000mo</RangeBound>
