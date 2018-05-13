@@ -32,6 +32,8 @@ class Circle extends Component {
     super();
     this.container = null;
     this.canvas = null;
+    this.width = 0;
+    this.height = 0;
     // get initial volume on page load
     // then live update
     this.volume = 0;
@@ -58,7 +60,6 @@ class Circle extends Component {
   }
 
   onVolumeDownloading (evt) {
-    //return;
     // volume in mo
     const volume = evt.detail.value / (1000 * 1024);
     this.volume += volume;
@@ -71,7 +72,8 @@ class Circle extends Component {
 
     const DPR = window.devicePixelRatio || 1;
     const containerBCR = this.container.getBoundingClientRect();
-    this.canvas.width = this.canvas.height = containerBCR.height * DPR;
+    this.width = this.height = this.containerBCR.width;
+    this.canvas.width = this.canvas.height = this.width * DPR;
     this.canvas.style.width = this.canvas.style.height = `${containerBCR.height}px`;
 
     this.ctx = this.canvas.getContext('2d');
@@ -84,9 +86,9 @@ class Circle extends Component {
 
   draw () {
     const TAU = Math.PI * 2;
-    const mid = this.canvas.height / 4;
+    const mid = this.width / 2;
     const lineWidth = 15;
-    const radius = (this.canvas.height - lineWidth) / 4;
+    const radius = (this.width - lineWidth) / 2;
     const innerRadius = radius - lineWidth;
     const percentage = this.volume / this.props.dataMax;
 
