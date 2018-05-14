@@ -20,13 +20,13 @@ before_install:
   - chmod 600 /tmp/travis_deploy
   - ssh-add /tmp/travis_deploy
 before_script:
-  - npm install -g https://github.com/ebidel/lighthouse-ci
+  # - npm install -g https://github.com/ebidel/lighthouse-ci
   # deploy on staging server
-  - "./.travis/deploy-pr.sh"
+  # - "./.travis/deploy-pr.sh"
 script:
   # test build for bundlesize
   - npm run build
   - npm run bundlesize
 after_success:
   # run lightouse-ci against staging server
-  - lighthouse-ci --score=85 staging.streamwave.be
+  # - lighthouse-ci --score=85 staging.streamwave.be
