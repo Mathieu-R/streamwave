@@ -41,6 +41,12 @@ const Settings = Loadable({
   timeout: 10000
 });
 
+const Demo = Loadable({
+  loader: () => import('./demo-streaming', /* webpackPrefetch: true, webpackChunkName: "route-demo" */),
+  loading: Loading,
+  timeout: 10000
+});
+
 import About from './about';
 import Licences from './licences';
 import Search from './search';
@@ -162,6 +168,8 @@ class Home extends Component {
     const networkEngine = this.player.getNetworkingEngine();
     const updateDataVolumeDebounced = debounce(updateDataVolume, 300);
     networkEngine.registerResponseFilter((type, response) => {
+      //console.log(response);
+
       // user does not want to limit-data => do not track.
       this.settings.get('limit-data').then(ok => {
         if (!ok) return;
@@ -366,6 +374,7 @@ class Home extends Component {
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />
+          <Route exact path="/demo" component={Demo} />
         </Switch>
         <Player
           ref={player => this.playerEl = player}

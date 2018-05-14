@@ -160,6 +160,7 @@ class SideNav extends Component {
             <Element><CustomLink to="/" onClick={hideSideNav} aria-label="home">Home</CustomLink></Element>
             <Element><CustomLink to="/about" onClick={hideSideNav} aria-label="about">A propos</CustomLink></Element>
             <Element><CustomLink to="/licences" onClick={hideSideNav} aria-label="licences">Licenses musicales</CustomLink></Element>
+            <Element><CustomLink to="/demo" onClick={hideSideNav} aria-label="demo streaming">Demo</CustomLink></Element>
           </Menu>
         </Container>
       </Overlay>

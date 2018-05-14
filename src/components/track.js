@@ -1,5 +1,4 @@
-import { h } from 'preact';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import { h, Component } from 'preact';
 import { formatDuration } from '../utils';
 import styled from 'styled-components';
 
@@ -32,13 +31,6 @@ const Title = styled.div`
   padding: ${PADDING};
 `;
 
-const IsOffline = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: ${PADDING};
-`;
-
 const Duration = styled.div`
   display: flex;
   justify-content: center;
@@ -46,15 +38,34 @@ const Duration = styled.div`
   padding: ${PADDING};
 `;
 
-const Track = ({
-  number, title, duration, onClick
-}) => (
-  <Container onClick={onClick}>
-    <Number>{number}</Number>
-    <Title>{title}</Title>
-    <IsOffline></IsOffline>
-    <Duration>{formatDuration(duration)}</Duration>
-  </Container>
-);
+class Track extends Component {
+  constructor () {
+    super();
+    this.onClick = this.onClick.bind(this);
+  }
 
-export default onlyUpdateForKeys(['number', 'title', 'duration'])(Track);
+  shouldComponentUpdate (nextProps) {
+    if (nextProps.title !== this.props.title) {
+      return true;
+    }
+
+    return false;
+  }
+
+  onClick (evt) {
+    const {track} = this.props;
+    this.props.handleTrackClick(track);
+  }
+
+  render ({number, title, duration}) {
+    return (
+      <Container onClick={this.onClick}>
+        <Number>{number}</Number>
+        <Title>{title}</Title>
+        <Duration>{formatDuration(duration)}</Duration>
+      </Container>
+    );
+  }
+}
+
+export default Track;
