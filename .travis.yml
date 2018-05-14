@@ -26,6 +26,7 @@ before_script:
 script:
   # test build for bundlesize
   - npm run build
+  - npm run bundlesize
 after_success:
   # run lightouse-ci against staging server
   - lighthouse-ci --score=85 staging.streamwave.be
