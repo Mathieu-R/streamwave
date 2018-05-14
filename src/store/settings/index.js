@@ -16,7 +16,6 @@ export function restoreSettings () {
     manager.init()
       .then(_ => manager.getAll())
       .then(settings => {
-        console.log(settings);
         dispatch({
           type: RESTORE_SETTINGS,
           settings

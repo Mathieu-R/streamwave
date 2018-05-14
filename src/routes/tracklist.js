@@ -231,9 +231,10 @@ class TrackList extends Component {
     });
   }
 
-  handleTrackClick () {
-    //const {artist, coverURL, track} = this.props;
-    //this.listenToTrack()
+  handleTrackClick (track) {
+    // title = title of album or playlist
+    const {artist, title, coverURL} = this.state;
+    this.listenToTrack(artist, title, coverURL, track)
   }
 
   listenToTrack (artist, album, coverURL, track) {
@@ -291,8 +292,9 @@ class TrackList extends Component {
         <Tracks>
           {tracks.map(track => (
             <Track
-              number={track.number} title={track.title} artist={artist} coverURL={coverURL} duration={track.duration} track={track}
-              onClick={_ => this.listenToTrack(artist, title, coverURL, track)} />
+              number={track.number} title={track.title} duration={track.duration} track={track}
+              handleTrackClick={this.handleTrackClick}
+            />
           ))}
         </Tracks>
       </Container>
