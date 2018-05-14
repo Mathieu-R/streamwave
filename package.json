@@ -6,7 +6,8 @@
     "start": "webpack-dev-server --config build/webpack.config.js",
     "build:analyse": "rm -rf ./dist && NODE_ENV=production webpack --profile --json > stats.json --config build/webpack.config.js -p && webpack-bundle-analyzer stats.json",
     "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p",
-    "analyse": "webpack-bundle-analyzer stats.json"
+    "analyse": "webpack-bundle-analyzer stats.json",
+    "bundlesize": "bundlesize"
   },
   "bundlesize": [
     {
@@ -26,6 +27,7 @@
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-imports": "^1.5.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
+    "bundlesize": "^0.17.0",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "dotenv": "^5.0.1",
