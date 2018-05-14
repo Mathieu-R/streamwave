@@ -72,7 +72,7 @@ class Circle extends Component {
 
     const DPR = window.devicePixelRatio || 1;
     const containerBCR = this.container.getBoundingClientRect();
-    this.width = this.height = this.containerBCR.width;
+    this.width = this.height = containerBCR.width;
     this.canvas.width = this.canvas.height = this.width * DPR;
     this.canvas.style.width = this.canvas.style.height = `${containerBCR.height}px`;
 
