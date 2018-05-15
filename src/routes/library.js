@@ -42,12 +42,9 @@ class Library extends Component {
 
   componentWillMount () {
     this.fetchGallery()
-    .then(response => {
-      this.props.storeLibrary(response);
-      return set('library', response);
-    })
-    .then(_ => this.lazyLoadArtworks())
-    .catch(err => console.error(err));
+      .then(response => this.props.storeLibrary(response))
+      .then(_ => this.lazyLoadArtworks())
+      .catch(err => console.error(err));
   }
 
   componentWillUnmount () {

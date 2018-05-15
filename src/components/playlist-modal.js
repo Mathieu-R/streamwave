@@ -19,15 +19,14 @@ import {
 
 const Container = styled.div`
   position: fixed;
-  top: 0;
+  top: 25px;
   left: 50%;
+  bottom: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
   width: 100%;
   max-width: 400px;
-  margin: 10px;
   border-radius: 5px;
   background: #000;
   opacity: ${props => props.show ? 1 : 0};
