@@ -1,8 +1,23 @@
 import { h, Component } from 'preact';
 import { formatDuration } from '../utils';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const PADDING = '5px';
+
+const fade = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+  100% {
+    opaity: 1;
+    transform: scale(1);
+  }
+`;
 
 const Container = styled.div`
   display: grid;
@@ -12,6 +27,9 @@ const Container = styled.div`
   font-weight: bold;
   grid-gap: 20px;
   cursor: pointer;
+  opacity: 1;
+  transform: scale(1);
+  animation: ${fade} linear .5s;
 
   &:hover, &:focus {
     background: #22242d;

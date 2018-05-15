@@ -1,5 +1,4 @@
-import { h } from 'preact';
-import pure from 'recompose/pure';
+import { h, Component } from 'preact';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -57,13 +56,24 @@ const Label = styled.label`
   }
 `;
 
-const Switch = ({label, value, onChange}) => (
-  <Container>
-    <Input type="checkbox" id={label} onChange={onChange} checked={value}/>
-    {/* Little Hack => altough preact support "for" attribute, styled-components only accept "htmlFor" */}
-    <Label htmlFor={label}>{label}</Label>
-  </Container>
-);
+class Switch extends Component {
+  shouldComponentUpdate (nextProps) {
+    if (nextProps.value !== this.props.value) {
+      return true;
+    }
+    return false;
+  }
 
-export default pure(Switch);
+  render ({label, value, onChange}) {
+    return (
+      <Container>
+        <Input type="checkbox" id={label} onChange={onChange} checked={value}/>
+        {/* Little Hack => altough preact support "for" attribute, styled-components only accept "htmlFor" */}
+        <Label htmlFor={label}>{label}</Label>
+      </Container>
+    );
+  }
+}
+
+export default Switch;
 

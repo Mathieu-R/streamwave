@@ -25,6 +25,20 @@ async function getRequestsUrls (tracklist, cover) {
   return [...flatten(urls), `${Constants.CDN_URL}/${cover}`];
 }
 
+// download without bg-sync or bg-fetch
+// directly put the response into the cache
+// with that all major browsers support download
+export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistId}) {
+  const requests = await getRequestsUrls(tracklist, cover);
+
+  // note: simple copy-paste from service-worker
+  const files = await requests.map(request => ({request, response: fetch(request)}));
+  const responses = await Promise.all(files.map(file => file.response));
+  trackDownload(responses, tracklistId);
+  const cache = await caches.open(MUSIC_CACHE_NAME);
+  return Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
+}
+
 export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
   const registration = await navigator.serviceWorker.ready;
 
@@ -66,35 +80,8 @@ export async function removeTracklistFromCache (tracklist, id) {
   }));
 
   await Promise.all(toRemoveFromCache);
-  return del(id, {downloaded: false});
-}
-
-export function track (responses, tracklistId) {
-  let totalDownload, downloaded = 0;
-
-  totalDownload = responses.reduce((total, response) => {
-    const contentLength = parseInt(response.headers.get('content-length'), 10);
-    return total += contentLength;
-  }, 0);
-
-  responses.map(response => {
-    // response has been consumed
-    // by cache api
-    const cloned = response.clone();
-    const onStream = ({done, value}) => {
-      if (done) {
-        store.dispatch(removeDownloadPercentage({id: tracklistId}));
-        return;
-      }
-
-      downloaded += value.length;
-      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
-      return reader.read().then(onStream);
-    }
-
-    const reader = cloned.body.getReader();
-    reader.read().then(onStream);
-  });
+  // or set(id, {downloaded: false}) ?
+  return del(id);
 }
 
 // uses background fetch which is for now only available in chrome canary
@@ -112,6 +99,7 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   store.dispatch(toasting(['Votre tracklist va être téléchargée en arrière-plan.', 'Vous pouvez fermer l\'application si vous le désirez.'], 5000));
 
   // store the tracklist in idb in case we would lost internet connection
+  // not sure I need do that that
   //await set(`background-fetch-${id}`, tracklist);
 
   // background fetch options
@@ -180,4 +168,32 @@ export function getDataVolumeDownloaded ({userId}) {
       volume: parseFloat(volumeInMo.toFixed(1))
     }
   }).catch(err => console.error(err));
+}
+
+export function track (responses, tracklistId) {
+  let totalDownload, downloaded = 0;
+
+  totalDownload = responses.reduce((total, response) => {
+    const contentLength = parseInt(response.headers.get('content-length'), 10);
+    return total += contentLength;
+  }, 0);
+
+  responses.map(response => {
+    // response has been consumed
+    // by cache api
+    const cloned = response.clone();
+    const onStream = ({done, value}) => {
+      if (done) {
+        store.dispatch(removeDownloadPercentage({id: tracklistId}));
+        return;
+      }
+
+      downloaded += value.length;
+      store.dispatch(setDownloadPercentage({id: tracklistId, percentage: (downloaded / totalDownload)}));
+      return reader.read().then(onStream);
+    }
+
+    const reader = cloned.body.getReader();
+    reader.read().then(onStream);
+  });
 }

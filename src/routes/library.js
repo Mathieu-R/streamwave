@@ -50,6 +50,12 @@ class Library extends Component {
     .catch(err => console.error(err));
   }
 
+  componentWillUnmount () {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
   getGalleryFromCache () {
     return get('library');
   }

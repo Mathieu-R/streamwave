@@ -23,7 +23,7 @@ const ProgressBarContainer = styled.div`
   align-items: center;
   flex: 1;
   height: 8px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: ${props => props.borderRadius ? '5px' : 0};
 `;
 

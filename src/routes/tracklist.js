@@ -7,8 +7,8 @@ import Switch from '../components/switch';
 import TopBarBack from '../components/topbar-back';
 import ProgressLine from '../components/progress-line';
 import { shuffle } from '../utils';
-import { downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
-import styled from 'styled-components';
+import { simpleDownloadTracklist, downloadTracklist, downloadTracklistInBackground, removeTracklistFromCache } from '../utils/download';
+import styled, { keyframes } from 'styled-components';
 
 import {
   setTrack,
@@ -25,6 +25,15 @@ import {
 import {
   getDownloadWithMobileNetwork
 } from '../store/settings';
+
+const fade = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const Container = styled.div``;
 
@@ -49,11 +58,13 @@ const Details = styled.div`
   align-items: flex-start;
   flex-grow: 1;
   margin: 15px;
+  animation: ${fade} linear .4s;
 `;
 
 const Cover = styled.img`
   max-height: 100px;
   object-fit: contain;
+  animation: ${fade} linear .6s;
 `;
 
 const Title = styled.h1`
@@ -142,6 +153,7 @@ class TrackList extends Component {
 
   componentWillMount () {
     const id = this.props.match.params.id;
+
     Promise.all([
       this.fetchTracklist(id),
       // check if album is downloaded
@@ -159,7 +171,6 @@ class TrackList extends Component {
     })
     .then(response => response.json())
     .then(response => {
-      console.log(response);
       this.props.setPrimaryColor(response.primaryColor);
       this.setState({...response});
       return response;
@@ -183,7 +194,8 @@ class TrackList extends Component {
       }
     }
 
-    if (!Constants.SUPPORT_BACKGROUND_SYNC) {
+    // browser has to support at least service-worker and http streaming
+    if (!Constants.SUPPORT_CACHE_API) {
       this.props.toasting(['Votre navigateur ne supporte pas le téléchargement de musiques...']);
       return;
     }
@@ -210,13 +222,14 @@ class TrackList extends Component {
     this.isDownloading = true
 
     // TODO: support simple caching without bg-sync
-
     if (Constants.SUPPORT_BACKGROUND_FETCH) {
       // download the album in background
       promise = downloadTracklistInBackground(options);
-    } else {
+    } else if (Constants.SUPPORT_BACKGROUND_SYNC) {
       // download the album in foreground
       promise = downloadTracklist(options);
+    } else {
+      promise = simpleDownloadTracklist(options);
     }
 
     promise.then(_ => {

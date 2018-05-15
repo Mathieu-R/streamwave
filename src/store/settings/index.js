@@ -36,28 +36,6 @@ export function setFade (value) {
   }
 }
 
-export function setEqualizeVolume (status) {
-  return dispatch => {
-    manager.set('equalize-volume', status).then(_ => {
-      dispatch({
-        type: SET_EQUALIZE_VOLUME,
-        status
-      });
-    });
-  }
-}
-
-export function setEqualizer (eq) {
-  return dispatch => {
-    manager.set('equalizer', eq).then(_ => {
-      dispatch({
-        type: SET_EQUALIZER,
-        eq
-      });
-    });
-  }
-}
-
 export function setDownloadWithMobileNetwork (status) {
   return dispatch => {
     manager.set('download-mobile-network', status).then(_ => {
@@ -92,20 +70,29 @@ export function setLimitDataStatus (status) {
 }
 
 export function setMaxDataVolume (value) {
-  return dispatch => {
-    manager.set('data-max', value).then(_ => {
-      dispatch({
-        type: SET_DATA_VOLUME_MAX,
-        value
-      });
-    });
+  return {
+    type: SET_DATA_VOLUME_MAX,
+    value
   }
+}
+
+export function clear () {
+  return dispatch => {
+    return manager.clear().then(settings => {
+      dispatch({
+        type: RESTORE_SETTINGS,
+        settings
+      })
+    })
+  }
+}
+
+export const setMaxDataVolumeInStore = (value) => {
+  return manager.set('data-max', value);
 }
 
 // selectors
 export const getFade = state => state.settings.fade;
-export const getEqualizeVolume = state => state.settings.equalizeVolume;
-export const getEq = state => state.settings.eq;
 export const getQuality = state => state.settings.downloadQuality;
 export const getDownloadWithMobileNetwork = state => state.settings.downloadWithMobileNetwork;
 export const getLimitDataStatus = state => state.settings.limitData;
@@ -120,8 +107,6 @@ export default (state = {}, action) => {
       return {
         ...state,
         fade: action.settings['fade'],
-        equalizeVolume: action.settings['equalize-volume'],
-        eq: action.settings['equalizer'],
         downloadWithMobileNetwork: action.settings['download-mobile-network'],
         downloadQuality: action.settings['download-quality'],
         limitData: action.settings['limit-data'],
@@ -132,18 +117,6 @@ export default (state = {}, action) => {
       return {
         ...state,
         fade: action.value
-      }
-
-    case SET_EQUALIZE_VOLUME:
-      return {
-        ...state,
-        equalizeVolume: action.status
-      }
-
-    case SET_EQUALIZER:
-      return {
-        ...state,
-        eq: action.eq
       }
 
     case SET_DOWNLOAD_WITH_MOBILE_NETWORK:

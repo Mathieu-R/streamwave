@@ -29,6 +29,7 @@ const Inner = styled.section`
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
+  max-width: 90%;
 `;
 
 const Row = styled.div`
@@ -42,7 +43,10 @@ const Album = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 200px;
+
+  @media(max-width: ${props => props.theme.mobile}) {
+    font-size: 12px;
+  }
 `;
 
 const Licence = styled.a`

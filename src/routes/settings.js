@@ -1,35 +1,38 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { clear } from 'idb-keyval';
+import { set } from 'idb-keyval';
+import debounce from 'debounce';
 import TopBarHamburger from '../components/topbar-hamburger';
-import Range from '../components/range';
-import Switch from '../components/switch';
-import Select from 'material-ui/Select';
-import Circle from '../components/circle';
+import DownloadQuality from '../components/settings/download-quality';
+import DownloadWithMobileNetwork from '../components/settings/download-mobile-network';
+import StorageQuota from '../components/settings/storage-quota';
+import DataVolume from '../components/settings/data-volume';
 import { getDataVolumeDownloaded } from '../utils/download';
 import styled from 'styled-components';
 import Constants from '../constants';
 
 import {
   getFade,
-  getEqualizeVolume,
-  getEq,
   getDownloadWithMobileNetwork,
   getQuality,
   getLimitDataStatus,
   getDataMax,
   setFade,
-  setEqualizeVolume,
-  setEqualizer,
   setDownloadWithMobileNetwork,
   setDownloadQuality,
   setLimitDataStatus,
   setMaxDataVolume,
+  setMaxDataVolumeInStore,
+  clear
 } from '../store/settings';
 
 import {
   getUserId
 } from '../store/user';
+
+import {
+  toasting
+} from '../store/toast';
 
 const Container = styled.div`
   display: flex;
@@ -45,79 +48,14 @@ const SettingsContainer = styled.div`
   width: 100%;
 `;
 
-const Label = styled.label`
-  margin-bottom: 10px;
-`;
-
-const LabelInline = styled.label`
-`;
-
-const RangeBound = styled.span`
+const ButtonsContainer = styled.section`
   display: flex;
-  padding: 0 10px;
-  font-weight: bold;
-`;
-
-const FadeContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px 0;
-`;
-
-const Fade = styled.div`
-  display: flex;
+  justify-content: center;
   align-items: center;
-`;
 
-const EqualizeVolume = styled.section`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px 0;
-`;
-
-const DownloadWithMobileNetwork = styled.section`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px 0;
-`;
-
-const EQ = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 50px;
-`;
-
-const DownloadQuality = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 50px;
-`;
-
-const DataVolume = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 100px;
-  max-height: 400px;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px 0;
-`;
-
-const DataVolumeRange = styled.section`
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-  opacity: ${props => props.show ? 1 : 0};
-  transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
+  @media (max-width: ${props => props.theme.mobile}) {
+    flex-direction: column;
+  }
 `;
 
 const SettingsButton = styled.button`
@@ -126,24 +64,17 @@ const SettingsButton = styled.button`
   margin: 10px;
   padding: 10px 25px;
   border-radius: 5px;
-  background: ${props => props.theme.primaryColor};
+  background: #696969;
   color: #FFF;
-`;
 
-const Logout = styled.button`
-  display: flex;
-  align-self: center;
-  margin: 10px;
-  padding: 10px 25px;
-  border-radius: 5px;
-  background: ${props => props.theme.primaryColor};
-  color: #FFF;
+  @media (max-width: ${props => props.theme.mobile}) {
+    justify-content: center;
+    width: 100%;
+  }
 `;
 
 const mapStateToProps = state => ({
   fade: getFade(state),
-  equalizeVolume: getEqualizeVolume(state),
-  eq: getEq(state),
   downloadWithMobileNetwork: getDownloadWithMobileNetwork(state),
   quality: getQuality(state),
   limitData: getLimitDataStatus(state),
@@ -153,12 +84,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setFade: value => dispatch(setFade(value)),
-  setEqualizeVolume: status => dispatch(setEqualizeVolume(status)),
-  setEqualizer: value => dispatch(setEqualizer(value)),
   setDownloadWithMobileNetwork: value => dispatch(setDownloadWithMobileNetwork(value)),
   setDownloadQuality: quality => dispatch(setDownloadQuality(quality)),
   setLimitDataStatus: status => dispatch(setLimitDataStatus(status)),
-  setMaxDataVolume: value => dispatch(setMaxDataVolume(value))
+  setMaxDataVolume: value => dispatch(setMaxDataVolume(value)),
+  clear: _ => dispatch(clear()),
+  toasting: (message, duration) => dispatch(toasting(message, duration))
 });
 
 class Settings extends Component {
@@ -167,11 +98,12 @@ class Settings extends Component {
 
     this.logout = this.logout.bind(this);
     this.onFadeChange = this.onFadeChange.bind(this);
-    this.onEqualizeVolumeChange = this.onEqualizeVolumeChange.bind(this);
-    this.onEqualizerChange = this.onEqualizerChange.bind(this);
     this.onQualityChange = this.onQualityChange.bind(this);
     this.onLimitDataStatusChange = this.onLimitDataStatusChange.bind(this);
     this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
+    this.resetDataVolume = this.resetDataVolume.bind(this);
+    this.clearCache = this.clearCache.bind(this);
+    this.restore = this.restore.bind(this);
 
     this.state = {
       volume: 0
@@ -201,16 +133,6 @@ class Settings extends Component {
     this.props.setFade(value);
   }
 
-  onEqualizeVolumeChange (evt) {
-    const status = evt.target.checked;
-    this.props.setEqualizeVolume(status);
-  }
-
-  onEqualizerChange (evt) {
-    const {value} = evt.target;
-    this.props.setEqualizer(value);
-  }
-
   onDownloadWithMobileNetworkChange (evt) {
     const {value} = evt.target;
     this.props.setDownloadWithMobileNetwork(value);
@@ -228,11 +150,27 @@ class Settings extends Component {
 
   onMaxDataVolumeChange (value) {
     this.props.setMaxDataVolume(value);
+    // debounce to avoid too much access to idb
+    const debounced = debounce(setMaxDataVolumeInStore, 300);
+    debounced(value);
   }
 
+  resetDataVolume () {
+    set(`data-volume_${this.props.userId}`, 0);
+  }
+
+  // clear settings idb cache
+  restore () {
+    this.props.clear().then(() => {
+      this.props.toasting(['Paramètres restaurés !']);
+    });
+  }
+
+  // clear service-worker cache
   clearCache (evt) {
-    // clear idb cache
-    clear();
+    caches.delete('streamwave-music-cache')
+      .then(() => this.props.toasting(['Cache vidé !']))
+      .catch(err => console.error(err));
   }
 
   logout (evt) {
@@ -246,86 +184,42 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, equalizeVolume, eq, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
+  render ({fade, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
     return (
       <Container>
         <TopBarHamburger />
         <SettingsContainer>
-          {/* <FadeContainer>
-            <Label htmlFor="fade">Fondu enchainé</Label>
-            <Fade>
-              <RangeBound>off</RangeBound>
-                <Range
-                  min={0}
-                  max={12}
-                  onChange={this.onFadeChange}
-                  value={fade}
-                />
-              <RangeBound>12s</RangeBound>
-            </Fade>
-          </FadeContainer>
-          <EqualizeVolume>
-            <Switch
-              label="Egaliser le volume sonore"
-              onChange={this.onEqualizeVolumeChange}
-              value={equalizeVolume}
-            />
-          </EqualizeVolume> */}
           {
             Constants.SUPPORT_NETWORK_INFORMATION_API &&
-            <DownloadWithMobileNetwork>
-              <Switch
-                label="Télécharger à l'aide du réseau mobile"
-                onChange={this.onDownloadWithMobileNetworkChange}
-                value={downloadWithMobileNetwork}
-              />
-            </DownloadWithMobileNetwork>
-          }
-          {/* <EQ>
-          <LabelInline htmlFor="quality">Equaliseur</LabelInline>
-            <Select native onChange={this.onEqualizerChange} value={eq} style={{color: '#FFF'}}>
-              <option value="none">Aucun</option>
-              <option value="church">Church</option>
-              <option value="pop">Pop</option>
-              <option value="jazz">Jazz</option>
-            </Select>
-          </EQ> */}
-          <DownloadQuality>
-            <LabelInline htmlFor="quality">Qualité de téléchargement</LabelInline>
-            <Select native onChange={this.onQualityChange} value={quality.toString()} style={{color: '#FFF'}}>
-              <option value="128">128k</option>
-              <option value="192">192k</option>
-              <option value="256">256k</option>
-            </Select>
-          </DownloadQuality>
-          <DataVolume>
-            <Switch
-              label="Volume de données maximale (mo)"
-              onChange={this.onLimitDataStatusChange}
-              value={limitData}
+            <DownloadWithMobileNetwork
+              value={downloadWithMobileNetwork}
+              onChange={this.downloadWithMobileNetwork}
             />
-            <DataVolumeRange show={limitData}>
-              <RangeBound>200mo</RangeBound>
-              <Range
-                min={200}
-                max={2000}
-                value={dataMax}
-                showTooltip={true}
-                onChange={this.onMaxDataVolumeChange}
-              />
-              <RangeBound>2000mo</RangeBound>
-            </DataVolumeRange>
-            {/* SVG arc with data consumed until today */}
-            {
-              limitData &&
-              <Circle volume={volume} dataMax={dataMax} />
+          }
+          <DownloadQuality
+            quality={quality.toString()}
+            onChange={this.onQualityChange}
+          />
+          { Constants.SUPPORT_STORAGE_API &&
+            <StorageQuota />
+          }
+          <DataVolume
+            limitData={limitData}
+            dataMax={dataMax}
+            volume={volume}
+            onLimitDataStatusChange={this.onLimitDataStatusChange}
+            onMaxDataVolumeChange={this.onMaxDataVolumeChange}
+          />
+          <ButtonsContainer>
+            { Constants.SUPPORT_CACHE_API &&
+              <SettingsButton onClick={this.clearCache} aria-label="clear cache">Vider le cache</SettingsButton>
             }
-          </DataVolume>
-          <SettingsButton onClick={this.clearCache} aria-label="clear cache">Vider le cache</SettingsButton>
-          <SettingsButton onClick={this.logout} aria-label="logout">Déconnexion</SettingsButton>
+            <SettingsButton onClick={this.restore} aria-label="restore settings">Restaurer</SettingsButton>
+            <SettingsButton onClick={this.logout} aria-label="logout">Déconnexion</SettingsButton>
+          </ButtonsContainer>
         </SettingsContainer>
       </Container>
-    )
+    );
   }
 }
 

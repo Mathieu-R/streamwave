@@ -12,7 +12,7 @@
   "bundlesize": [
     {
       "path": "./dist/*.bundle.*.js",
-      "maxSize": "250kB"
+      "maxSize": "200kB"
     }
   ],
   "devDependencies": {

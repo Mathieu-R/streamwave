@@ -167,16 +167,24 @@ class Home extends Component {
     // https://github.com/google/shaka-player/issues/1416
     const networkEngine = this.player.getNetworkingEngine();
     const updateDataVolumeDebounced = debounce(updateDataVolume, 300);
-    networkEngine.registerResponseFilter((type, response) => {
+    networkEngine.registerResponseFilter(async (type, response) => {
       //console.log(response);
 
       // user does not want to limit-data => do not track.
-      this.settings.get('limit-data').then(ok => {
-        if (!ok) return;
-      });
+      const limit = await this.settings.get('limit-data');
+      if (!limit) {
+        return;
+      }
 
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+        // https://github.com/google/shaka-player/issues/1439
+        const cached = Object.keys(response.headers).includes('X-From-Cache');
+        console.log('segment from service-worker cache: ', cached);
+        if (!cached) {
+          return;
+        }
+
         // bytes downloaded
         const value = response.data.byteLength;
         // update idb cache to save the user data volume consumed
@@ -352,9 +360,17 @@ class Home extends Component {
       return;
     }
 
+    // this.audio.base.remote.prompt()
+    //   .then(evt => console.log(evt))
+    //   .catch(err => console.error(err));
+
+    // return;
+
     const url = '/presentation';
-    this.chromecaster = new Chromecaster(url);
-    this.chromecaster.send(data);
+    this.chromecaster = new Chromecaster();
+    this.chromecaster.cast(url).then(_ => {
+      this.chromecaster.send(data);
+    }).catch(err => console.error(err));
   }
 
   render () {
