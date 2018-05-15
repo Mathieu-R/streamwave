@@ -130,7 +130,6 @@ class Presentation extends Component {
 
     navigator.presentation.receiver.connectionList
     .then(list => {
-      console.log(list);
       // the spec says to do that
       list.connections.map(connection => this.addConnection(connection));
       list.onconnectionavailable = evt => this.addConnection(evt.connection);
@@ -173,6 +172,8 @@ class Presentation extends Component {
     connection.onmessage = async evt => {
       const data = JSON.parse(evt.data);
       const {type} = data;
+
+      connection.send(type);
 
       if (type === 'song') {
         this.setState(data);

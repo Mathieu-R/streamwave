@@ -15,6 +15,7 @@ const SWITCH_PLAYER_STATUS = 'SWITCH_PLAYER_STATUS';
 const SWITCH_SHUFFLE_STATUS = 'SWITCH_SHUFFLE_STATUS';
 const SWITCH_REPEAT_STATUS = 'SWITCH_REPEAT_STATUS';
 const SET_PLAYING_STATUS = 'SET_PLAYING_STATUS';
+const SET_CHROMECAST_AVAILABLE = 'SET_CHROMECAST_AVAILABLE';
 const SET_CHROMECAST_STATUS = 'SET_CHROMECAST_STATUS';
 const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 const SET_DOWNLOAD_PERCENTAGE = 'SET_DOWNLOAD_PERCENTAGE';
@@ -158,6 +159,13 @@ export function setPlayingStatus ({playing}) {
   }
 }
 
+export function setChromecastAvailable ({available}) {
+  return {
+    type: SET_CHROMECAST_AVAILABLE,
+    available
+  }
+}
+
 export function setChromecastStatus ({chromecasting}) {
   return {
     type: SET_CHROMECAST_STATUS,
@@ -194,6 +202,7 @@ export const getAlbum = state => state.player.album;
 export const getTrackName = state => getTrack(state) && getTrack(state).title;
 export const getCoverURL = state => getTrack(state) && getTrack(state).coverURL; /*state.player.coverURL;*/
 export const isMusicPlaying = state => state.player.playing;
+export const isChromecastAvailable = state => state.player.chromecastAvailable;
 export const isMusicChromecasting = state => state.player.chromecasting;
 export const isShuffle = state => state.player.shuffle;
 export const isRepeat = state => state.player.repeat;
@@ -294,6 +303,12 @@ export default (state = {}, action) => {
         playing: action.playing
       }
     }
+
+    case SET_CHROMECAST_AVAILABLE:
+      return {
+        ...state,
+        chromecastAvailable: action.available
+      }
 
     case SET_CHROMECAST_STATUS:
       return {

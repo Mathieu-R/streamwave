@@ -12,6 +12,7 @@ import {
   getDuration,
   getCurrentTime,
   isMusicPlaying,
+  isChromecastAvailable,
   isMusicChromecasting,
   switchPlayingStatus,
   switchPlayerStatus,
@@ -65,11 +66,15 @@ const Artist = styled.div`
 
 const Title = styled.div`
   font-size: 14px;
+
+  @media(max-width: ${props => props.theme.mobile}) {
+    font-size: 12px;
+  }
 `;
 
 const ControlsContainer = styled.div`
   height: 100%;
-  min-width: 200px;
+  /*min-width: 200px;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,6 +85,7 @@ const Button = styled.button`
   align-items: center;
   border: none;
   background: none;
+  padding: 0 10px;
 `;
 
 const mapStateToProps = state => ({
@@ -87,6 +93,7 @@ const mapStateToProps = state => ({
   artist: getArtist(state),
   track: getTrack(state),
   playing: isMusicPlaying(state),
+  chromecastAvailable: isChromecastAvailable(state),
   chromecasting: isMusicChromecasting(state),
   duration: getDuration(state),
   currentTime: getCurrentTime(state)
@@ -142,8 +149,8 @@ class MiniPlayer extends Component {
   }
 
   render ({
-    coverURL, artist, track,
-    playing, chromecasting, duration,
+    coverURL, artist, track, playing,
+    chromecastAvailable, chromecasting, duration,
     currentTime
   }) {
     return (
@@ -232,10 +239,12 @@ class MiniPlayer extends Component {
               </g>
             </svg>
           </Button>
+          {
+          chromecastAvailable &&
           <Button disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
-            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
@@ -246,7 +255,7 @@ class MiniPlayer extends Component {
               />
             </svg>
             :
-            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
               <path d="M0 0h24v24H0z" fill="none"/>
               <path
@@ -257,6 +266,7 @@ class MiniPlayer extends Component {
             </svg>
           }
           </Button>
+          }
         </ControlsContainer>
       </Container>
     );

@@ -22,6 +22,7 @@ import {
   isMusicPlaying,
   isShuffle,
   isRepeat,
+  isChromecastAvailable,
   isMusicChromecasting,
   switchPlayingStatus,
   setCurrentIndex,
@@ -216,6 +217,7 @@ const mapStateToProps = state => ({
   repeat: isRepeat(state),
   queue: getQueue(state),
   chromecasting: isMusicChromecasting(state),
+  chromecastAvailable: isChromecastAvailable(state),
   currentTime: getCurrentTime(state),
   totalTime: getDuration(state)
 });
@@ -341,8 +343,8 @@ class Player extends Component {
   }
 
   render ({
-    showPlayer, coverURL, artist, title, duration,
-    playing, chromecasting, shuffle, repeat,
+    showPlayer, coverURL, artist, title, duration, playing,
+    chromecastAvailable, chromecasting, shuffle, repeat,
     track, currentTime, totalTime, primaryColor,
     seek, onVolumeChange
   }, {
@@ -356,6 +358,8 @@ class Player extends Component {
     return (
       <Container show={showPlayer}>
         <Close onClick={this.closePlayer} aria-label="close player"/>
+        {
+        chromecastAvailable &&
         <Chromecast onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
@@ -381,6 +385,7 @@ class Player extends Component {
             </svg>
           }
         </Chromecast>
+        }
         <CoverContainer background={primaryColor}>
           <Cover>
             <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />

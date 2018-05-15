@@ -129,6 +129,7 @@ class Home extends Component {
   componentDidMount () {
     this.initShakaPlayer();
     this.initMediaSession();
+    this.initPresentation();
     this.props.restoreSettings();
   }
 
@@ -216,6 +217,10 @@ class Home extends Component {
     navigator.mediaSession.setActionHandler('seekforward', this.seekForward);
     navigator.mediaSession.setActionHandler('previoustrack', this.setPrevTrack);
     navigator.mediaSession.setActionHandler('nexttrack', evt => this.setNextTrack({continuous: false}));
+  }
+
+  initPresentation () {
+    this.chromecaster = new Chromecaster(Constants.PRESENTATION_URL);
   }
 
   /**
@@ -365,9 +370,7 @@ class Home extends Component {
 
     // return;
 
-    const url = '/presentation';
-    this.chromecaster = new Chromecaster();
-    this.chromecaster.cast(url).then(_ => {
+    this.chromecaster.cast().then(_ => {
       this.chromecaster.send(data);
     }).catch(err => console.error(err));
   }
