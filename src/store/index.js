@@ -30,6 +30,9 @@ const initialState = {
     playing: false,
     repeat: false,
     shuffle: false,
+    // assume a presentation display
+    // is available by default
+    chromecastAvailable: true,
     chromecasting: false,
     // list of current downloads and their percentages
     downloads: {}
@@ -37,8 +40,6 @@ const initialState = {
   playlists: [],
   settings: {
     fade: 0,
-    equalizeVolume: false,
-    eq: 'none',
     downloadQuality: 256,
     limitData: false,
     dataMax: 0

@@ -35,7 +35,7 @@ class Reset extends Component {
   }
 
   async performReset (password, token) {
-    const response = await fetch(`${Constants.AUTH_URL}/local/account/reset/reset-password?token=${token}`, {
+    const response = await fetch(`${Constants.AUTH_URL}/local/account/reset/change-password?token=${token}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'

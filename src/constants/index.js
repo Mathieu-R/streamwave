@@ -29,6 +29,10 @@ class Constants {
     );
   }
 
+  static get PRESENTATION_URL () {
+    return '/presentation';
+  }
+
   static get SUPPORT_CREDENTIALS_MANAGEMENT_API () {
     return (navigator.credentials && navigator.credentials.preventSilentAccess);
   }
