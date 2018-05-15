@@ -11,6 +11,7 @@ class Reset extends Component {
   reset (evt) {
     evt.preventDefault();
 
+    const token = this.props.match.params.token;
     const password = this.password.value;
     const passwordConfirm = this.passwordConfirm.value;
 
@@ -28,7 +29,7 @@ class Reset extends Component {
       .catch(err => console.error(err));
   }
 
-  async performReset () {
+  async performReset (password, token) {
     const response = await fetch(`${Constants.AUTH_URL}/local/account/reset/reset-password?token=${token}`, {
       method: 'POST',
       headers: {
@@ -54,7 +55,7 @@ class Reset extends Component {
     }
 
     // password changed
-    this.props.toasting(data.message);
+    this.props.toasting([data.message]);
   }
 
   render () {

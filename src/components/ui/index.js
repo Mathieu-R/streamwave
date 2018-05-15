@@ -64,6 +64,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
   width: 100%;
   max-width: ${props => props.theme.mobile};
   margin: 0 15px;

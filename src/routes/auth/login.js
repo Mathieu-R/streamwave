@@ -1,9 +1,14 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
+import styled from 'styled-components';
+import { Container as UIContainer, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import TopBarBack from '../../components/topbar-back';
 import Constants from '../../constants';
+
+const Container = styled(UIContainer)`
+  flex-direction: column;
+`;
 
 import {
   toasting

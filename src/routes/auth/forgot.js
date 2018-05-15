@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import Constants from '../../constants';
 import styled from 'styled-components';
 import TopBarBack from '../../components/topbar-back';
-import { Container, Form, FormButton } from '../../components/ui';
+import { Container as UIContainer, Form, FormButton } from '../../components/ui';
+
+const Container = styled(UIContainer)`
+  flex-direction: column;
+`;
 
 import {
   toasting

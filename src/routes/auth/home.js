@@ -129,6 +129,11 @@ class Auth extends Component {
             password: credentials.password
           })
         });
+
+        // TODO: maybe fix ?
+        const data = await response.json();
+        localStorage.setItem('streamwave-token', data.token);
+        this.props.history.push('/');
         return;
       }
 

@@ -23,7 +23,10 @@ self.onfetch = event => {
 
   const url = new URL(event.request.url);
 
-  // TODO: handle google avatar
+  // handle google avatar
+  if (url.hostname.contains('googleusercontent.com')) {
+    staleWhileRevalidate(event);
+  }
 
   // api call
   if (url.hostname === 'api.streamwave.be') {
