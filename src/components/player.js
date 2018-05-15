@@ -286,20 +286,7 @@ class Player extends Component {
 
   onChromecastClick () {
     const {chromecasting} = this.props;
-    const data = {
-      type: 'song',
-      artist: this.props.artist,
-      title: this.props.title,
-      coverURL: this.props.coverURL,
-      track: this.props.track,
-      currentTime: this.props.currentTime,
-      duration: this.props.duration,
-      playing: this.props.playing,
-      primaryColor: this.props.primaryColor,
-      manifestURL: this.props.manifestURL
-    };
-
-    this.props.chromecast({chromecasting, data});
+    this.props.chromecast({chromecasting});
   }
 
   onShuffleClick (evt) {

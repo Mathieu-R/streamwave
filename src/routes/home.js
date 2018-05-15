@@ -358,7 +358,7 @@ class Home extends Component {
     });
   }
 
-  chromecast ({chromecasting, data}) {
+  chromecast ({chromecasting}) {
     if (chromecasting) {
       this.chromecaster.stop();
       return;
@@ -371,7 +371,7 @@ class Home extends Component {
     // return;
 
     this.chromecaster.cast().then(_ => {
-      this.chromecaster.send(data);
+      this.chromecaster.sendTrackInformations();
     }).catch(err => console.error(err));
   }
 

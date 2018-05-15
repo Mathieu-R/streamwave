@@ -37,7 +37,7 @@ class Chromecaster {
       this.updateChromecastButtonDisplay({available: available});
 
       availability.onchange = evt => {
-        this.updateChromecastButtonDisplay({available: evt.value});
+        this.updateChromecastButtonDisplay({available: evt.target.value});
       }
     }).catch(_ => {
       // availibility monitoring is not available on that platform
@@ -111,6 +111,21 @@ class Chromecaster {
       //   this.reconnect(id);
       // }
     });
+  }
+
+  sendTrackInformations () {
+    const state = store.getState();
+    const data = {
+      type: 'song',
+      artist: state.player.artist,
+      album: state.player.album,
+      track: state.player.track,
+      currentTime: state.player.currentTime,
+      playing: state.player.playing,
+      primaryColor: state.player.primaryColor
+    };
+    console.log(data.track);
+    this.send(data);
   }
 
   send (data) {

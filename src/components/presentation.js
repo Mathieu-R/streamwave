@@ -106,18 +106,18 @@ class Presentation extends Component {
 
     this.updateTime = this.updateTime.bind(this);
 
-    this.state = {
-      coverURL: 'ability/ability.jpg',
-      artist: 'Borrtex',
-      album: 'Ability',
-      title: 'Ability',
-      duration: 353,
-      playing: true,
-      currentTime: 7.82,
-      totalTime: 153,
-      primaryColor: {r:117, g:118, b:119},
-      manifestURL: 'ability/01-1451113-Borrtex-Ability/manifest-full.mpd'
-    }
+    // this.state = {
+    //   coverURL: 'ability/ability.jpg',
+    //   artist: 'Borrtex',
+    //   album: 'Ability',
+    //   title: 'Ability',
+    //   duration: 353,
+    //   playing: true,
+    //   currentTime: 7.82,
+    //   totalTime: 153,
+    //   primaryColor: {r:117, g:118, b:119},
+    //   manifestURL: 'ability/01-1451113-Borrtex-Ability/manifest-full.mpd'
+    // }
   }
 
   componentDidMount () {
@@ -169,7 +169,7 @@ class Presentation extends Component {
     // listen for messages event
     // we give all the informations about media by there
     // no redux store here
-    connection.onmessage = async evt => {
+    connection.onmessage = evt => {
       const data = JSON.parse(evt.data);
       const {type} = data;
 
@@ -177,7 +177,7 @@ class Presentation extends Component {
 
       if (type === 'song') {
         this.setState(data);
-        this.listen(data.manifestURL);
+        this.listen(data.track.manifestURL);
         return;
       }
 
@@ -202,28 +202,28 @@ class Presentation extends Component {
   }
 
   render ({}, {
-    coverURL, title, artist, album, duration,
-    playing, currentTime, totalTime, primaryColor
+    artist, album, track,
+    currentTime, playing, primaryColor
   }) {
     return (
       <Container>
         <CoverContainer background={primaryColor}>
           <Cover>
-            <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
+            <Artwork src={track.coverURL && `${Constants.CDN_URL}/${track.coverURL}`} alt="cover artwork" />
           </Cover>
         </CoverContainer>
           <Footer>
             <ProgressWrapper>
-              <ProgressBar duration={duration} currentTime={currentTime} />
+              <ProgressBar duration={track.duration} currentTime={currentTime} />
             </ProgressWrapper>
             <AllInfos>
               <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
               <Infos>
-                <Title>{title}</Title>
+                <Title>{track.title}</Title>
                 <Artist>{artist}</Artist>
                 <Album>{album}</Album>
               </Infos>
-              <TotalTime>{formatDuration(totalTime)}</TotalTime>
+              <TotalTime>{formatDuration(track.duration)}</TotalTime>
             </AllInfos>
           </Footer>
         <audio preload="metadata" ref={audio => this.audio = audio} onTimeUpdate={this.updateTime}></audio>
