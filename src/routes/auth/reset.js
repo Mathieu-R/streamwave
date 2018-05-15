@@ -1,6 +1,11 @@
 import { h, Component } from 'preact';
+import { connect } from 'react-redux';
 import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
+
+const mapDispatchToProps = dispatch => ({
+  toasting: (message, duration) => dispatch(toasting(message, duration))
+});
 
 class Reset extends Component {
   constructor () {
@@ -79,4 +84,4 @@ class Reset extends Component {
   }
 }
 
-export default Reset;
+export default connect(null, mapDispatchToProps)(Reset);
