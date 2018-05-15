@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../../constants';
 import styled from 'styled-components';
+import TopBarBack from '../../components/topbar-back';
 import { Container, Form, FormButton } from '../../components/ui';
 
 import {
@@ -73,15 +74,16 @@ class Forgot extends Component {
   render () {
     return (
       <Container>
-      <Form onSubmit={this.sendPasswordChangeEmail}>
-        <InputContainer>
-          <Label htmlFor="email">E-mail</Label>
-          <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
-        </InputContainer>
-        <FormButton aria-label="send email to change password">
-          Envoyer un e-mail de changement de mot de passe
-        </FormButton>
-      </Form>
+        <TopBarBack url='/auth' />
+        <Form onSubmit={this.sendPasswordChangeEmail}>
+          <InputContainer>
+            <Label htmlFor="email">E-mail</Label>
+            <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
+          </InputContainer>
+          <FormButton aria-label="send email to change password">
+            Envoyer un e-mail de changement de mot de passe
+          </FormButton>
+        </Form>
       </Container>
     );
   }

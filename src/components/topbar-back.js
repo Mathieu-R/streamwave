@@ -9,10 +9,10 @@ class TopBarBack extends Component {
     return false;
   }
 
-  render () {
+  render ({url}) {
     return (
       <TopBarContainer>
-        <Link to="/">
+        <Link to={url}>
           <TopBarButton role="button" src={arrow} alt="arrow back to home" />
         </Link>
         <TopBarTitle>

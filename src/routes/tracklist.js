@@ -273,7 +273,7 @@ class TrackList extends Component {
     if (tracks === undefined) return null;
     return (
       <Container>
-        <TopBarBack />
+        <TopBarBack url='/' />
         <Infos>
           <InfosWrapper>
             {coverURL && <Cover alt="cover" src={`${Constants.CDN_URL}/${coverURL}`} />}

@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
+import TopBarBack from '../../components/topbar-back';
 import Constants from '../../constants';
 
 import {
@@ -85,6 +86,7 @@ class Login extends Component {
   render () {
     return (
       <Container>
+        <TopBarBack url='/auth' />
         <Form onSubmit={this.login}>
           <InputWrapper>
             <Label htmlFor="email">E-mail</Label>
