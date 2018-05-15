@@ -24,7 +24,7 @@ self.onfetch = event => {
   const url = new URL(event.request.url);
 
   // handle google avatar
-  if (url.hostname.contains('googleusercontent.com')) {
+  if (url.hostname.includes('googleusercontent.com')) {
     staleWhileRevalidate(event);
   }
 
