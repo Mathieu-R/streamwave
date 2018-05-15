@@ -67,7 +67,7 @@ class Forgot extends Component {
 
     // email sent, check it to change your password
     const data = await response.json();
-    this.props.toasting(data.message);
+    this.props.toasting([data.message]);
   }
 
   render () {
