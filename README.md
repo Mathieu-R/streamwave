@@ -23,3 +23,13 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 ### Notes
 Background Fetch : 
 I noticed that Background Fetch works in chrome mobile with `experimental web platform features` flag on.
+
+### Usage
+
+You need these 2 API to make the app work.
+- https://github.com/Mathieu-R/streamwave-auth
+- https://github.com/Mathieu-R/streamwave-library
+
+```
+npm install && npm run start
+```
