@@ -6,7 +6,7 @@ const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 50px;
   width: 100%;
   margin: 10px 0;
 `;
@@ -15,11 +15,12 @@ const Input = styled.input`
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
   height: 50px;
   margin: 0;
   opacity: 0;
-  transform: translateY(-50%);
+  /*transform: translateY(-50%);*/
 `;
 
 const Track = styled.div`

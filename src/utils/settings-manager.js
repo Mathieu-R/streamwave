@@ -1,8 +1,25 @@
 import { set, get } from 'idb-keyval';
 
 class SettingsManager {
+  // Firefox need a constructor !
+  // even if it is empty
+  // otherwise class silently fails
+  constructor () {}
+
   static get IDB_KEY () {
     return 'streamwave-settings';
+  }
+
+  static get INITIAL_SETTINGS () {
+    const settings = {};
+
+    settings['fade'] = 0;
+    settings['download-mobile-network'] = false;
+    settings['download-quality'] = 256;
+    settings['limit-data'] = false;
+    settings['data-max'] = 0;
+
+    return settings;
   }
 
   async init () {
@@ -11,16 +28,7 @@ class SettingsManager {
       return;
     }
 
-    settings = {};
-
-    settings['fade'] = 0;
-    settings['equalize-volume'] = false;
-    settings['equalizer'] = 'none';
-    settings['download-mobile-network'] = false;
-    settings['download-quality'] = 256;
-    settings['limit-data'] = false;
-    settings['data-max'] = 0;
-
+    settings = SettingsManager.INITIAL_SETTINGS;
     return set(SettingsManager.IDB_KEY, settings);
   }
 
@@ -37,6 +45,11 @@ class SettingsManager {
     const settings = await get(SettingsManager.IDB_KEY);
     settings[key] = value;
     return set(SettingsManager.IDB_KEY, settings);
+  }
+
+  async clear () {
+    await set(SettingsManager.IDB_KEY, SettingsManager.INITIAL_SETTINGS);
+    return SettingsManager.INITIAL_SETTINGS;
   }
 }
 

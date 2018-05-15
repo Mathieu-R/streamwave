@@ -1,19 +1,26 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
-import pure from 'recompose/pure'
 import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 import arrow from '../assets/svg/arrow.svg';
 
-const TopBarBack = props => (
-    <TopBarContainer>
-      <Link to="/">
-        <TopBarButton role="button" src={arrow} alt="arrow back to home" />
-      </Link>
-      <TopBarTitle>
-        Streamwave
-      </TopBarTitle>
-    </TopBarContainer>
-);
+class TopBarBack extends Component {
+  shouldComponentUpdate () {
+    return false;
+  }
 
-export default pure(TopBarBack);
+  render ({url}) {
+    return (
+      <TopBarContainer>
+        <Link to={url}>
+          <TopBarButton role="button" src={arrow} alt="arrow back to home" />
+        </Link>
+        <TopBarTitle>
+          Streamwave
+        </TopBarTitle>
+      </TopBarContainer>
+    )
+  }
+}
+
+export default TopBarBack;

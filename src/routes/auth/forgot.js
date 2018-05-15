@@ -2,7 +2,12 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../../constants';
 import styled from 'styled-components';
-import { Container, Form, FormButton } from '../../components/ui';
+import TopBarBack from '../../components/topbar-back';
+import { Container as UIContainer, Form, FormButton } from '../../components/ui';
+
+const Container = styled(UIContainer)`
+  flex-direction: column;
+`;
 
 import {
   toasting
@@ -67,21 +72,22 @@ class Forgot extends Component {
 
     // email sent, check it to change your password
     const data = await response.json();
-    this.props.toasting(data.message);
+    this.props.toasting([data.message]);
   }
 
   render () {
     return (
       <Container>
-      <Form onSubmit={this.sendPasswordChangeEmail}>
-        <InputContainer>
-          <Label htmlFor="email">E-mail</Label>
-          <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
-        </InputContainer>
-        <FormButton aria-label="send email to change password">
-          Envoyer un e-mail de changement de mot de passe
-        </FormButton>
-      </Form>
+        <TopBarBack url='/auth' />
+        <Form onSubmit={this.sendPasswordChangeEmail}>
+          <InputContainer>
+            <Label htmlFor="email">E-mail</Label>
+            <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
+          </InputContainer>
+          <FormButton aria-label="send email to change password">
+            Envoyer un e-mail de changement de mot de passe
+          </FormButton>
+        </Form>
       </Container>
     );
   }

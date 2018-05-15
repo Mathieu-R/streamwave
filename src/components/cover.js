@@ -53,23 +53,6 @@ const Artwork = styled.img`
   opacity: 1;
 `;
 
-const Play = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: url(${playIcon}) no-repeat no-repeat center;
-  width: 48px;
-  height: 48px;
-  border: none;
-  opacity: 0;
-  transition: opacity .2s cubic-bezier(0, 0, 0.3, 1);
-
-  ${Artwork}:hover &${Play}{
-    opacity: 1;
-  }
-`;
-
 const InfosContainer = styled.div`
   height: 50px;
   margin-top: 10px;

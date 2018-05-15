@@ -23,7 +23,10 @@ self.onfetch = event => {
 
   const url = new URL(event.request.url);
 
-  // TODO: handle google avatar
+  // handle google avatar
+  if (url.hostname.contains('googleusercontent.com')) {
+    staleWhileRevalidate(event);
+  }
 
   // api call
   if (url.hostname === 'api.streamwave.be') {
@@ -145,6 +148,7 @@ const downloadInForeground = async () => {
         body: 'Vous êtes sur un réseau mobile.\n Autorisez le téléchargement sur ce type de réseau dans les paramètres ou activez le Wifi.',
         data: {type: 'settings'}
       });
+      // make promise reject to trigger a retry
       return Promise.reject();
     }
 
@@ -204,7 +208,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
 
     //console.log(`ranged response from service-worker from ${start} to ${end}`);
 
-    slicedResponse.headers.set('x-from-cache', 'true');
+    slicedResponse.headers.set('X-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
     return slicedResponse;

@@ -30,7 +30,7 @@ const SearchBar = styled.input`
   background: #2D3535;
   color: #FFF;
   font-size: 16px;
-  transform: scale(${props => props.open ? 1 : 0.97});
+  transform: scale(0.97);
   transition: transform .2s ease-out;
   will-change: transform;
 `;
@@ -43,23 +43,14 @@ class Search extends Component {
     this.onCloseSearchBar = this.onCloseSearchBar.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.search = this.search.bind(this);
-
-    this.state = {
-      searchBarOpen: false
-    }
   }
 
   onOpenSearchBar () {
-
-    this.setState({
-      searchBarOpen: true
-    });
+    this.searchBar.style.transform = `scale(1)`;
   }
 
   onCloseSearchBar () {
-    this.setState({
-      searchBarOpen: false
-    });
+    this.searchBar.style.transform = 'scale(0.97)';
   }
 
   onInputChange (evt) {
@@ -88,10 +79,10 @@ class Search extends Component {
           <SearchBar
             type="text"
             placeholder="Rechercher"
+            innerRef={searchBar => this.searchBar = searchBar}
             onInput={this.onInputChange}
             onClick={this.onOpenSearchBar}
             onBlur={this.onCloseSearchBar}
-            open={searchBarOpen}
           />
         </SearchBarContainer>
       </Container>

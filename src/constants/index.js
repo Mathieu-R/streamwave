@@ -61,6 +61,10 @@ class Constants {
     return ('connection' in navigator && navigator.connection.type !== undefined);
   }
 
+  static get SUPPORT_STORAGE_API () {
+    return ('storage' in navigator);
+  }
+
   static get SUPPORT_BACKGROUND_SYNC () {
     return ('serviceWorker' in navigator && 'SyncManager' in window);
   }

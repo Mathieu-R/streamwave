@@ -6,11 +6,12 @@ import {
 } from '../store/player';
 
 class Chromecaster {
-  constructor (url) {
+  constructor () {
     this.request = null;
     this.connection = null;
 
-    this.cast(url);
+    this.send = this.send.bind(this);
+    this.stop = this.stop.bind(this);
   }
 
   static get CLOSED_STATE () {
@@ -21,32 +22,74 @@ class Chromecaster {
     return 'chromecast_presentation_id';
   }
 
-  async onConnectionAvailable (evt) {
-    console.log(evt);
+  async setConnection (connection) {
     // 1. disconnect from existing presentation if any
-    if (this.connection && this.connection !== evt.connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
+    if (this.connection && this.connection !== connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
       this.connection.close();
     }
 
     // 2. set the connection, save the presentation id in cache in order to allow reconnection
-    this.connection = evt.connection;
-    await set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id);
+    this.connection = connection;
+    await set(Chromecaster.CHROMECAST_IDB_KEY, connection.id);
 
     // event listeners
-    this.connection.onclose = _ => this.connection = null;
+    this.connection.onclose = _ => {
+      this.connection = null;
+      this.updateUI({chromecasting: false});
+    }
+
     this.connection.onterminate = _ => {
-      del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => this.connection = null);
+      del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
+        this.connection = null;
+        this.updateUI({chromecasting: false});
+      });
     }
   }
 
-  cast (url) {
-    this.request = new PresentationRequest([url]);
-    navigator.presentation.defaultRequest = this.request;
-    navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
+  updateUI ({chromecasting}) {
+    return store.dispatch(setChromecastStatus({chromecasting}));
+  }
 
-    return this.request.start().then(() => {
-      store.dispatch(setChromecastStatus({chromecasting: true}));
-    }).catch(err => console.error(err));
+  cast (url) {
+    return new Promise(async (resolve) => {
+      this.request = new PresentationRequest(url);
+      navigator.presentation.defaultRequest = this.request;
+      navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
+
+      // monitor receiver availability
+      this.request.getAvailability().then(availability => {
+        const available = availability.value;
+        this.updateUI({chromecasting: available});
+
+        availability.onchange = evt => {
+          this.updateUI({chromecasting: evt.value});
+        }
+      }).catch(_ => {
+        // availibility monitoring is not available on that platform
+        // assuming receiver is available
+        this.updateUI({chromecasting: true});
+      });
+
+      await this.request.start();
+
+      // wait until connection is available
+      // otherwise we send data before connection is ready
+      this.request.onconnectionavailable = async evt => {
+        await this.setConnection(evt.connection);
+        resolve();
+      }
+
+      // try to reconnect to old presentation
+      // const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
+      // let connection;
+
+      // if (!id) {
+      //   console.log(this.request);
+      //   this.request.start().then(connection => this.connection = connection);
+      // } else {
+      //   this.reconnect(id);
+      // }
+    });
   }
 
   send (data) {
@@ -55,17 +98,12 @@ class Chromecaster {
       return;
     }
 
+    console.log(this.connection);
     this.connection.send(JSON.stringify(data));
   }
 
-  reconnect () {
-    get(Chromecaster.CHROMECAST_IDB_KEY).then(id => {
-      if (!id) {
-        return;
-      }
-
-      return navigator.presentation.defaultRequest.reconnect(id).then(this.onConnectionAvailable);
-    });
+  reconnect (id) {
+    return navigator.presentation.defaultRequest.reconnect(id);
   }
 
   stop () {
@@ -73,10 +111,8 @@ class Chromecaster {
       return;
     }
 
-    // stop() still allow to reconnect unlike terminate()
-    return this.connection.stop().then(() => {
-      store.dispatch(setChromecastStatus({chromecasting: false}));
-    });
+    // close() still allow to reconnect unlike terminate()
+    this.connection.close();
   }
 
   /* Remote Playback API - not available in chrome desktop for now */
