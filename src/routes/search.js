@@ -218,7 +218,7 @@ class Search extends Component {
     const {artist, album, coverURL, manifestURL, playlistHLSURL} = track;
 
     const index = tracks.findIndex(t => t.title === track.title);
-    this.props.setQueue(queue);
+    this.props.setQueue(tracks);
 
     this.props.setTrack({
       artist,
