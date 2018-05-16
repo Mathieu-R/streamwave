@@ -1,4 +1,6 @@
 import { get, set, del } from 'idb-keyval';
+import { isMobile } from './index';
+import Constants from '../constants';
 import store from '../store';
 
 import {
@@ -7,14 +9,28 @@ import {
 } from '../store/player';
 
 class Chromecaster {
-  constructor (url) {
+  constructor (url, audio) {
     this.connection = null;
 
     this.send = this.send.bind(this);
     this.stop = this.stop.bind(this);
 
-    this.request = new PresentationRequest(url);
-    this.monitorAvailability();
+    if (isMobile() && Constants.SUPPORT_REMOTE_PLAYBACK_API) {
+      // presentation api is only supported on mobile
+      // with the chrome sdk + url of type cast:<cast-id>
+      // don't like this approach
+      // in that case => switch on Remote Playback API if supported
+      this.monitorRemoteAvailability(audio);
+    } else if (Constants.SUPPORT_PRESENTATION_API) {
+      // on desktop, if presentation api is supported, use it.
+      this.request = new PresentationRequest(url);
+      this.monitorPresentationAvailability();
+    } else {
+      // if nothing is supported
+      // remove chromecast button
+      this.updateChromecastButtonDisplay({available: false});
+    }
+
     //navigator.presentation.defaultRequest = this.request;
     //navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
   }
@@ -27,7 +43,7 @@ class Chromecaster {
     return 'chromecast_presentation_id';
   }
 
-  monitorAvailability () {
+  monitorPresentationAvailability () {
     // monitor receiver availability
     // not if we are connected
     // useful to know if we shoud show/hide
@@ -89,7 +105,21 @@ class Chromecaster {
     return store.dispatch(setChromecastStatus({chromecasting}));
   }
 
-  cast () {
+  // cast audio
+  // through Presentation API
+  // or Remote Playback API
+  // presenting: true => presentation api chosen
+  // presenting: false => remote playback api chosen
+  cast (audio) {
+    if (isMobile()) {
+      // on mobile remote audio
+      return this.remote(audio).then(() => ({presenting: false}));
+    }
+
+    this.present().then(() => ({presenting: true}));
+  }
+
+  present () {
     return new Promise(async (resolve) => {
       await this.request.start();
 
@@ -152,13 +182,38 @@ class Chromecaster {
 
   /* Remote Playback API - not available in chrome desktop for now */
 
-  watchRemoteAvailability (audio) {
-    return new Promise(resolve => {
-      return audio.remote.watchAvailability(available => resolve(available));
-    });
+  monitorRemoteAvailability (audio) {
+    return audio.remote.watchAvailability(available => {
+      this.updateChromecastButtonDisplay({available});
+    }).catch(_ => {
+      // same logic as for presentation api
+      // assume remote device is available
+      this.updateChromecastButtonDisplay({available: true});
+    })
   }
 
   remote (audio) {
+    audio.remote.onconnecting = _ => {
+      this.updateUI({chromecasting: true});
+      // do not need to track device availibility anymore
+      audio.remote.cancelWatchAvailibility();
+    }
+
+    // from Remote Playback API spec.
+    // handles both 'connecting' and 'connected' state. Calling more than once
+    // is a no-op.
+    audio.remote.onconnect = _ => {
+      this.updateUI({chromecasting: true});
+      // do not need to track device availibility anymore
+      audio.remote.cancelWatchAvailibility();
+    }
+
+    audio.remote.ondisconnect = _ => {
+      this.updateUI({chromecasting: true});
+      // track device availability again
+      this.monitorRemoteAvailability();
+    }
+
     return audio.remote.prompt();
   }
 }
