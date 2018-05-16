@@ -116,7 +116,7 @@ class Chromecaster {
       return this.remote(audio).then(() => ({presenting: false}));
     }
 
-    this.present().then(() => ({presenting: true}));
+    return this.present().then(() => ({presenting: true}));
   }
 
   present () {

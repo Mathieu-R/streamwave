@@ -19,7 +19,7 @@ const spinner = keyframes`
   }
 `;
 
-const Loader = styled.div`
+export const Loader = styled.div`
   display: inline-block;
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left-color: ${props => props.color};

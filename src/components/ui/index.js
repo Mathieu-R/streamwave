@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const Button = styled.button`
@@ -111,3 +111,13 @@ export const Overlay = styled.div`
     will-change: opacity
   }
 `;
+
+export const fade = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
