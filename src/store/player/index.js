@@ -297,12 +297,11 @@ export default (state = {}, action) => {
         shuffle: !state.shuffle
       }
 
-    case SET_PLAYING_STATUS: {
+    case SET_PLAYING_STATUS:
       return {
         ...state,
         playing: action.playing
       }
-    }
 
     case SET_CHROMECAST_AVAILABLE:
       return {

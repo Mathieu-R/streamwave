@@ -392,7 +392,9 @@ class Home extends Component {
             render={props => <TrackList listen={this.listen} type='playlist' {...props} />}
           />
           <Route exact path="/playlist" component={Playlists} />
-          <Route exact path="/search" component={Search} />
+          <Route exact path="/search"
+            render={props => <Search listen={this.listen} {...props} />}
+          />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />
