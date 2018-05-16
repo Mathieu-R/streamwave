@@ -106,6 +106,9 @@ class Home extends Component {
     this.source = null;
 
     this.chromecaster = null;
+    // notice if currently presenting
+    // through Presentation API
+    this.presenting = false;
     this.settings = new SettingsManager();
 
     this.audio = null;
@@ -220,7 +223,7 @@ class Home extends Component {
   }
 
   initPresentation () {
-    this.chromecaster = new Chromecaster(Constants.PRESENTATION_URL);
+    this.chromecaster = new Chromecaster(Constants.PRESENTATION_URL, this.audio.base);
   }
 
   /**
@@ -313,7 +316,8 @@ class Home extends Component {
   changeVolume (volume) {
     this.audio.base.volume = volume / 100;
 
-    if (this.chromecaster) {
+    // only if we use presentation api
+    if (this.presenting) {
       // change volume in chromecast
       this.chromecaster.send({
         type: 'volume',
@@ -325,7 +329,8 @@ class Home extends Component {
   seek (time) {
     this.audio.base.currentTime = time;
 
-    if (this.chromecaster) {
+    // only if we use presentation api
+    if (this.presenting) {
       this.seekInChromecast(time);
     }
   }
@@ -364,14 +369,13 @@ class Home extends Component {
       return;
     }
 
-    // this.audio.base.remote.prompt()
-    //   .then(evt => console.log(evt))
-    //   .catch(err => console.error(err));
-
-    // return;
-
-    this.chromecaster.cast().then(_ => {
-      this.chromecaster.sendTrackInformations();
+    this.chromecaster.cast(this.audio.base).then(({presenting}) => {
+      // if we cast through presentation api
+      // send information for the receiver
+      if (presenting) {
+        this.chromecaster.sendTrackInformations();
+      }
+      this.presenting = presenting;
     }).catch(err => console.error(err));
   }
 
@@ -388,7 +392,9 @@ class Home extends Component {
             render={props => <TrackList listen={this.listen} type='playlist' {...props} />}
           />
           <Route exact path="/playlist" component={Playlists} />
-          <Route exact path="/search" component={Search} />
+          <Route exact path="/search"
+            render={props => <Search listen={this.listen} {...props} />}
+          />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />

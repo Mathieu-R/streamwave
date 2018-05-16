@@ -30,3 +30,8 @@ export function getRGBCssFromObject ({r, g, b}) {
 export function pluralize (string, len) {
   return (len > 1 ? string + 's' : string);
 }
+
+// user-agent sniffing, yeah, sure !
+export function isMobile () {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}

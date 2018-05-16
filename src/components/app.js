@@ -10,10 +10,10 @@ import Toast from './toast';
 import Auth from '../routes/auth';
 
 const Home = Loadable({
-  loader: () => import('../routes/home' /* webpackPrefetch: true, webpackChunkName: "route-presentation" */),
+  loader: () => import('../routes/home' /* webpackPrefetch: true, webpackChunkName: "route-home" */),
   loading: Loading,
   timeout: 10000
-})
+});
 
 const Presentation = Loadable({
   loader: () => import('./presentation' /* webpackChunkName: "route-presentation" */),
