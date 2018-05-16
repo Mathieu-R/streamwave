@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Loader } from '../components/loading';
 import { fade } from '../components/ui';
 import Constants from '../constants';
+import { formatDuration } from '../utils';
 
 const Container = styled.div`
   display: flex;
@@ -52,6 +53,24 @@ const SearchResults = styled.section`
   margin-bottom: 100px;
 `;
 
+const AlbumsHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+  height: 40px;
+  color: #000;
+`;
+
+const TracksHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+  height: 40px;
+  color: #000;
+`;
+
 const Cover = styled.img`
   width: 100%;
   height: 100%;
@@ -60,8 +79,9 @@ const Cover = styled.img`
 
 const Infos = styled.div`
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   color: #FFF;
 `;
 
@@ -69,7 +89,7 @@ const Artist = styled.div`
 
 `;
 
-const Title = styled.div``;
+const Album = styled.div``;
 
 const LineResults = styled(Link)`
   display: grid;
@@ -78,8 +98,41 @@ const LineResults = styled(Link)`
   height: 50px;
   font-weight: 400;
   grid-gap: 20px;
+  margin: 5px 0;
   padding: 0 20px;
   animation: ${fade} linear .3s;
+`;
+
+const TrackResult = styled.button`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  font-weight: 400;
+  background: none;
+  border: none;
+  font-size: 15px;
+  padding: 0 20px;
+  animation: ${fade} linear .3s;
+`;
+
+const TrackTitle = styled.div``;
+const TrackInline = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TrackArtist = styled.div`
+  margin: 0 7px;
+`;
+
+const TrackAlbum = styled.div`
+  margin: 0 7px;
+`;
+
+const Duration = styled.div`
+
 `;
 
 const Artwork = styled.div``;
@@ -95,7 +148,8 @@ class Search extends Component {
 
     this.state = {
       loading: false,
-      results: []
+      albums: [],
+      tracks: []
     };
   }
 
@@ -124,11 +178,8 @@ class Search extends Component {
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       }
     }).then(response => response.json())
-      .then(({results}) => {
-        if (results.length === 0) {
-          return this.setState({noResults: true});
-        }
-        return this.setState({results});
+      .then(({results: {albums, tracks}}) => {
+        return this.setState({albums, tracks});
       })
       .then(_ => {
         clearTimeout(timeout);
@@ -143,22 +194,49 @@ class Search extends Component {
       });
   }
 
-  renderResults (results) {
+  renderResults (albums, tracks) {
     return (
-      results.map(result => (
-        <LineResults key={result._id} to={`/album/${result._id}`}>
-          <Cover src={`${Constants.CDN_URL}/${result.coverURL}`}></Cover>
+      <div>
+        {albums.length > 0 && <AlbumsHeader>Albums</AlbumsHeader>}
+        {this.renderAlbums(albums)}
+        {tracks.length > 0 && <TracksHeader>Pistes</TracksHeader>}
+        {this.renderTracks(tracks)}
+      </div>
+    )
+  }
+
+  renderAlbums (albums) {
+    return (
+      albums.map(album => (
+        <LineResults key={album._id} to={`/album/${album._id}`}>
+          <Cover src={`${Constants.CDN_URL}/${album.coverURL}`}></Cover>
           <Infos>
-            <Artist>{result.artist}</Artist>
-            <Title>{result.title}</Title>
+            <Artist>{album.artist}</Artist>
+            <Album>{album.title}</Album>
           </Infos>
         </LineResults>
       ))
     );
   }
 
-  render ({}, {loading, noResults, results}) {
-    console.log(loading, results);
+  renderTracks (tracks) {
+    console.log(tracks);
+    return (
+      tracks.map(track => (
+        <TrackResult>
+          <Infos>
+            <TrackTitle>{track.title}</TrackTitle>
+            <TrackInline><TrackArtist>{track.artist}</TrackArtist>•<TrackAlbum>{track.album}</TrackAlbum></TrackInline>
+          </Infos>
+          <Duration>
+            {formatDuration(track.duration)}
+          </Duration>
+        </TrackResult>
+      ))
+    )
+  }
+
+  render ({}, {loading, albums, tracks}) {
     return (
       <Container>
         <SearchBarContainer>
@@ -176,10 +254,7 @@ class Search extends Component {
             loading ?
             <Center><Loader color='#FFF' /></Center>
             :
-            noResults && results.length === 0 ?
-            <Center><div>Aucun résultats</div></Center>
-            :
-            this.renderResults(results)
+            this.renderResults(albums, tracks)
           }
         </SearchResults>
       </Container>
