@@ -85,7 +85,6 @@ class ProgressBar extends Component {
       return;
     }
 
-    console.log(props);
     const clampedPosition = props.currentTime / props.duration;
     requestAnimationFrame(() => this.update(clampedPosition));
   }

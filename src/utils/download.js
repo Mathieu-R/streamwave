@@ -79,10 +79,7 @@ export async function removeTracklistFromCache (tracklist, id) {
     ];
   });
 
-  console.log(toRemoveFromCache);
   const flattened = flatten(toRemoveFromCache);
-  console.log(flattened);
-
   await Promise.all(flattened);
   // or set(id, {downloaded: false}) ?
   return del(id);
