@@ -81,6 +81,7 @@ const ControlsContainer = styled.div`
 `;
 
 const Button = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   border: none;

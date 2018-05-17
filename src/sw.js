@@ -56,21 +56,20 @@ self.onfetch = event => {
 }
 
 self.onbackgroundfetched = event => {
-  console.log(event);
   event.waitUntil(async function () {
     // open the cache
     const cache = await caches.open(MUSIC_CACHE_NAME);
     // put the downloaded stuff in the cache
     await Promise.all(event.fetches.map(({request, response}) => cache.put(request, response)));
     // update UI. Yeah, there's an event for that !
-    event.updateUI('Tracklist downloaded');
+    event.updateUI('Tracklist téléchargée.');
   }());
 }
 
 self.onbackgroundfetchfail = event => {
   console.log(event);
   event.waitUntil(async function () {
-    event.updateUI('Tracklist download failed.');
+    event.updateUI('Erreur lors du téléchargement de la tracklist !');
   }());
 }
 
@@ -207,6 +206,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
     });
 
     //console.log(`ranged response from service-worker from ${start} to ${end}`);
+    console.log(response.headers.get('X-From-Cache'));
 
     slicedResponse.headers.set('X-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);

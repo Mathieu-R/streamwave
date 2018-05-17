@@ -12,13 +12,19 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] NodeJS    
 - [X] Basic auth + Google Oauth2     
 - [X] Credential Management API    
-- [ ] Presentation API (Chromecast) https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
+- [ ] Presentation API (Chromecast)    
+    https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
+    https://github.com/w3c/remote-playback/issues/117    
+    https://bugs.chromium.org/p/chromium/issues/detail?id=843965    
 - [X] Media Session API    
 - [X] Service Worker    
-- [X] Background Fetch https://bugs.chromium.org/p/chromium/issues/detail?id=825878
+- [X] Background Fetch    
+    https://bugs.chromium.org/p/chromium/issues/detail?id=825878     
 - [X] Background Sync     
 - [X] Median Cut 
 - [X] Track data volume    
+    https://github.com/google/shaka-player/issues/1416
+    https://github.com/google/shaka-player/issues/1439
 
 ### Notes
 Background Fetch : 

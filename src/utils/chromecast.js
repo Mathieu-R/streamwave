@@ -184,7 +184,7 @@ class Chromecaster {
 
   monitorRemoteAvailability (audio) {
     return audio.remote.watchAvailability(available => {
-      console.log(available);
+      console.log('remote available:', available);
       this.updateChromecastButtonDisplay({available});
     }).catch(_ => {
       // same logic as for presentation api

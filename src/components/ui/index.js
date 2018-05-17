@@ -112,6 +112,27 @@ export const Overlay = styled.div`
   }
 `;
 
+export const Ripple = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  transform: scale(0);
+  opacity: 0.9;
+  transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
+
+  &:hover, &:focus {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
 export const fade = keyframes`
   from {
     opacity: 0;
