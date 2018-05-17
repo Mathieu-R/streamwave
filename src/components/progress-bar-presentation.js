@@ -78,6 +78,14 @@ class ProgressBar extends Component {
       this.onResize();
     }
 
+    // sometimes this method fires
+    // even when not needed (e.g. in search page)
+    // should investigate why
+    if (props.currentTime === null || props.duration === null) {
+      return;
+    }
+
+    console.log(props);
     const clampedPosition = props.currentTime / props.duration;
     requestAnimationFrame(() => this.update(clampedPosition));
   }

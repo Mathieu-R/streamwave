@@ -190,7 +190,7 @@ class Search extends Component {
 
   search (term) {
     // show a spinner if loading is too long
-    const timeout = setTimeout(_ => this.setState({loading: true}), 500);
+    //const timeout = setTimeout(_ => this.setState({loading: true}), 500);
 
     fetch(`${Constants.API_URL}/search/${term}`, {
       headers: {
@@ -201,8 +201,8 @@ class Search extends Component {
         return this.setState({albums, tracks});
       })
       .then(_ => {
-        clearTimeout(timeout);
-        if (this.state.loading) {
+        if (this.state.albums.length > 0 || this.state.tracks.length > 0) {
+          //clearTimeout(timeout);
           this.setState({
             loading: false
           });

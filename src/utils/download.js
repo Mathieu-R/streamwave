@@ -67,7 +67,7 @@ export async function removeTracklistFromCache (tracklist, id) {
   const cache = await caches.open(MUSIC_CACHE_NAME);
   const keys = await cache.keys();
 
-  const toRemoveFromCache = flatten(tracklist.map(([audio256URL, manifestURL, playlistHLSURL]) => {
+  const toRemoveFromCache = tracklist.map(({audio256URL, manifestURL, playlistHLSURL}) => {
     // remove "-quality.mp4"
     const normalizedAudioURL = audio256URL.replace(/-[^-]*$/, '');
     // find request for that url
@@ -77,14 +77,19 @@ export async function removeTracklistFromCache (tracklist, id) {
       cache.delete(manifestURL),
       cache.delete(playlistHLSURL)
     ];
-  }));
+  });
 
-  await Promise.all(toRemoveFromCache);
+  console.log(toRemoveFromCache);
+  const flattened = flatten(toRemoveFromCache);
+  console.log(flattened);
+
+  await Promise.all(flattened);
   // or set(id, {downloaded: false}) ?
   return del(id);
 }
 
 // uses background fetch which is for now only available in chrome canary
+// or in chrome stable behind a flag (experimental web platform features)
 // https://github.com/WICG/background-fetch
 export async function downloadTracklistInBackground ({tracklist, album, cover, id}) {
   // get the active service-worker
@@ -96,10 +101,13 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   }
 
   // dispatch toasting so we inform the user in UI
-  store.dispatch(toasting(['Votre tracklist va être téléchargée en arrière-plan.', 'Vous pouvez fermer l\'application si vous le désirez.'], 5000));
+  store.dispatch(toasting([
+    'Votre tracklist va être téléchargée en arrière-plan.',
+    'Vous pouvez fermer l\'application si vous le désirez.'
+  ], 5000));
 
   // store the tracklist in idb in case we would lost internet connection
-  // not sure I need do that that
+  // not sure I need to do that
   //await set(`background-fetch-${id}`, tracklist);
 
   // background fetch options
