@@ -175,7 +175,7 @@ export function getDataVolumeDownloaded ({userId}) {
   }).catch(err => console.error(err));
 }
 
-export function track (responses, tracklistId) {
+export function trackDownload (responses, tracklistId) {
   let totalDownload, downloaded = 0;
 
   totalDownload = responses.reduce((total, response) => {
