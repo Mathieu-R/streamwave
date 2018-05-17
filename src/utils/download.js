@@ -36,7 +36,12 @@ export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistI
   const responses = await Promise.all(files.map(file => file.response));
   trackDownload(responses, tracklistId);
   const cache = await caches.open(MUSIC_CACHE_NAME);
-  return Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
+  await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
+
+  return store.dispatch(toasting([
+    'Tracklist téléchargée.',
+    'Vous pouvez désormais l\'écouter hors-ligne'
+  ], 5000));
 }
 
 export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
