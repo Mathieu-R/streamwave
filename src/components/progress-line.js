@@ -8,7 +8,7 @@ const ProgressLineContainer = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
-  height: 3px;
+  height: 5px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 5px;
   width: 100%;

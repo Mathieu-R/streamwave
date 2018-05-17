@@ -3,8 +3,12 @@ import { connect } from 'react-redux';
 import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
+import {
+  toasting
+} from '../../store/toast';
+
 const mapDispatchToProps = dispatch => ({
-  toasting: (message, duration) => dispatch(toasting(message, duration))
+  toasting: (messages, duration) => dispatch(toasting(messages, duration))
 });
 
 class Reset extends Component {
@@ -55,12 +59,13 @@ class Reset extends Component {
 
     // token invalid or expired
     if (response.status === 400) {
-      this.props.toasting(data.error);
+      this.props.toasting([data.error]);
       return;
     }
 
     // password changed
     this.props.toasting([data.message]);
+    this.props.history.push('/auth');
   }
 
   render () {
