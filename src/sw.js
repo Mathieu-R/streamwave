@@ -26,14 +26,22 @@ self.onfetch = event => {
   // handle google avatar
   if (url.hostname.includes('googleusercontent.com')) {
     staleWhileRevalidate(event);
+    return;
   }
 
-  // api call
-  if (url.hostname === 'api.streamwave.be') {
+   // network-first for playlists
+   if (url.hostname === 'api.streamwave.be' && url.pathname === '/v1/playlists') {
     // bail non-get request (e.g. POST to api)
     if (event.request.method !== 'GET') {
       return;
     }
+
+    networkFirst(event);
+    return;
+   }
+
+  // api call
+  if (url.hostname === 'api.streamwave.be') {
     // get something from the cache
     // then update it
     staleWhileRevalidate(event);
@@ -94,7 +102,35 @@ self.onnotificationclick = event => {
   clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
 }
 
-const staleWhileRevalidate = (event) => {
+const networkFirst = event => {
+  const {request} = event;
+  const fetched = fetch(request);
+  // perform a copy a fetched version
+  // as we could consume it twice (fetch + put in cache)
+  const fetchedClone = fetched.then(response => response.clone());
+
+  event.respondWith(async function () {
+    try {
+      const response = await fetched;
+      return response;
+    } catch (err) {
+      return caches.match(request);
+      console.error(err);
+    }
+  }());
+
+  event.waitUntil(async function () {
+    try {
+      const response = await fetchedClone;
+      const cache = await caches.open('streamwave-api');
+      cache.put(request, response);
+    } catch (err) {
+      console.error(err);
+    }
+  }());
+}
+
+const staleWhileRevalidate = event => {
   const {request} = event;
   const cached = caches.match(request);
   const fetched = fetch(request);
@@ -136,7 +172,7 @@ const staleWhileRevalidate = (event) => {
     } catch (err) {
       console.error(err);
     }
-  }())
+  }());
 }
 
 const downloadInForeground = async () => {

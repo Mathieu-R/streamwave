@@ -50,11 +50,11 @@ const NavBarLink = styled(NavLink).attrs({
   flex-grow: 1;
 
   &.${activeClassName} g, &.${activeClassName} svg {
-    fill: #4A90E2;
+    fill: #03A9F4;
   }
 
   &.${activeClassName} ${Title} {
-    color: #4A90E2;
+    color: #03A9F4;
   }
 `;
 
