@@ -34,7 +34,11 @@ export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistI
   // note: simple copy-paste from service-worker
   const files = await requests.map(request => ({request, response: fetch(request)}));
   const responses = await Promise.all(files.map(file => file.response));
-  trackDownload(responses, tracklistId);
+  // only track download if browser support readable streams (FF does not)
+  if (Constants.SUPPORT_STREAMS) {
+    trackDownload(responses, tracklistId);
+  }
+
   const cache = await caches.open(MUSIC_CACHE_NAME);
   await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
 

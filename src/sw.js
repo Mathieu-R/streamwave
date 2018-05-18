@@ -206,7 +206,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
     });
 
     //console.log(`ranged response from service-worker from ${start} to ${end}`);
-    console.log(response.headers.get('X-From-Cache'));
+    console.log(response.headers);
 
     slicedResponse.headers.set('X-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);

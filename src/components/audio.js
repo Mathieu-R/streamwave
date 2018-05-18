@@ -38,7 +38,8 @@ class Audio extends Component {
     // onTimeUpdate fires up even when no audio is played.
     if (!duration) return;
 
-    this.props.setCurrentTime(currentTime);
+    // trying rAF for smooth animation
+    requestAnimationFrame(_ => this.props.setCurrentTime(currentTime));
   }
 
   onLoadedMetadata (evt) {
