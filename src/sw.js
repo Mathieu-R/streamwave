@@ -77,7 +77,9 @@ self.onsync = event => {
   if (event.tag === 'foreground-download') {
     // TODO: delay bg-sync if we are on cellular network
     // and it is not allowed to download with that network
-    event.waitUntil(downloadInForeground())
+    event.waitUntil(downloadInForeground());
+  } else if (event.tag === 'bg-sync-add-to-playlist') {
+    event.waitUntil(uploadInForeground());
   }
 }
 
@@ -155,7 +157,8 @@ const downloadInForeground = async () => {
 
     // download each tracklist
     // feedback in ui
-    await Promise.all(toCache.map(async ({requests, tracklistId}) => {
+    // type = album or playlist
+    await Promise.all(toCache.map(async ({requests, tracklistId, type}) => {
       const files = await requests.map(request => ({request, response: fetch(request)}));
       const responses = await Promise.all(files.map(file => file.response));
 
@@ -168,12 +171,54 @@ const downloadInForeground = async () => {
         body: 'Accéder à la tracklist.',
         // usefull to redirect user when
         // he clicks on the notification
-        data: {type: 'album', id: tracklistId}
+        data: {type, id: tracklistId}
       });
     }));
 
     // clean bg-sync-queue
     await idbKeyval.set('bg-sync-queue', []);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+uploadInForeground = async () => {
+  try {
+    // get stuff to upload
+    const toUpload = await idbKeyval.get('bg-sync-add-to-playlist');
+
+    await Promise.all(toUpload.map(async ({playlistId, track, token}) => {
+      const response = await fetch(`https://api.streamwave.be/v1/playlist/${playlistId}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(track)
+      });
+
+      const data = await response.json();
+      let notificationMessage, error;
+
+      if (!data) {
+        error = true;
+        notificationMessage = 'Impossible d\'ajouter le titre.';
+      } else {
+        error = false;
+        notificationMessage = 'Titre ajouté à la playlist';
+      }
+
+      self.registration.showNotification(notificationMessage, {
+        // could show more infos.
+        body: error ? 'Veuillez réessayer' : 'Accéder à la playlist.',
+        // usefull to redirect user when
+        // he clicks on the notification
+        data: {type: 'playlist', id: playlistId}
+      });
+    }));
+
+    // clean bg-sync queue
+    await idbKeyval.set('bg-sync-add-to-playlist', []);
   } catch (err) {
     console.error(err);
   }

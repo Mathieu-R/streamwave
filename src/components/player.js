@@ -169,10 +169,21 @@ const Controls = styled.section`
 
 const CenterControls = styled(Button)`
   margin: 0 5px;
+  transition: 0.1s opacity linear;
+
+  &:hover, &:focus {
+    opacity: 0.7;
+  }
 `;
 
 const OutsideControls = styled(Button)`
   margin: 0 10px;
+
+  transition: 0.1s opacity linear;
+
+  &:hover, &:focus {
+    opacity: 0.7;
+  }
 `;
 
 const Shuffle = styled(OutsideControls)``;

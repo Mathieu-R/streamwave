@@ -209,7 +209,8 @@ class TrackList extends Component {
       tracklist: this.state.tracks,
       album: this.state.title,
       cover: this.state.coverURL,
-      id
+      id,
+      type: this.props.type
     };
 
     // prevent multiples downloads of the same album

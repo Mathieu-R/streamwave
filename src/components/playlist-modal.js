@@ -13,8 +13,7 @@ import {
 import {
   getPlaylists,
   createPlaylist,
-  fetchPlaylists,
-  addTrackToPlaylist
+  fetchPlaylists
 } from '../store/playlists';
 
 const Container = styled.div`
@@ -118,7 +117,7 @@ const TracksCounter = styled.span`
 const Cancel = styled.button`
   width: 100%;
   min-height: 50px;
-  background: #296BB7;
+  background: #3F51B5;
   color: #FFF;
   border: none;
   border-radius: 3px;
@@ -134,7 +133,6 @@ const mapDispatchToProps = dispatch => ({
   toasting: (messages, duration) => dispatch(toasting(messages, duration)),
   fetchPlaylists: _ => dispatch(fetchPlaylists()),
   createPlaylist: payload => dispatch(createPlaylist(payload)),
-  addTrackToPlaylist: payload => dispatch(addTrackToPlaylist(payload))
 });
 
 class PlaylistModal extends Component {
@@ -196,10 +194,76 @@ class PlaylistModal extends Component {
   }
 
   addTrackToPlaylist (playlistId) {
-    this.props.addTrackToPlaylist({playlistId, track: this.props.track})
-      .then(() => toasting(['Titre ajouté à la playlist']))
-      .then(() => this.props.removePlaylistModal())
-      .catch(err => console.error(err));
+    const {track} = this.props;
+    // if bg-sync supported
+    // register a bg-sync event so user can add
+    // track to playlist even offline
+    if (Constants.SUPPORT_BACKGROUND_SYNC) {
+      this.addTrackWhenConnectionAvailable({playlistId, track});
+      return
+    }
+
+    // if bg-sync not supported
+    // try to add track directly
+    // if no connection => fail.
+    this.addTrackDirectly({playlistId, track}).catch(err => {
+      // failed
+      // no internet connection ?
+      this.props.toasting(['Impossible d\'ajouter le titre.', 'Vérifier votre connexion internet.'], 5000);
+      console.error(err);
+    });
+  }
+
+
+  async addTrackDirectly ({playlistId, track}) {
+    const response = await fetch(`${Constants.API_URL}/playlist/${playlistId}`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
+      },
+      body: JSON.stringify(track)
+    });
+
+    const data = await response.json();
+
+    if (!data) {
+      this.props.toasting(['Impossible d\'ajouter le titre.'], 5000);
+      return;
+    }
+
+    this.props.toasting(['Titre ajouté à la playlist']);
+    this.props.removePlaylistModal();
+  }
+
+  async addTrackWhenConnectionAvailable ({playlistId, track}) {
+    const registration = await navigator.serviceWorker.ready;
+
+    if (!registration.active) {
+      return;
+    }
+
+    // ask user permission to show notification
+    await Notification.requestPermission();
+
+    // stuff to cache
+    // service-worker has no access
+    // to localstorage
+    // so doing a workaround here
+    const toCache = {
+      playlistId,
+      track,
+      token: localStorage.getItem('streamwave-token')
+    };
+
+    // retrieve bg-sync queue if any (in case of multiple add)
+    const bgSyncQueue = await get('bg-sync-playlist-queue') || [];
+
+    // add stuff to queue, avoid double
+    set('bg-sync-playlist-queue', Array.from(new Set([...bgSyncQueue, toCache])));
+
+    // register background sync event
+    await registration.sync.register('bg-sync-add-to-playlist');
   }
 
   render ({show, removePlaylistModal, trackId, playlists}, {showPlaylistInput}) {

@@ -52,29 +52,6 @@ export function fetchPlaylists () {
   }
 }
 
-export function addTrackToPlaylist ({playlistId, track}) {
-  return dispatch => {
-    return new Promise((resolve, reject) => {
-      return fetch(`${Constants.API_URL}/playlist/${playlistId}`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
-        },
-        body: JSON.stringify(track)
-      })
-      .then(response => response.json())
-      .then(response => {
-        if (!response) {
-          reject();
-        }
-        resolve();
-      });
-    })
-
-  }
-}
-
 // selectors
 export const getPlaylists = state => state.playlists;
 
