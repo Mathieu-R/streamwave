@@ -28,7 +28,7 @@ async function getRequestsUrls (tracklist, cover) {
 // download without bg-sync or bg-fetch
 // directly put the response into the cache
 // with that all major browsers support download
-export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistId}) {
+export async function simpleDownloadTracklist ({tracklist, album, cover, id: tracklistId}) {
   const requests = await getRequestsUrls(tracklist, cover);
 
   // note: simple copy-paste from service-worker
@@ -48,7 +48,7 @@ export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistI
   ], 5000));
 }
 
-export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
+export async function downloadTracklist ({tracklist, album, cover, id: tracklistId, type}) {
   const registration = await navigator.serviceWorker.ready;
 
   if (!registration.active) {
@@ -61,7 +61,7 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId}) {
   // get all requests url
   const requests = await getRequestsUrls(tracklist, cover);
   // stuff to cache
-  const toCache = {requests, tracklistId};
+  const toCache = {requests, tracklistId, type};
 
   // retrieve bg-sync queue if any (in case of multiple tracklist download)
   const bgSyncQueue = await get('bg-sync-queue') || [];
