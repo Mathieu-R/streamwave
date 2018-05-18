@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
+import { get, set } from 'idb-keyval';
 import styled from 'styled-components';
 import { Overlay, Button } from './ui';
 import Constants from '../constants';
@@ -264,6 +265,7 @@ class PlaylistModal extends Component {
 
     // register background sync event
     await registration.sync.register('bg-sync-add-to-playlist');
+    this.props.removePlaylistModal();
   }
 
   render ({show, removePlaylistModal, trackId, playlists}, {showPlaylistInput}) {
