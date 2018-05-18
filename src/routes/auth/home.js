@@ -117,6 +117,8 @@ class Auth extends Component {
         mediation: 'silent' // prevent browser to show account choser
       });
 
+      console.log('Credentials:', credentials);
+
       if (!credentials) return;
       if (credentials.type === 'password') {
         const response = await fetch(`${Constants.AUTH_URL}/local/login`, {

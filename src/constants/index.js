@@ -61,6 +61,10 @@ class Constants {
     return 'caches' in window;
   }
 
+  static get SUPPORT_STREAMS () {
+    return 'ReadableStream' in window;
+  }
+
   static get SUPPORT_NETWORK_INFORMATION_API () {
     return ('connection' in navigator && navigator.connection.type !== undefined);
   }
