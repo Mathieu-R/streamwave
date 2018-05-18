@@ -23,6 +23,7 @@ class Audio extends Component {
     this.audio = null;
 
     this.onTimeUpdate = this.onTimeUpdate.bind(this);
+    this.trackTimeUpdate = this.trackTimeUpdate.bind(this);
     this.onLoadedMetadata = this.onLoadedMetadata.bind(this);
     this.onEnded = this.onEnded.bind(this);
   }
@@ -33,13 +34,34 @@ class Audio extends Component {
     return false;
   }
 
+  componentDidMount () {
+    requestAnimationFrame(this.trackTimeUpdate);
+  }
+
   onTimeUpdate (evt) {
     const {duration, currentTime} = this.audio;
     // onTimeUpdate fires up even when no audio is played.
     if (!duration) return;
 
-    // trying rAF for smooth animation
-    requestAnimationFrame(_ => this.props.setCurrentTime(currentTime));
+    this.props.setCurrentTime(currentTime);
+  }
+
+  trackTimeUpdate () {
+    // onTimeUpdate event does not allow me to have 60fps
+    const {duration, currentTime} = this.audio;
+    requestAnimationFrame(this.trackTimeUpdate);
+
+    // bail if no music played
+    if (!duration) {
+      return;
+    }
+
+    // bail if audio paused
+    if (this.audio.paused) {
+      return;
+    }
+
+    this.props.setCurrentTime(currentTime);
   }
 
   onLoadedMetadata (evt) {
@@ -55,8 +77,8 @@ class Audio extends Component {
       <audio
         ref={audio => this.audio = audio}
         preload="metadata"
-        onTimeUpdate={this.onTimeUpdate}
-        onLoadedMetadata={this.onLoadedMetadata}
+        //onTimeUpdate={this.onTimeUpdate}
+        //onLoadedMetadata={this.onLoadedMetadata}
         onEnded={this.onEnded}
       />
     );
