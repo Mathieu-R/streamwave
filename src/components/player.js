@@ -181,8 +181,8 @@ const OutsideControls = styled(Button)`
 
   transition: 0.1s opacity linear;
 
-  &:hover, &:focus {
-    opacity: 0.7;
+  &:hover {
+    opacity: 0.8;
   }
 `;
 

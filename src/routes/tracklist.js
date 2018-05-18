@@ -180,6 +180,7 @@ class TrackList extends Component {
   download (evt) {
     const id = this.props.match.params.id;
     const checked = evt.target.checked;
+    const {type} = this.props;
 
     console.log('connection type:', navigator.connection && navigator.connection.type);
     // if user is on mobile, on mobile network
@@ -210,7 +211,7 @@ class TrackList extends Component {
       album: this.state.title,
       cover: this.state.coverURL,
       id,
-      type: this.props.type
+      type
     };
 
     // prevent multiples downloads of the same album
