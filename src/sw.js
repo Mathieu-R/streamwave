@@ -30,6 +30,10 @@ self.onfetch = event => {
 
   // api call
   if (url.hostname === 'api.streamwave.be') {
+    // bail non-get request (e.g. POST to api)
+    if (event.request.method !== 'GET') {
+      return;
+    }
     // get something from the cache
     // then update it
     staleWhileRevalidate(event);
@@ -185,7 +189,7 @@ const downloadInForeground = async () => {
 uploadInForeground = async () => {
   try {
     // get stuff to upload
-    const toUpload = await idbKeyval.get('bg-sync-add-to-playlist');
+    const toUpload = await idbKeyval.get('bg-sync-playlist-queue');
 
     await Promise.all(toUpload.map(async ({playlistId, track, token}) => {
       const response = await fetch(`https://api.streamwave.be/v1/playlist/${playlistId}`, {
@@ -218,7 +222,7 @@ uploadInForeground = async () => {
     }));
 
     // clean bg-sync queue
-    await idbKeyval.set('bg-sync-add-to-playlist', []);
+    await idbKeyval.set('bg-sync-playlist-queue', []);
   } catch (err) {
     console.error(err);
   }
