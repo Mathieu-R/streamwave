@@ -66,7 +66,7 @@ class Playlists extends Component {
             <CustomLink to={`/playlist/${playlist._id}`} key={playlist._id}>
               <Playlist>
                 <Title>{playlist.title}</Title>
-                <Counter>{playlist.tracks.length} {pluralize('titres', playlist.tracks.length)}</Counter>
+                <Counter>{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</Counter>
               </Playlist>
             </CustomLink>
           ))}

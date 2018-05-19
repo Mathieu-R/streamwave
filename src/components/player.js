@@ -408,7 +408,7 @@ class Player extends Component {
             <Shuffle onClick={this.onShuffleClick} aria-label="shuffle tracklist">
               <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill={shuffle ? "#4A90E2" : "#FFF"}>
+                  <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill={shuffle ? "#03A9F4" : "#FFF"}>
                     <g id="Shuffle" transform="translate(105.000000, 279.000000)">
                       <path
                         d="M27.8181818,7.90769231 L27.8181818,5 L36,9.84615385 L27.8181818,14.6923077
@@ -460,7 +460,7 @@ class Player extends Component {
             <Play onClick={this.onPlayClick} aria-label="play or pause track">
             {
               playing ?
-              <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg fill="#FFFFFF" height="65" width="65" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
                   d="M9 16h2V8H9v8zm3-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2
@@ -468,7 +468,7 @@ class Player extends Component {
                 />
               </svg>
               :
-              <svg fill="#FFFFFF" height="45" width="45" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg fill="#FFFFFF" height="65" width="65" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path
                   d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48
@@ -502,7 +502,7 @@ class Player extends Component {
             <Repeat onClick={this.onRepeatClick} aria-label="repeat tracklist">
               <SVG width="28px" height="22px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill={repeat ? "#4A90E2" : "#FFF"}>
+                  <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill={repeat ? "#03A9F4" : "#FFF"}>
                     <g id="Repeat" transform="translate(256.000000, 279.000000)">
                       <path
                         d="M8.64,25.9710983 L19.2030566,25.9710983 C28.1531421,25.9710983 32.16,22.7468816

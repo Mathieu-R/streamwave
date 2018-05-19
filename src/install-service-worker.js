@@ -41,7 +41,7 @@ export default (store) => {
         }
       }
 
-      const isReloading = false;
+      let isReloading = false;
       navigator.serviceWorker.oncontrollerchange = evt => {
         if (isReloading) {
           return;
