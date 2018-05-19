@@ -4,10 +4,14 @@ const MUSIC_CACHE_NAME = 'streamwave-music-cache';
 
 // workbox library will be injected by webpack plugin
 workbox.precaching.precache(self.__precacheManifest);
-workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute('/settings', workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
 
 // skipping default sw lifecycle
 // update page as soon as possible
