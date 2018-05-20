@@ -74,7 +74,7 @@ class Cover extends Component {
     const placeholderRGB = getRGBCssFromObject(primaryColor);
     return (
       <Container>
-        <CoverLink to={`/album/${id}`} >
+        <CoverLink to={`/album/${id}`} className="cover__link">
           {/* cover__artwork class is useful for lazy-loading (at less until if find a better solution) */}
           <ArtworkContainer placeholderRGB={placeholderRGB}>
             <Artwork data-src={`${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" className="cover__artwork lazy" />

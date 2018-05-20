@@ -47,6 +47,10 @@ class Library extends Component {
       .catch(err => console.error(err));
   }
 
+  componentDidMount () {
+    this.offlineListener();
+  }
+
   componentWillUnmount () {
     if (this.observer) {
       this.observer.disconnect();
@@ -103,6 +107,31 @@ class Library extends Component {
     const src = target.dataset.src;
     target.src = src;
     target.classList.remove('lazy');
+  }
+
+  offlineListener () {
+    document.body.addEventListener('offline', _ => this.disableWhenOffline())
+    document.body.addEventListener('online', _ => this.activateWhenOnline());
+  }
+
+  disableWhenOffline () {
+    // get all the covers links
+    const coverLinks = Array.from(document.querySelectorAll('.cover__links'));
+    // disable albums that are not in the cache
+    return Promise.all(coverLinks.map(link => {
+      return caches.has(link.href).then(cached => {
+        if (!cached) {
+          link.setAttribute('disabled', 'true');
+        }
+      });
+    }));
+  }
+
+  activateWhenOnline () {
+    const coverLinks = Array.from(document.querySelectorAll('.cover__links'));
+    coverLinks.forEach(link => {
+      link.removeAttribute('disabled');
+    });
   }
 
   render ({library}) {
