@@ -3,7 +3,7 @@ importScripts("/third_party/idb-keyval.min.js");
 const MUSIC_CACHE_NAME = 'streamwave-music-cache';
 
 // workbox library will be injected by webpack plugin
-workbox.precaching.precache(self.__precacheManifest);
+workbox.precaching.precacheAndRoute(self.__precacheManifest);
 workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
