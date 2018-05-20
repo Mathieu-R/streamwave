@@ -195,7 +195,7 @@ class TrackList extends Component {
       }
     }
 
-    // browser has to support at least service-worker and http streaming
+    // browser has to support at least service-worker
     if (!Constants.SUPPORT_CACHE_API) {
       this.props.toasting(['Votre navigateur ne supporte pas le téléchargement de musiques...']);
       return;
@@ -223,14 +223,14 @@ class TrackList extends Component {
     let promise;
     this.isDownloading = true
 
-    // TODO: support simple caching without bg-sync
     if (Constants.SUPPORT_BACKGROUND_FETCH) {
       // download the album in background
       promise = downloadTracklistInBackground(options);
     } else if (Constants.SUPPORT_BACKGROUND_SYNC) {
-      // download the album in foreground
+      // download the album with retry if offline
       promise = downloadTracklist(options);
     } else {
+      // simple download (requires connectivity)
       promise = simpleDownloadTracklist(options);
     }
 
