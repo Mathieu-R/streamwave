@@ -22,22 +22,24 @@ export default (store) => {
         console.log('A new service worker has been found, installing...');
 
         registration.installing.onstatechange = event => {
+          console.log(`Service Worker ${event.target.state}`);
           // first time service-worker installed.
           if (event.target.state === 'activated' && !navigator.serviceWorker.controller) {
             store.dispatch(toasting(['Streamwave cached.', 'Ready to work offline.']));
+            return;
           }
 
           // new update
           if (event.target.state === 'activated' && navigator.serviceWorker.controller) {
             store.dispatch(toasting(['Streamwave updated.', 'Refresh to get the new version.']));
+            return;
           }
 
           // service worker updated and installed
           if (event.target.state === 'installed') {
             store.dispatch(toasting(['Streamwave updated.']));
+            return;
           }
-
-          console.log(`Service Worker ${event.target.state}`);
         }
       }
 
