@@ -235,15 +235,14 @@ class Home extends Component {
   async listen (manifest, m3u8playlist, trackInfos) {
     // TODO: use redux store cache
     const limit = await this.settings.get('limit-data');
-    console.log(limit);
     if (limit) {
-      const [volume, max] = await Promise.all([
+      const [{volume}, max] = await Promise.all([
         getDataVolumeDownloaded({userId: this.props.userId}),
         this.settings.get('data-max')
       ]);
 
       console.log(volume, max);
-      console.log('cached: ', caches.has(manifestURL));
+      console.log('cached: ', caches.has(manifest));
 
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
