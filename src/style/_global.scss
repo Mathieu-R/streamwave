@@ -91,3 +91,16 @@ a {
     opacity: 1;
   }
 }
+
+.ripple {
+  width: 300px;
+  height: 300px;
+  --ripple-x: 0;
+  --ripple-y: 0;
+  --ripple-color: rgba(255,255,255,0.54);
+  --animation-tick: 0;
+}
+
+.ripple.animating {
+  background-image: paint(ripple);
+}
