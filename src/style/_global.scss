@@ -92,6 +92,13 @@ a {
   }
 }
 
+.cover__link.cover--disabled {
+  opacity: 0.5;
+  filter: grayscale(5);
+  pointer-events: none;
+  cursor: default;
+}
+
 .ripple {
   width: 300px;
   height: 300px;

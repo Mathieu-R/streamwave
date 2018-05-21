@@ -110,8 +110,8 @@ class Library extends Component {
   }
 
   offlineListener () {
-    document.body.addEventListener('offline', _ => this.disableWhenOffline())
-    document.body.addEventListener('online', _ => this.activateWhenOnline());
+    window.addEventListener('offline', _ => this.disableWhenOffline())
+    window.addEventListener('online', _ => this.activateWhenOnline());
   }
 
   disableWhenOffline () {
@@ -122,7 +122,7 @@ class Library extends Component {
     return Promise.all(coverLinks.map(link => {
       return caches.has(link.href).then(cached => {
         if (!cached) {
-          link.setAttribute('disabled', 'true');
+          link.classList.add('cover--disabled');
         }
       });
     }));
@@ -132,7 +132,7 @@ class Library extends Component {
     console.log('online');
     const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
     coverLinks.forEach(link => {
-      link.removeAttribute('disabled');
+      link.classList.remove('cover--disabled');
     });
   }
 
