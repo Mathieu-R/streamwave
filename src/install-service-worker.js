@@ -23,6 +23,7 @@ export default (store) => {
 
         registration.installing.onstatechange = event => {
           console.log(`Service Worker ${event.target.state}`);
+          console.log(navigator.serviceWorker.controller);
           // first time service-worker installed.
           if (event.target.state === 'activated' && !navigator.serviceWorker.controller) {
             store.dispatch(toasting(['Streamwave cached.', 'Ready to work offline.']));
