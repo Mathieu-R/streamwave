@@ -120,7 +120,8 @@ class Library extends Component {
     const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
     // disable albums that are not in the cache
     return Promise.all(coverLinks.map(link => {
-      return caches.has(link.href).then(cached => {
+      console.log(link.href);
+      return caches.has(`${Constants.API_URL}/${link.href}`).then(cached => {
         if (!cached) {
           link.classList.add('cover--disabled');
         }

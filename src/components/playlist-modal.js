@@ -131,7 +131,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  toasting: (messages, duration) => dispatch(toasting(messages, duration)),
+  toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration)),
   fetchPlaylists: _ => dispatch(fetchPlaylists()),
   createPlaylist: payload => dispatch(createPlaylist(payload)),
 });
@@ -210,7 +210,7 @@ class PlaylistModal extends Component {
     this.addTrackDirectly({playlistId, track}).catch(err => {
       // failed
       // no internet connection ?
-      this.props.toasting(['Impossible d\'ajouter le titre.', 'Vérifier votre connexion internet.'], 5000);
+      this.props.toasting(['Impossible d\'ajouter le titre.', 'Vérifier votre connexion internet.'], ['dismiss'], 5000);
       console.error(err);
     });
   }
@@ -229,7 +229,7 @@ class PlaylistModal extends Component {
     const data = await response.json();
 
     if (!data) {
-      this.props.toasting(['Impossible d\'ajouter le titre.'], 5000);
+      this.props.toasting(['Impossible d\'ajouter le titre.'], ['dismiss'], 5000);
       return;
     }
 

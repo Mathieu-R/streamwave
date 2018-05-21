@@ -132,7 +132,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  toasting: (messages, duration) => dispatch(toasting(messages, duration)),
+  toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration)),
   setTrack: (music) => dispatch(setTrack(music)),
   setQueue: (queue) => dispatch(setQueue(queue)),
   setPrimaryColor: primaryColor => dispatch(setPrimaryColor(primaryColor))

@@ -5,15 +5,15 @@ import styled from 'styled-components';
 
 import {
   getMessages,
-  toShow
+  getButtons,
+  toShow,
+  stopToastMessage
  } from '../store/toast';
 
 const Inner = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  word-wrap: break-word;
   position: fixed;
   bottom: 5px;
   left: 5px;
@@ -22,7 +22,7 @@ const Inner = styled.div`
   text-align: center;
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-  font-size: 18px;
+  font-size: 15px;
   background: #323232;
   color: #FFF;
   opacity: 0;
@@ -45,6 +45,39 @@ const Inner = styled.div`
     left: 0;
     bottom: 0;
     right: 0;
+    font-size: 14px;
+  }
+`;
+
+const Messages = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  word-wrap: break-word;
+  font-weight: 400;
+  padding-right: 20px;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  background: none;
+  border: none;
+  color: #03A9F4;
+  font-size: 16px;
+  text-transform: uppercase;
+
+  &:focus {
+    outline: none;
+    color: #FFF;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}) {
     font-size: 15px;
   }
 `;
@@ -55,19 +88,59 @@ const Content = styled.p`
 
 const mapStateToProps = state => ({
   messages: getMessages(state),
+  buttons: getButtons(state),
   show: toShow(state)
 });
 
-const Toast = ({messages, show}) => (
-  <Transition in={show} timeout={300}>
-  {state => (
-    <Inner state={state} className={state}>
-      {messages.map((message, index) => (
-        <Content key={index}>{message}</Content>
-      ))}
-    </Inner>
-  )}
-  </Transition>
-);
+const mapDispatchToProps = dispatch => ({
+  hide: _ => dispatch(stopToastMessage())
+});
 
-export default connect(mapStateToProps)(Toast);
+class Toast extends Component {
+  constructor () {
+    super();
+    this.onClick = this.onClick.bind(this);
+  }
+
+  shouldComponentUpdate (nextProps) {
+    return nextProps.messages !== this.props.messages;
+  }
+
+  onClick (evt) {
+    const action = evt.target.dataset.action.toLowerCase();
+
+    switch (action) {
+      case 'dismiss':
+        this.props.hide();
+        break;
+      case 'reload':
+        location.reload();
+        break;
+      default:
+        console.error('Action is not supported by the toast.');
+    }
+  }
+
+  render ({messages, buttons, show}) {
+    return (
+      <Transition in={show} timeout={300}>
+      {state => (
+        <Inner state={state} className={state}>
+          <Messages>
+            {messages.map((message, index) => (
+              <Content key={index}>{message}</Content>
+            ))}
+          </Messages>
+          <Buttons>
+            {buttons.map((name, index) => (
+              <Button key={index} data-action={name} onClick={this.onClick}>{name}</Button>
+            ))}
+          </Buttons>
+        </Inner>
+      )}
+      </Transition>
+    );
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toast);

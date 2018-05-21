@@ -25,7 +25,7 @@ const Label = styled.label`
 `;
 
 const mapDispatchToProps = dispatch => ({
-  toasting: (messages, duration) => dispatch(toasting(messages, duration))
+  toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration))
 });
 
 class Forgot extends Component {

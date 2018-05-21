@@ -26,19 +26,19 @@ export default (store) => {
           console.log(navigator.serviceWorker.controller);
           // first time service-worker installed.
           if (event.target.state === 'activated' && !navigator.serviceWorker.controller) {
-            store.dispatch(toasting(['Streamwave cached.', 'Ready to work offline.']));
+            store.dispatch(toasting(['Streamwave cached', 'Ready to work offline']));
             return;
           }
 
           // new update
           if (event.target.state === 'activated' && navigator.serviceWorker.controller) {
-            store.dispatch(toasting(['Streamwave updated.', 'Refresh to get the new version.']));
+            store.dispatch(toasting(['Streamwave updated', 'Refresh to get the new version'], ['reload']));
             return;
           }
 
           // service worker updated and installed
           if (event.target.state === 'installed') {
-            store.dispatch(toasting(['Streamwave updated.']));
+            store.dispatch(toasting(['Streamwave updated']));
             return;
           }
         }

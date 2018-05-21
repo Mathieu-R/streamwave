@@ -171,7 +171,7 @@ const CenterControls = styled(Button)`
   margin: 0 5px;
   transition: 0.1s opacity linear;
 
-  &:hover, &:focus {
+  &:hover {
     opacity: 0.7;
   }
 `;
