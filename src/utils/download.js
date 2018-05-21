@@ -45,7 +45,7 @@ export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistI
   return store.dispatch(toasting([
     'Tracklist téléchargée.',
     'Vous pouvez désormais l\'écouter hors-ligne'
-  ], 5000));
+  ], ['dismiss'], 5000));
 }
 
 export async function downloadTracklist ({tracklist, cover, id: tracklistId, type}) {
@@ -110,7 +110,7 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   store.dispatch(toasting([
     'Votre tracklist va être téléchargée en arrière-plan.',
     'Vous pouvez fermer l\'application si vous le désirez.'
-  ], 5000));
+  ], ['dismiss'], 5000));
 
   // store the tracklist in idb in case we would lost internet connection
   // not sure I need to do that

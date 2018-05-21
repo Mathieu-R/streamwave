@@ -242,12 +242,12 @@ class Home extends Component {
       ]);
 
       console.log(volume, max);
-      console.log('cached: ', caches.has(manifest));
+      console.log('cached: ', await caches.has(manifest));
 
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
       // note: downloaded music = manifest in cache
-      if (volume > max && (Constants.SUPPORT_CACHE_API && !caches.has(manifestURL))) {
+      if (volume > max && (Constants.SUPPORT_CACHE_API && !await caches.has(manifestURL))) {
         return;
       }
     }

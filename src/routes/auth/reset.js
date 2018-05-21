@@ -8,7 +8,7 @@ import {
 } from '../../store/toast';
 
 const mapDispatchToProps = dispatch => ({
-  toasting: (messages, duration) => dispatch(toasting(messages, duration))
+  toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration))
 });
 
 class Reset extends Component {

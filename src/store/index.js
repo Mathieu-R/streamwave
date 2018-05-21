@@ -11,7 +11,8 @@ const middlewares = composeEnhancers(
 const initialState = {
   toast: {
     show: false,
-    messages: []
+    messages: [],
+    buttons: []
   },
   sideNav: {
     show: false

@@ -12,7 +12,7 @@ const Container = styled(UIContainer)`
 import { toasting } from '../../store/toast';
 
 const mapDispatchToProps = dispatch => ({
-  toasting: (messages, duration) => dispatch(toasting(messages, duration))
+  toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration))
 });
 
 class Register extends Component {
@@ -69,20 +69,20 @@ class Register extends Component {
     // bad typing, password not strong enough
     if (response.status === 400) {
       const errors = Object.keys(data.error).map(err => data.error[err].msg);
-      this.props.toasting(errors, 8000);
+      this.props.toasting(errors, ['dismiss'], 8000);
       return;
     }
 
     // email already used
     if (response.status === 409) {
-      this.props.toasting([data.error], 8000);
+      this.props.toasting([data.error], ['dismiss'], 8000);
       return;
     }
 
     // user not created
     // likely because mail sending failed
     if (response.status === 422) {
-      this.props.toasting([data.error], 8000);
+      this.props.toasting([data.error], ['dismiss'], 8000);
       return;
     }
 

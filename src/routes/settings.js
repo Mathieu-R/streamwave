@@ -89,7 +89,7 @@ const mapDispatchToProps = dispatch => ({
   setLimitDataStatus: status => dispatch(setLimitDataStatus(status)),
   setMaxDataVolume: value => dispatch(setMaxDataVolume(value)),
   clear: _ => dispatch(clear()),
-  toasting: (message, duration) => dispatch(toasting(message, duration))
+  toasting: (message, buttons, duration) => dispatch(toasting(message, buttons, duration))
 });
 
 class Settings extends Component {
