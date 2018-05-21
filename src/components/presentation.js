@@ -15,7 +15,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${props => props.theme.background};
+  background: #262727;
   overflow: hidden;
 `;
 
@@ -26,10 +26,11 @@ const CoverContainer = styled.section`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 60px;
 `;
 
-const Cover = styled.div``;
+const Cover = styled.div`
+  opacity: 0.7;
+`;
 
 const Artwork = styled.img`
   max-width: 300px;
@@ -106,18 +107,21 @@ class Presentation extends Component {
 
     this.updateTime = this.updateTime.bind(this);
 
-    // this.state = {
-    //   coverURL: 'ability/ability.jpg',
-    //   artist: 'Borrtex',
-    //   album: 'Ability',
-    //   title: 'Ability',
-    //   duration: 353,
-    //   playing: true,
-    //   currentTime: 7.82,
-    //   totalTime: 153,
-    //   primaryColor: {r:117, g:118, b:119},
-    //   manifestURL: 'ability/01-1451113-Borrtex-Ability/manifest-full.mpd'
-    // }
+    this.state = {
+      artist: 'Borrtex',
+      album: 'Ability',
+      playing: true,
+      currentTime: 7.82,
+      totalTime: 153,
+      primaryColor: {r:117, g:118, b:119},
+      manifestURL: 'ability/01-1451113-Borrtex-Ability/manifest-full.mpd',
+      track: {
+        duration: 353,
+        title: 'Ability',
+        coverURL: 'ability/ability.jpg',
+      },
+      debug: ''
+    }
   }
 
   componentDidMount () {
@@ -129,12 +133,12 @@ class Presentation extends Component {
     this.initShakaPlayer();
 
     navigator.presentation.receiver.connectionList
-    .then(list => {
-      // the spec says to do that
-      list.connections.map(connection => this.addConnection(connection));
-      list.onconnectionavailable = evt => this.addConnection(evt.connection);
-    })
-    .catch(err => console.error(err));
+      .then(list => {
+        // the spec says to do that
+        list.connections.map(connection => this.addConnection(connection));
+        list.onconnectionavailable = evt => this.addConnection(evt.connection);
+      })
+      .catch(err => console.error(err));
   }
 
   initShakaPlayer () {
@@ -166,14 +170,16 @@ class Presentation extends Component {
   }
 
   addConnection (connection) {
+    connection.send('connected');
+    //this.setState({debug: connection.id + ' ' + connection.state});
     // listen for messages event
     // we give all the informations about media by there
     // no redux store here
-    connection.onmessage = evt => {
+    connection.addEventListener('message', evt => {
+      connection.send(event.data);
+
       const data = JSON.parse(evt.data);
       const {type} = data;
-
-      connection.send(type);
 
       if (type === 'song') {
         this.setState(data);
@@ -190,7 +196,7 @@ class Presentation extends Component {
         this.audio.volume = data.volume;
         return;
       }
-    }
+    });
   }
 
   updateTime (evt) {
@@ -203,29 +209,31 @@ class Presentation extends Component {
 
   render ({}, {
     artist, album, track,
-    currentTime, playing, primaryColor
+    currentTime, playing, primaryColor, debug
   }) {
+    if (!track) return null;
     return (
       <Container>
+        <span class="debug">{debug}</span>
         <CoverContainer background={primaryColor}>
           <Cover>
             <Artwork src={track.coverURL && `${Constants.CDN_URL}/${track.coverURL}`} alt="cover artwork" />
           </Cover>
         </CoverContainer>
-          <Footer>
-            <ProgressWrapper>
-              <ProgressBar duration={track.duration} currentTime={currentTime} />
-            </ProgressWrapper>
-            <AllInfos>
-              <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
-              <Infos>
-                <Title>{track.title}</Title>
-                <Artist>{artist}</Artist>
-                <Album>{album}</Album>
-              </Infos>
-              <TotalTime>{formatDuration(track.duration)}</TotalTime>
-            </AllInfos>
-          </Footer>
+        <Footer>
+          <ProgressWrapper>
+            <ProgressBar duration={track.duration} currentTime={currentTime} />
+          </ProgressWrapper>
+          <AllInfos>
+            <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
+            <Infos>
+              <Title>{track.title}</Title>
+              <Artist>{artist}</Artist>
+              <Album>{album}</Album>
+            </Infos>
+            <TotalTime>{formatDuration(track.duration)}</TotalTime>
+          </AllInfos>
+        </Footer>
         <audio preload="metadata" ref={audio => this.audio = audio} onTimeUpdate={this.updateTime}></audio>
       </Container>
     );

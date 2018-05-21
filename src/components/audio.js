@@ -47,6 +47,9 @@ class Audio extends Component {
   }
 
   trackTimeUpdate () {
+    if (!this.audio) {
+      return;
+    }
     // onTimeUpdate event does not allow me to have 60fps
     // cause it does not fire enough
     const {duration, currentTime} = this.audio;

@@ -24,6 +24,7 @@ class Chromecaster {
     } else if (Constants.SUPPORT_PRESENTATION_API) {
       // on desktop, if presentation api is supported, use it.
       this.request = new PresentationRequest(url);
+      navigator.presentation.defaultRequest = this.request;
       this.monitorPresentationAvailability();
     } else {
       // if nothing is supported
@@ -31,7 +32,6 @@ class Chromecaster {
       this.updateChromecastButtonDisplay({available: false});
     }
 
-    //navigator.presentation.defaultRequest = this.request;
     //navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
   }
 
@@ -66,16 +66,21 @@ class Chromecaster {
     return new Promise(async resolve => {
       // 1. disconnect from existing presentation if any
       if (this.connection && this.connection !== connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
+        console.log('closing');
         this.connection.close();
       }
 
       // 2. set the connection, save the presentation id in cache in order to allow reconnection
       this.connection = connection;
+      window.__connection__ = connection;
       await set(Chromecaster.CHROMECAST_IDB_KEY, connection.id);
+
+      connection.send('lol1');
+      this.send('lol2');
 
       // event listeners
       this.connection.onmessage = evt => {
-        console.log(`message from: ${evt.id}. Received data type: "${evt.data}"`);
+        console.log(`message from: ${evt.target.id}. Received: "${evt.data}"`);
       }
 
       this.connection.onconnect = _ => {
@@ -84,12 +89,14 @@ class Chromecaster {
       }
 
       this.connection.onclose = _ => {
+        console.log('closed');
         this.connection = null;
         this.updateUI({chromecasting: false});
       }
 
       this.connection.onterminate = _ => {
         del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
+          console.log('terminated');
           this.connection = null;
           this.updateUI({chromecasting: false});
         });
@@ -154,7 +161,6 @@ class Chromecaster {
       playing: state.player.playing,
       primaryColor: state.player.primaryColor
     };
-    console.log(data.track);
     this.send(data);
   }
 
@@ -164,6 +170,8 @@ class Chromecaster {
       return;
     }
 
+    console.log(this.connection.state);
+    this.connection.send('lol');
     this.connection.send(JSON.stringify(data));
   }
 
@@ -175,7 +183,6 @@ class Chromecaster {
     if (!this.connection) {
       return;
     }
-
     // close() still allow to reconnect unlike terminate()
     this.connection.terminate();
   }
