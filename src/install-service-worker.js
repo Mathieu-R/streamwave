@@ -19,26 +19,20 @@ export default (store) => {
       // if an update is found
       // we should have a service-worker installing
       registration.onupdatefound = event => {
-        const newServiceWorker = registration.installing;
         console.log('A new service worker has been found, installing...');
 
-        newServiceWorker.onstatechange = event => {
+        registration.installing.onstatechange = event => {
           console.log(`Service Worker ${event.target.state}`);
+
           // first time service-worker installed.
-          if (newServiceWorker.state === 'activated' && !navigator.serviceWorker.controller) {
+          if (event.target.state === 'installed' && !navigator.serviceWorker.controller) {
             store.dispatch(toasting(['Streamwave cached', 'Ready to work offline']));
             return;
           }
 
           // new update
-          if (newServiceWorker.state === 'activated' && navigator.serviceWorker.controller) {
+          if (event.target.state === 'activated' && navigator.serviceWorker.controller) {
             store.dispatch(toasting(['Streamwave updated', 'Refresh to get the new version'], ['reload']));
-            return;
-          }
-
-          // service worker updated and installed
-          if (newServiceWorker.state === 'installed') {
-            store.dispatch(toasting(['Streamwave updated']));
             return;
           }
         }

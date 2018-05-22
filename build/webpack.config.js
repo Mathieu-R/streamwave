@@ -56,19 +56,19 @@ if (production) {
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
     }),
-    new HtmlCriticalWebpackPlugin({
-      base: path.resolve(__dirname, '../dist'),
-      src: path.resolve(__dirname, '../dist/index.html'),
-      dest: path.resolve(__dirname, '../dist/index.html'),
-      inline: true,
-      minify: true,
-      extract: true,
-      width: 530,
-      height: 565,
-      penthouse: {
-        blockJSRequests: false,
-      }
-    }),
+    // new HtmlCriticalWebpackPlugin({
+    //   base: path.resolve(__dirname, '../dist'),
+    //   src: path.resolve(__dirname, '../dist/index.html'),
+    //   dest: path.resolve(__dirname, '../dist/index.html'),
+    //   inline: true,
+    //   minify: true,
+    //   extract: true,
+    //   width: 530,
+    //   height: 565,
+    //   penthouse: {
+    //     blockJSRequests: false,
+    //   }
+    // }),
     // preload main bundles
     // prefetch should be done with webpack
     // when native support for prefetch will land

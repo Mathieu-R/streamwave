@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import installServiceWorker from './install-service-worker';
 import store from './store';
-import 'css-paint-polyfill'; // polyfill for houdini css pain
 
 import './style/index.scss';
 import App from './components/app';
