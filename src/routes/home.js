@@ -184,8 +184,7 @@ class Home extends Component {
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
         // https://github.com/google/shaka-player/issues/1439
         const cached = Object.keys(response.headers).includes('X-From-Cache');
-        console.log('segment from service-worker cache: ', cached);
-        console.log(response.headers);
+        //console.log('segment from service-worker cache: ', cached);
         if (cached) {
           return;
         }
@@ -243,12 +242,12 @@ class Home extends Component {
       ]);
 
       console.log(volume, max);
-      console.log('cached: ', await caches.has(manifest));
+      console.log('cached: ', await caches.has(`${Constants.CDN_URL}/${manifest}`));
 
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
       // note: downloaded music = manifest in cache
-      if (volume > max && (Constants.SUPPORT_CACHE_API && !await caches.has(manifest))) {
+      if (volume > max && (Constants.SUPPORT_CACHE_API && !await caches.has(`${Constants.CDN_URL}/${manifest}`))) {
         return;
       }
     }
