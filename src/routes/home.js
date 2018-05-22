@@ -231,8 +231,9 @@ class Home extends Component {
    * @param {String} manifest manifest url
    * @param {String} m3u8playlist  hls playlist url
    * @param {Object} trackInfos {artist, album, title, coverURL}
+   * @param {Boolean} play play/pause media
    */
-  async listen (manifest, m3u8playlist, trackInfos) {
+  async listen (manifest, m3u8playlist, trackInfos, play) {
     // TODO: use redux store cache
     const limit = await this.settings.get('limit-data');
     if (limit) {
@@ -255,7 +256,7 @@ class Home extends Component {
     // 1. Load the player
     return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
-      return this.play();
+      return play ? this.play() : this.pause();
     })
     // 2. Set media notification (Media Session API)
     .then(_ => this.setMediaNotifications(trackInfos))
@@ -357,13 +358,13 @@ class Home extends Component {
 
     // update redux state, get new current track, play it
     this.props.setPrevTrack().then(({manifestURL, playlistHLSURL, trackInfos}) => {
-      this.listen(manifestURL, playlistHLSURL, trackInfos);
+      this.listen(manifestURL, playlistHLSURL, trackInfos, true);
     });
   }
 
   setNextTrack (continuous) {
-    this.props.setNextTrack(continuous).then(({manifestURL, playlistHLSURL, trackInfos}) => {
-      this.listen(manifestURL, playlistHLSURL, trackInfos);
+    this.props.setNextTrack(continuous).then(({manifestURL, playlistHLSURL, trackInfos, play}) => {
+      this.listen(manifestURL, playlistHLSURL, trackInfos, play);
     });
   }
 
@@ -415,7 +416,7 @@ class Home extends Component {
         />
         <MiniPlayerAndNavBarContainer>
           <MiniPlayer
-            listen={this.listen}
+            //listen={this.listen}
             onPlayClick={this.onPlayClick}
             prev={this.setPrevTrack}
             next={this.setNextTrack}
@@ -428,7 +429,7 @@ class Home extends Component {
           ref={audio => this.audio = audio}
           preload="metadata"
           next={this.setNextTrack}
-          crossFade={this.crossFade}
+          //crossFade={this.crossFade}
         />
       </Container>
     );

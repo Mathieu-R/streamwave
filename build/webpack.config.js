@@ -10,6 +10,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const WebpackBar = require('webpackbar');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const production = process.env.NODE_ENV === 'production';
 
@@ -51,9 +52,22 @@ if (production) {
       minify: {
         removeComments: true
       },
-      //cache: true,
+      cache: true,
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
+    }),
+    new HtmlCriticalWebpackPlugin({
+      base: path.resolve(__dirname, '../dist'),
+      src: path.resolve(__dirname, '../dist/index.html'),
+      dest: path.resolve(__dirname, '../dist/index.html'),
+      inline: true,
+      minify: true,
+      extract: true,
+      width: 530,
+      height: 565,
+      penthouse: {
+        blockJSRequests: false,
+      }
     }),
     // preload main bundles
     // prefetch should be done with webpack

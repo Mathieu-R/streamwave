@@ -83,9 +83,12 @@ export function setPrevTrack () {
 export function setNextTrack ({continuous}) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      const {player: {queue, artist, album, coverURL, currentIndex}} = getState();
+      const {player: {queue, artist, album, coverURL, currentIndex, repeat}} = getState();
       const index = ((currentIndex + 1) > (queue.length - 1)) ? 0 : currentIndex + 1;
       const track = queue[index];
+      const {title, manifestURL, playlistHLSURL} = track;
+      const trackInfos = {artist, album, title, coverURL};
+      let play;
 
       dispatch({
         type: SET_TRACK,
@@ -93,15 +96,30 @@ export function setNextTrack ({continuous}) {
         artist,
         album,
         coverURL,
-        track: (continuous && index === 0) ? null : track
+        track
       });
 
-      const {manifestURL, playlistHLSURL, title} = track;
-      resolve({
+      // continuous mode (no user gesture)
+      // not repeat mode
+      // next track is the first one
+      // => stop listening (= only media in pause, nothing more)
+      if (continuous && !repeat && index === 0) {
+        play = false;
+        // TODO: ensure it'ok to only put that here
+        dispatch(setCurrentTime(0));
+        dispatch(setPlayingStatus({playing: false}));
+      } else {
+        play = true;
+      }
+
+      const resolveObject = {
         manifestURL,
         playlistHLSURL,
-        trackInfos: {artist, album, title, coverURL}
-      });
+        trackInfos,
+        play
+      }
+
+      resolve(resolveObject);
     });
   }
 }
