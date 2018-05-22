@@ -254,6 +254,8 @@ class Player extends Component {
     this.onChromecastClick = this.onChromecastClick.bind(this);
     this.addToPlaylist = this.addToPlaylist.bind(this);
     this.removePlaylistModal = this.removePlaylistModal.bind(this);
+    this.expandRipple = this.expandRipple.bind(this);
+    this.unexpandRipple = this.unexpandRipple.bind(this);
 
     this.state = {
       showPlaylistModal: false
@@ -340,6 +342,14 @@ class Player extends Component {
     });
   }
 
+  expandRipple () {
+    this.ripple.classList.add('expanded');
+  }
+
+  unexpandRipple () {
+    this.ripple.classList.remove('expanded');
+  }
+
   render ({
     showPlayer, coverURL, artist, title, duration, playing,
     chromecastAvailable, chromecasting, shuffle, repeat,
@@ -355,10 +365,20 @@ class Player extends Component {
 
     return (
       <Container show={showPlayer}>
+        <div
+          class="ripple"
+          ref={ripple => this.ripple = ripple}
+        ></div>
         <Close onClick={this.closePlayer} aria-label="close player"/>
         {
         chromecastAvailable &&
-        <Chromecast onClick={this.onChromecastClick} aria-label="chromecast music">
+        <Chromecast
+          onClick={this.onChromecastClick}
+          onMouseDown={this.expandRipple}
+          onTouchStart={this.expandRipple}
+          onMouseUp={this.unexpandRipple}
+          onTouchEnd={this.unexpandRipple}
+          aria-label="chromecast music">
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
