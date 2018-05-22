@@ -228,7 +228,7 @@ class Search extends Component {
       index: 0
     });
 
-    this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL});
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL}, true);
   }
 
   renderResults (albums, tracks) {

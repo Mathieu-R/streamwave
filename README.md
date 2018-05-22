@@ -16,6 +16,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
     https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
     https://github.com/w3c/remote-playback/issues/117    
     https://bugs.chromium.org/p/chromium/issues/detail?id=843965    
+    https://github.com/w3c/presentation-api/issues/450#issuecomment-390948883    
 - [X] Media Session API    
 - [X] Service Worker    
 - [X] Background Fetch    
@@ -25,6 +26,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] Track data volume    
     https://github.com/google/shaka-player/issues/1416
     https://github.com/google/shaka-player/issues/1439
+    https://github.com/google/shaka-player/issues/1439 
 
 ### Notes
 Background Fetch : 

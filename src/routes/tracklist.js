@@ -268,7 +268,7 @@ class TrackList extends Component {
       index
     });
 
-    this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL});
+    this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL}, true);
   }
 
   render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {

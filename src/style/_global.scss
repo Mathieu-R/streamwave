@@ -100,14 +100,19 @@ a {
 }
 
 .ripple {
-  width: 300px;
-  height: 300px;
-  --ripple-x: 0;
-  --ripple-y: 0;
-  --ripple-color: rgba(255,255,255,0.54);
-  --animation-tick: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(50%, -50%) scale(0.01);
+  opacity: 0.5;
+  transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
+  will-change: transform;
 }
 
-.ripple.animating {
-  background-image: paint(ripple);
+.ripple.expanded {
+  transform: translate(50%, -50%) scale(1);
 }
