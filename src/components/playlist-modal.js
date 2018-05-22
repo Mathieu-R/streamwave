@@ -151,17 +151,8 @@ class PlaylistModal extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps) {
-    //return this.props.show !== nextProps.show;
-    console.log(this.props.show, nextProps.show);
-  }
-
-  componentDidUpdate () {
-    //this.props.fetchPlaylists();
-  }
-
   componentDidMount () {
-    //this.props.fetchPlaylists();
+    this.props.fetchPlaylists();
   }
 
   blockClick (evt) {

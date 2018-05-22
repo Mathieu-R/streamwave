@@ -66,7 +66,6 @@ class Chromecaster {
     return new Promise(async resolve => {
       // 1. disconnect from existing presentation if any
       if (this.connection && this.connection !== connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
-        console.log('closing');
         this.connection.close();
       }
 
@@ -74,9 +73,6 @@ class Chromecaster {
       this.connection = connection;
       window.__connection__ = connection;
       await set(Chromecaster.CHROMECAST_IDB_KEY, connection.id);
-
-      connection.send('lol1');
-      this.send('lol2');
 
       // event listeners
       this.connection.onmessage = evt => {
@@ -89,14 +85,12 @@ class Chromecaster {
       }
 
       this.connection.onclose = _ => {
-        console.log('closed');
         this.connection = null;
         this.updateUI({chromecasting: false});
       }
 
       this.connection.onterminate = _ => {
         del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
-          console.log('terminated');
           this.connection = null;
           this.updateUI({chromecasting: false});
         });
@@ -128,25 +122,22 @@ class Chromecaster {
 
   present () {
     return new Promise(async (resolve) => {
-      await this.request.start();
+      // try to reconnect to old presentation
+      const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
+      let connection;
+
+      if (!id) {
+        this.request.start();
+      } else {
+        this.reconnect(id);
+      }
 
       // wait until connection is available
-      // otherwise we send data before connection is ready
-      this.request.onconnectionavailable = async evt => {
+      // otherwise we would send data before connection is ready
+      navigator.presentation.defaultRequest.onconnectionavailable = async evt => {
         await this.setConnection(evt.connection);
         resolve();
       }
-
-      // try to reconnect to old presentation
-      // const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
-      // let connection;
-
-      // if (!id) {
-      //   console.log(this.request);
-      //   this.request.start().then(connection => this.connection = connection);
-      // } else {
-      //   this.reconnect(id);
-      // }
     });
   }
 
@@ -170,8 +161,6 @@ class Chromecaster {
       return;
     }
 
-    console.log(this.connection.state);
-    this.connection.send('lol');
     this.connection.send(JSON.stringify(data));
   }
 
