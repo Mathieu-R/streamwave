@@ -1,13 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Container as UIContainer, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import TopBarBack from '../../components/topbar-back';
 import Constants from '../../constants';
-
-const Container = styled(UIContainer)`
-  flex-direction: column;
-`;
 
 import { toasting } from '../../store/toast';
 
@@ -92,26 +86,26 @@ class Register extends Component {
 
   render () {
     return (
-      <Container>
+      <div class="container-column">
         <TopBarBack url='/auth' />
-        <Form onSubmit={this.register}>
-          <InputWrapper>
-            <Label htmlFor="email">E-mail</Label>
+        <form class="form" onSubmit={this.register}>
+          <div class="input-wrapper">
+            <label class="label" for="email">E-mail</label>
             <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
-          </InputWrapper>
-          <InputWrapper>
-            <Label htmlFor="password">Mot de passe</Label>
+          </div>
+          <div class="input-wrapper">
+            <label class="label" for="password">Mot de passe</label>
             <input ref={input => this.password = input} type="password" id="password" autocomplete="new-password"/>
-          </InputWrapper>
-          <InputWrapper>
-            <Label htmlFor="password-confirm">Confirmation du mot de passe</Label>
+          </div>
+          <div class="input-wrapper">
+            <label class="label" for="password-confirm">Confirmation du mot de passe</label>
             <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" autocomplete="new-password"/>
-          </InputWrapper>
-          <FormButton type="submit" aria-label="register">
+          </div>
+          <button class="form-button" type="submit" aria-label="register">
             Créer un compte
-          </FormButton>
-        </Form>
-      </Container>
+          </button>
+        </form>
+      </div>
     );
   }
 }

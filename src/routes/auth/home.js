@@ -1,10 +1,9 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import { Container, Wrapper, LinkButton } from '../../components/ui';
+import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
-import styled from 'styled-components';
 import Constants from '../../constants';
+
 import '../../third_party/gapi';
 
 import {
@@ -18,74 +17,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   storeUser: user => dispatch(storeUser(user))
 });
-
-const Welcome = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 270px;
-`;
-
-const Title = styled.h1`
-  margin: 0;
-  font-size: 36px;
-  text-align: center;
-
-  &::after {
-    content: '';
-    display: flex;
-    height: 1px;
-    background: #FFF;
-    border: none;
-  }
-`;
-
-const Subtitle = styled.span`
-  color: ${props => props.theme.welcome.subtitle.color};
-  font-size: 12px;
-  text-align: center;
-  margin: 2px 0;
-`;
-
-const ButtonsContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const Button = styled.button`
-  height: 55px;
-  width: 100%;
-  margin: 17px 0;
-  border-radius: 27px;
-`;
-
-const LoginButton = styled(Button)`
-  background: ${props => props.theme.auth.background};
-`;
-
-const RegisterButton = styled(Button)`
-  background: ${props => props.theme.auth.background};
-`;
-
-const GoogleButton = styled(Button)`
-  background: ${props => props.theme.auth.google.background};
-`;
-
-const AuthLink = styled(LinkButton)`
-  color: #FFF;
-  font-size: 18px;
-  /* fix: <a> does not take height of the button parent if firefox */
-  height: 55px;
-`;
-
-const PasswordResetLink = styled(LinkButton)`
-  font-size: 12px;
-  text-decoration: underline;
-  color: #FFF;
-  text-align: center;
-`;
 
 class Auth extends Component {
   constructor () {
@@ -190,33 +121,33 @@ class Auth extends Component {
 
   render () {
     return (
-      <Container>
-        <Wrapper>
-          <Welcome>
-            <Title>Streamwave</Title>
-            <Subtitle>streaming music pwa</Subtitle>
-          </Welcome>
-          <ButtonsContainer>
-            <LoginButton aria-label="go to login page">
-              <AuthLink to="/auth/login">
+      <div class="container">
+        <div class="wrapper">
+          <section class="auth-home__welcome">
+            <h1 class="auth-home__title">Streamwave</h1>
+            <span class="auth-home__subtitle">streaming music pwa</span>
+          </section>
+          <section class="auth-home__buttons">
+            <button class="auth-home__login-button" aria-label="go to login page">
+              <Link class="link-button auth-home__auth-link" to="/auth/login">
                 Se connecter
-              </AuthLink>
-            </LoginButton>
-            <RegisterButton aria-label="go to register page">
-              <AuthLink to="/auth/register">
+              </Link>
+            </button>
+            <button class="auth-home__register-button" aria-label="go to register page">
+              <Link class="link-button auth-home__auth-link" to="/auth/register">
                 Créer un compte
-              </AuthLink>
-            </RegisterButton>
-            <GoogleButton onClick={this.googleLogin} aria-label="login with your google account">
+              </Link>
+            </button>
+            <button class="auth-home__google-button" onClick={this.googleLogin} aria-label="login with your google account">
               Continuer avec google
-            </GoogleButton>
-            <PasswordResetLink to="/auth/forgot" aria-label="go to password reset page">
+            </button>
+            <Link class="link-button auth-home__password-reset-link" to="/auth/forgot" aria-label="go to password reset page">
               Mot de passe oublié ?
-            </PasswordResetLink>
-          </ButtonsContainer>
-        </Wrapper>
-      </Container>
-    )
+            </Link>
+          </section>
+        </div>
+      </div>
+    );
   }
 }
 

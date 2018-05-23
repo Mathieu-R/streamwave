@@ -1,2 +1,38 @@
 @import 'variables';
 @import 'global';
+@import 'routes/global';
+
+@import 'components/circle';
+@import 'components/cover';
+@import 'components/loading';
+@import 'components/mini-player';
+@import 'components/navbar';
+@import 'components/overlay';
+@import 'components/player';
+@import 'components/playlist-modal';
+@import 'components/progress-bar-presentation';
+@import 'components/progress-bar';
+@import 'components/progress-line';
+@import 'components/range';
+@import 'components/side-nav';
+@import 'components/switch';
+@import 'components/toast';
+@import 'components/topbar';
+@import 'components/track';
+
+@import 'components/settings/data-volume';
+@import 'components/settings/download-mobile-network';
+@import 'components/settings/download-quality';
+@import 'components/settings/fade';
+@import 'components/settings/storage-quota';
+
+@import 'routes/auth/forgot';
+@import 'routes/auth/home';
+@import 'routes/demo-streaming';
+@import 'routes/home';
+@import 'routes/library';
+@import 'routes/licences';
+@import 'routes/playlists';
+@import 'routes/search';
+@import 'routes/settings';
+@import 'routes/tracklist';

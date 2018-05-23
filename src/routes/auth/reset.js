@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Container, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import Constants from '../../constants';
 
 import {
@@ -70,21 +69,21 @@ class Reset extends Component {
 
   render () {
     return (
-      <Container>
-        <Form onSubmit={this.reset}>
-          <InputWrapper>
-            <Label for="password">Nouveau mot de passe</Label>
+      <div class="container">
+        <form class="form" onSubmit={this.reset}>
+          <div class="input-wrapper">
+            <label class="label" for="password">Nouveau mot de passe</label>
             <input ref={input => this.password = input} type="password" id="password" autocomplete="new-password"/>
-          </InputWrapper>
-          <InputWrapper>
-            <Label for="password-confirm">Confirmation du nouveau mot de passe</Label>
+          </div>
+          <div class="input-wrapper">
+            <label class="label" for="password-confirm">Confirmation du nouveau mot de passe</label>
             <input ref={input => this.passwordConfirm = input} type="password" id="password-confirm" autocomplete="new-password"/>
-          </InputWrapper>
-          <FormButton type="submit" aria-label="change password">
+          </div>
+          <button class="form-button" type="submit" aria-label="change password">
             Changer de mot de passe
-          </FormButton>
-        </Form>
-      </Container>
+          </button>
+        </form>
+      </div>
     );
   }
 }

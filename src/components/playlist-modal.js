@@ -1,11 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { get, set } from 'idb-keyval';
-import styled from 'styled-components';
-import { Overlay, Button } from './ui';
 import Constants from '../constants';
-
-import backIcon from '../assets/svg/arrow-black.svg';
 
 import {
   toasting
@@ -16,115 +12,6 @@ import {
   createPlaylist,
   fetchPlaylists
 } from '../store/playlists';
-
-const Container = styled.div`
-  position: fixed;
-  top: 25px;
-  left: 50%;
-  bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 5px;
-  background: #000;
-  opacity: ${props => props.show ? 1 : 0};
-  transform: translateX(-50%);
-  transition: opacity .3s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
-`;
-
-const CreateContainer = styled.div`
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 70px;
-`;
-
-const CreateButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #FFF;
-  color: #000;
-  flex-grow: 1;
-  margin: 10px;
-`;
-
-const CreateInputContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  background: #FFF;
-  border-radius: 5px;
-  padding: 0 10px;
-  margin: 10px 0;
-  opacity: ${props => props.show ? 1 : 0};
-  pointer-events: ${props => props.show ? 'all' : 'none'};
-  transition: opacity 0.1s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
-`;
-
-const CreateInput = styled.input`
-  font-size: 100%;
-  padding-left: 5px;
-  border: none;
-  flex-grow: 1;
-  outline: none;
-`;
-
-const Back = styled.button`
-  background: url(${backIcon}) no-repeat no-repeat;
-  background-size: 24px 24px;
-  width: 24px;
-  height: 24px;
-`;
-
-const Playlists = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-  overflow: auto;
-`;
-
-const Playlist = styled(Button)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background: inherit;
-  color: #FFF;
-
-  &:hover, &:focus {
-    background: rgba(255, 255, 255, 0.2);
-  }
-`;
-
-const Title = styled.span`
-  font-size: 18px;
-`;
-
-const TracksCounter = styled.span`
-  font-size: 12px;
-`;
-
-const Cancel = styled.button`
-  width: 100%;
-  min-height: 50px;
-  background: #3F51B5;
-  color: #FFF;
-  border: none;
-  border-radius: 3px;
-  margin: 5px 10px;
-  padding: 15px;
-`;
 
 const mapStateToProps = state => ({
   playlists: getPlaylists(state)
@@ -180,6 +67,8 @@ class PlaylistModal extends Component {
 
     this.props.createPlaylist({title: this.input.value})
       .then(playlist => {
+        // reset input value
+        this.input.value = '';
         console.log(playlist);
       })
       .catch(msg => this.props.toasting(msg));
@@ -262,32 +151,45 @@ class PlaylistModal extends Component {
   render ({show, removePlaylistModal, trackId, playlists}, {showPlaylistInput}) {
     const pluralize = (string, len) => len > 1 ? string + 's' : string;
     return (
-      <Overlay show={show} onClick={removePlaylistModal}>
-        <Container show={show} onClick={this.blockClick}>
-          <CreateContainer>
-            <CreateButton onClick={this.showPlaylistInput} aria-label="create playlist">Créer une nouvelle playlist</CreateButton>
-            <CreateInputContainer show={showPlaylistInput}>
-              <Back onClick={this.removePlaylistInput} aria-label="cancel playlist creation"/>
-              <CreateInput
-                innerRef={input => this.input = input}
+      <div class={
+        show ?
+        'overlay overlay--visible' :
+        'overlay'
+      } onClick={removePlaylistModal}>
+        <div class={
+          show ?
+          'playlist-modal playlist-modal--visible' :
+          'playlist-modal'
+        } onClick={this.blockClick}>
+          <section class="playlist-modal__create-container">
+            <div class="playlist-modal__create-button" onClick={this.showPlaylistInput} aria-label="create playlist">Créer une nouvelle playlist</div>
+            <div class={
+              showPlaylistInput ?
+              'playlist-modal__create-input-container playlist-modal__create-input-container--visible' :
+              'playlist-modal__create-input-container'
+            }>
+              <div class="playlist-modal__create-back" onClick={this.removePlaylistInput} aria-label="cancel playlist creation"/>
+              <input
+                class="playlist-modal__create-input"
+                ref={input => this.input = input}
                 type="text"
                 placeholder="Nom de la playlist..."
                 onKeyDown={this.createPlaylist} />
-            </CreateInputContainer>
-          </CreateContainer>
-          <Playlists>
+            </div>
+          </section>
+          <section class="playlist-modal__playlists">
             {
               playlists.map(playlist =>
-                <Playlist key={playlist._id} onClick={evt => this.addTrackToPlaylist(playlist._id)} aria-label="add to this playlist">
-                  <Title>{playlist.title}</Title>
-                  <TracksCounter>{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</TracksCounter>
-                </Playlist>
+                <div class="playlist-modal__playlist" key={playlist._id} onClick={evt => this.addTrackToPlaylist(playlist._id)} aria-label="add to this playlist">
+                  <span class="playlist-modal__playlist__title">{playlist.title}</span>
+                  <span class="playlist-modal__playlist__tracks-counter">{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</span>
+                </div>
               )
             }
-          </Playlists>
-          <Cancel onClick={removePlaylistModal}>Annuler</Cancel>
-        </Container>
-      </Overlay>
+          </section>
+          <div class="playlist-modal__cancel" onClick={removePlaylistModal}>Annuler</div>
+        </div>
+      </div>
     );
   }
 }

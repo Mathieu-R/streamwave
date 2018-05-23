@@ -1,14 +1,7 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import styled from 'styled-components';
-import { Container as UIContainer, Form, InputWrapper, Label, FormButton } from '../../components/ui';
 import TopBarBack from '../../components/topbar-back';
 import Constants from '../../constants';
-
-const Container = styled(UIContainer)`
-  flex-direction: column;
-`;
 
 import {
   toasting
@@ -90,22 +83,22 @@ class Login extends Component {
 
   render () {
     return (
-      <Container>
+      <div class="container-column">
         <TopBarBack url='/auth' />
-        <Form onSubmit={this.login}>
-          <InputWrapper>
-            <Label htmlFor="email">E-mail</Label>
+        <form class="form" onSubmit={this.login}>
+          <div class="input-wrapper">
+            <label class="label" for="email">E-mail</label>
             <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
-          </InputWrapper>
-          <InputWrapper>
-            <Label htmlFor="password">Mot de passe</Label>
+          </div>
+          <div class="input-wrapper">
+            <label class="label" for="password">Mot de passe</label>
             <input ref={input => this.password = input} type="password" id="password" autocomplete="current-password"/>
-          </InputWrapper>
-          <FormButton aria-label="login">
+          </div>
+          <button class="form-button" aria-label="login">
             Se connecter
-          </FormButton>
-        </Form>
-      </Container>
+          </button>
+        </form>
+      </div>
     );
   }
 }

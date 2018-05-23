@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
 import {
   getDuration,
@@ -16,53 +15,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setCurrentTime: time => dispatch(setCurrentTime(time))
 });
-
-const ProgressBarContainer = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: ${props => props.borderRadius ? '5px' : 0};
-`;
-
-const ProgressTrack = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: #FFF;
-  border-radius: ${props => props.borderRadius ? '5px' : 0};
-  transform: translate(0, -50%) scale(0);
-  transform-origin: 0 50%;
-  will-change: transform;
-`;
-
-const ProgressRoundContainer = styled.div`
-  position: relative;
-  width: 100%;
-  background: 0 0;
-  border: none;
-  outline: none;
-  pointer-events: none;
-`;
-
-const ProgressRound = styled.div`
-  position: absolute;
-  top: 50%;
-  left: -5px;
-  height: 20px;
-  width: 20px;
-  outline: 0;
-  border-radius: 50%;
-  background: #FFF;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-  transform: translateY(-50%) scale(0.7);
-  transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
-  will-change: transform;
-`;
 
 class ProgressBar extends Component {
   constructor () {
@@ -182,18 +134,24 @@ class ProgressBar extends Component {
     if (!duration && !currentTime) return null;
 
     return (
-      <ProgressBarContainer
-        innerRef={container => this.container = container}
+      <div class={
+        borderRadius ?
+        'progress-bar progress-bar--radius' :
+        'progress-bar'
+      }
+        ref={container => this.container = container}
         onTouchStart={this.onSwipeStart}
         onMouseDown={this.onSwipeStart}
-        borderRadius={this.props.borderRadius}
-        className="progress-bar"
       >
-        <ProgressTrack innerRef={track => this.track = track} borderRadius={borderRadius} />
-        <ProgressRoundContainer innerRef={round => this.round = round}>
-          <ProgressRound innerRef={round => this.innerRound = round} />
-        </ProgressRoundContainer>
-      </ProgressBarContainer>
+        <div class={
+          borderRadius ?
+          'progress-bar__track progress-bar__track--radius' :
+          'progress-bar__track'
+        } ref={track => this.track = track}></div>
+        <div class="progress-bar__round-container" ref={round => this.round = round}>
+          <div class="progress-bar__round" ref={round => this.innerRound = round} />
+        </div>
+      </div>
     )
   }
 }

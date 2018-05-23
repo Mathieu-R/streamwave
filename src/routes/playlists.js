@@ -1,42 +1,8 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import Constants from '../constants';
 import { pluralize } from '../utils';
-import { Container as UIContainer } from '../components/ui';
 import TopBarHamburger from '../components/topbar-hamburger';
-
-const Wrapper = styled(UIContainer)`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
-const CustomLink = styled(Link)`
-  width: 100%;
-  text-decoration: none;
-  color: #FFF;
-  padding: 10px 5px;
-
-  &:hover, &:focus {
-    background: #22242d;
-  }
-`;
-
-const Playlist = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-`;
-
-const Title = styled.span`
-  font-size: 16px;
-`;
-
-const Counter = styled.span`
-  font-size: 12px;
-`;
+import Constants from '../constants';
 
 class Playlists extends Component {
   constructor () {
@@ -61,16 +27,16 @@ class Playlists extends Component {
     return (
       <div>
         <TopBarHamburger />
-        <Wrapper>
+        <section class="container playlists__wrapper">
           {playlists.map((playlist, index) => (
-            <CustomLink to={`/playlist/${playlist._id}`} key={playlist._id}>
-              <Playlist>
-                <Title>{playlist.title}</Title>
-                <Counter>{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</Counter>
-              </Playlist>
-            </CustomLink>
+            <Link class="playlists__link" to={`/playlist/${playlist._id}`} key={playlist._id}>
+              <div class="playlists__playlist">
+                <span class="playlists__title">{playlist.title}</span>
+                <span class="playlists__tracks-counter">{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</span>
+              </div>
+            </Link>
           ))}
-        </Wrapper>
+        </section>
       </div>
     )
   }

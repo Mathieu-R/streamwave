@@ -2,7 +2,6 @@ import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { get, set } from 'idb-keyval';
-import styled from 'styled-components';
 import Constants from '../constants';
 import Cover from '../components/cover';
 import TopBarHamburger from '../components/topbar-hamburger';
@@ -11,15 +10,6 @@ import {
   storeLibrary,
   getLibrary
 } from '../store/library';
-
-const Gallery = styled.section`
-  width: 100%;
-  flex-grow: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-gap: 20px;
-  padding: 0 2%;
-`;
 
 const mapStateToProps = state => ({
   library: getLibrary(state)
@@ -141,7 +131,7 @@ class Library extends Component {
     return (
       <div>
         <TopBarHamburger />
-        <Gallery innerRef={gallery => this.gallery = gallery}>
+        <section class="library" ref={gallery => this.gallery = gallery}>
           {library.map(({artist, title, coverURL, primaryColor, _id}) => (
             <Cover
               key={_id}
@@ -152,7 +142,7 @@ class Library extends Component {
               id={_id}
             />
           ))}
-        </Gallery>
+        </section>
       </div>
     );
   }
