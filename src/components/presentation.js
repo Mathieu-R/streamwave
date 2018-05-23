@@ -4,6 +4,10 @@ import ProgressBar from './progress-bar-presentation';
 import { formatDuration } from '../utils';
 import Constants from '../constants';
 
+// lazy-load presentation css
+// as only few users should need it
+import '../style/chromecast/index';
+
 class Presentation extends Component {
   constructor () {
     super();
