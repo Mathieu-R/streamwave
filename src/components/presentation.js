@@ -1,102 +1,12 @@
 import { h, Component } from 'preact';
-import styled from 'styled-components';
 import shaka from 'shaka-player';
 import ProgressBar from './progress-bar-presentation';
-import { formatDuration, getRGBCssFromObject } from '../utils';
+import { formatDuration } from '../utils';
 import Constants from '../constants';
 
-const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #262727;
-  overflow: hidden;
-`;
-
-const CoverContainer = styled.section`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-`;
-
-const Cover = styled.div`
-  opacity: 0.7;
-`;
-
-const Artwork = styled.img`
-  max-width: 300px;
-`;
-
-const Footer = styled.section`
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100px;
-`;
-
-const ProgressWrapper = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5px;
-  width: 100%;
-`;
-
-const AllInfos = styled.section`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-`;
-
-const CurrentTime = styled.span`
-  margin: 0 20px;
-  font-weight: bold;
-`;
-
-const TotalTime = styled.div`
-  margin: 0 20px;
-  font-weight: bold;
-`;
-
-const Infos = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  padding: 5px;
-  height: 100px;
-`;
-
-const Title = styled.span`
-  margin: 3px;
-  font-size: 18px;
-`;
-
-const Artist = styled.span`
-  font-size: 14px;
-  font-weight: 400;
-  margin: 3px;
-  opacity: 0.7;
-`;
-
-const Album = styled.span`
-  font-size: 14px;
-  font-weight: 400;
-  margin: 3px;
-  opacity: 0.7;
-`;
+// lazy-load presentation css
+// as only few users should need it
+import '../style/chromecast/index';
 
 class Presentation extends Component {
   constructor () {
@@ -113,14 +23,12 @@ class Presentation extends Component {
       playing: true,
       currentTime: 7.82,
       totalTime: 153,
-      primaryColor: {r:117, g:118, b:119},
       manifestURL: 'ability/01-1451113-Borrtex-Ability/manifest-full.mpd',
       track: {
         duration: 353,
         title: 'Ability',
         coverURL: 'ability/ability.jpg',
-      },
-      debug: ''
+      }
     }
   }
 
@@ -213,29 +121,28 @@ class Presentation extends Component {
   }) {
     if (!track) return null;
     return (
-      <Container>
-        <span class="debug">{debug}</span>
-        <CoverContainer background={primaryColor}>
-          <Cover>
-            <Artwork src={track.coverURL && `${Constants.CDN_URL}/${track.coverURL}`} alt="cover artwork" />
-          </Cover>
-        </CoverContainer>
-        <Footer>
-          <ProgressWrapper>
+      <div class="presentation">
+        <section class="presentation__cover-container">
+          <div class="presentation__cover">
+            <img class="presentation__artwork" src={track.coverURL && `${Constants.CDN_URL}/${track.coverURL}`} alt="cover artwork" />
+          </div>
+        </section>
+        <section class="presentation__footer">
+          <div class="presentation__progress-wrapper">
             <ProgressBar duration={track.duration} currentTime={currentTime} />
-          </ProgressWrapper>
-          <AllInfos>
-            <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
-            <Infos>
-              <Title>{track.title}</Title>
-              <Artist>{artist}</Artist>
-              <Album>{album}</Album>
-            </Infos>
-            <TotalTime>{formatDuration(track.duration)}</TotalTime>
-          </AllInfos>
-        </Footer>
+          </div>
+          <section class="presentation__all-infos">
+            <span class="presentation__current-time">{formatDuration(currentTime)}</span>
+            <div class="presentation__infos">
+              <span class="presentation__title">{track.title}</span>
+              <span class="presentation__artist">{artist}</span>
+              <span class="presentation__album">{album}</span>
+            </div>
+            <span class="presentation__total-time">{formatDuration(track.duration)}</span>
+          </section>
+        </section>
         <audio preload="metadata" ref={audio => this.audio = audio} onTimeUpdate={this.updateTime}></audio>
-      </Container>
+      </div>
     );
   }
 }

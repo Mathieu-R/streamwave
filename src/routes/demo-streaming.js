@@ -1,43 +1,5 @@
 import { h, Component } from 'preact';
-import styled from 'styled-components';
 import TopBarHamburger from '../components/topbar-hamburger';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-`;
-
-const Bitrate = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-`;
-
-const Title = styled.span`
-  font-size: 32px;
-  color: #DEDEDE;
-`;
-
-const Content = styled.span`
-  font-size: 16px;
-`;
-
-const CanvasContainer = styled.section`
-  width: 100%;
-  height: 50px;
-`;
 
 class Demo extends Component {
   constructor () {
@@ -157,18 +119,18 @@ class Demo extends Component {
 
   render ({}, {bitrate}) {
     return (
-      <Container>
+      <div class="demo-streaming">
         <TopBarHamburger />
-        <Wrapper>
-          <Bitrate>
-            <Title>Bitrate</Title>
-            <Content>{bitrate} kb/s</Content>
-          </Bitrate>
-          <CanvasContainer innerRef={container => this.container = container}>
+        <div class="demo-streaming__wrapper">
+          <div class="demo-streaming__bitrate">
+            <span class="demo-streaming__bitrate-title">Bitrate</span>
+            <span class="demo-streaming__bitrate-content">{bitrate} kb/s</span>
+          </div>
+          <div class="canvas-container" ref={container => this.container = container}>
             <canvas ref={canvas => this.canvas = canvas}></canvas>
-          </CanvasContainer>
-        </Wrapper>
-      </Container>
+          </div>
+        </div>
+      </div>
     );
   }
 }

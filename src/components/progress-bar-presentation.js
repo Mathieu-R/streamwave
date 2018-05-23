@@ -1,47 +1,4 @@
 import { h, Component } from 'preact';
-import styled from 'styled-components';
-
-const ProgressBarContainer = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  height: 100%;
-  background: rgba(255,255,255,0.5);
-`;
-
-const ProgressTrack = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #FFF;
-  transform: translate(0, -50%);
-  transform-origin: 0 50%;
-`;
-
-const ProgressRoundContainer = styled.div`
-  position: relative;
-  width: 100%;
-  background: 0 0;
-  border: none;
-  outline: none;
-  pointer-events: none;
-`;
-
-const ProgressRound = styled.div`
-  position: absolute;
-  top: 50%;
-  left: -5px;
-  height: 15px;
-  width: 15px;
-  outline: 0;
-  border-radius: 50%;
-  background: #FFF;
-  transform: translateY(-50%) scale(0.7);
-  transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
-`;
 
 class ProgressBar extends Component {
   constructor () {
@@ -105,15 +62,15 @@ class ProgressBar extends Component {
     if (!duration && !currentTime) return null;
 
     return (
-      <ProgressBarContainer
-        innerRef={container => this.container = container}
+      <div class="progress-bar-presentation"
+        ref={container => this.container = container}
       >
-        <ProgressTrack innerRef={track => this.track = track} />
-        <ProgressRoundContainer innerRef={container => this.round = container}>
-          <ProgressRound />
-        </ProgressRoundContainer>
-      </ProgressBarContainer>
-    )
+        <div class="progress-bar-presentation__track" ref={track => this.track = track}></div>
+        <div class="progress-bar-presentation__round-container" ref={container => this.round = container}>
+          <div class="progress-bar-presentation__round" />
+        </div>
+      </div>
+    );
   }
 }
 

@@ -1,13 +1,10 @@
 import { h } from 'preact';
 import TopBarHamburger from '../../components/topbar-hamburger';
-import styled from 'styled-components';
-
-const Container = styled.div``;
 
 const About = () => (
-  <Container>
+  <div>
     <TopBarHamburger />
-  </Container>
+  </div>
 );
 
 export default About;

@@ -44,10 +44,6 @@ input[type="email"], input[type="password"] {
   border-radius: 5px;
   border: none;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-
-  & .error {
-    border: 1px solid red;
-  }
 }
 
 a {
@@ -60,29 +56,24 @@ a {
   opacity: 0.5;
 }
 
+.app {
+  min-height: 100vh;
+  background: $background;
+}
+
 /* class for lazy-loaded images */
 .cover__artwork.lazy {
   opacity: 0;
 }
 
 .progress-bar .highlight-round,
-.range-bar .highlight-round {
+.range .highlight-round {
   box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
   transform: translateY(-50%) scale(1);
 }
 
-.range-bar .highlight-round {
+.range .highlight-round {
   transform: translateY(-40%) scale(1);
-}
-
-.range-bar .show-tooltip {
-  opacity: 1;
-  transform: translateY(-170%) scale(1);
-}
-
-.side-nav.side-nav--visible {
-  transform: translateX(0);
-  opacity: 1;
 }
 
 .overlay.overlay--visible {
@@ -115,4 +106,13 @@ a {
 
 .ripple.expanded {
   transform: translate(50%, -50%) scale(1);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

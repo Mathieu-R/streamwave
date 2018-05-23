@@ -1,30 +1,18 @@
 $mobile: 530px;
 
-$background-color: #161C36;
+$auth-background: #7C7C7C;
+$background: linear-gradient(#485460, #0b0c0d 85%);
 
-$navbar-background-color: #222223;
+$mini-player-height: 45px;
+$mini-player-background: #212121;
+$progress-bar-height: 5px;
+
+$navbar-background: #222223;
 $navbar-height: 55px;
+
+$slider-background: #979797;
 
 $welcome-subtitle-color: #D8D8D8;
 
-$auth-button-color: #7C7C7C;
-$auth-google-button-color: #2962FF;
-
-$menu-button-select-color: #4A90E2;
-$track-select-color: #4A90E2;
-
-$slider-color: #979797;
-$slider-progress-color: #4A90E2;
-$slider-round-color: #1870D7;
-
-$switch-button-fade-opacity: 0.3;
-$switch-button-round-color: #4A90E2;
-
-$logout-button-color: #1870D7;
-
-$mini-player-height: 45px;
-$mini-player-background-color: #212121;
-
-$player-slider-color: #D8D8D8;
-$player-slider-progress-color: #FFF;
-$player-slider-round-color: #FFF;
+$auth-button-background: #7C7C7C;
+$google-button-background: #2962FF;

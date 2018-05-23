@@ -1,8 +1,5 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import pure from 'recompose/pure';
-import { TopBarContainer, TopBarButton, TopBarTitle } from './ui';
 
 import hamburger from '../assets/svg/hamburger.svg';
 
@@ -19,18 +16,14 @@ class TopBarHamburger extends Component {
     return false;
   }
 
-  // componentDidUpdate () {
-  //   console.log('lolololol');
-  // }
-
   render ({showSideNav}) {
     return (
-      <TopBarContainer>
-        <TopBarButton role="button" src={hamburger} onClick={showSideNav} alt="hamburger open menu" />
-        <TopBarTitle>
+      <div class="top-bar">
+        <img class="top-bar__button" role="button" src={hamburger} onClick={showSideNav} alt="hamburger open menu" />
+        <div class="top-bar__title">
           Streamwave
-        </TopBarTitle>
-      </TopBarContainer>
+        </div>
+      </div>
     );
   }
 }

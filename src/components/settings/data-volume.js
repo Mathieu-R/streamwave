@@ -1,33 +1,7 @@
 import { h, Component } from 'preact';
-import styled from 'styled-components';
 import Switch from '../switch';
 import Range from '../range';
 import Circle from '../circle';
-
-const Container = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 100px;
-  max-height: 400px;
-  width: 100%;
-  min-height: 50px;
-  padding: 10px 0;
-`;
-
-const DataVolumeRange = styled.section`
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-  opacity: ${props => props.show ? 1 : 0};
-  transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1);
-`;
-
-const RangeBound = styled.span`
-  display: flex;
-  padding: 0 10px;
-  font-weight: bold;
-`;
 
 class DataVolume extends Component {
   shouldComponentUpdate (nextProps) {
@@ -48,14 +22,18 @@ class DataVolume extends Component {
 
   render ({limitData, dataMax, volume, onLimitDataStatusChange, onMaxDataVolumeChange}) {
     return (
-      <Container>
+      <div class="data-volume">
         <Switch
           label="Volume de données maximale (mo)"
           onChange={onLimitDataStatusChange}
           value={limitData}
         />
-        <DataVolumeRange show={limitData}>
-          <RangeBound>200mo</RangeBound>
+        <div class={
+          limitData ?
+          'data-volume__range data-volume__range--visible' :
+          'data-volume__range'
+        } show={limitData}>
+          <span class="data-volume__bound">200mo</span>
           <Range
             min={200}
             max={2000}
@@ -63,14 +41,14 @@ class DataVolume extends Component {
             showTooltip={true}
             onChange={onMaxDataVolumeChange}
           />
-          <RangeBound>2000mo</RangeBound>
-        </DataVolumeRange>
+          <span class="data-volume__bound">2000mo</span>
+        </div>
         {/* SVG arc with data consumed until today */}
         {
           limitData &&
           <Circle volume={volume} dataMax={dataMax} />
         }
-      </Container>
+      </div>
     );
   }
 }
