@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
-import styled from 'styled-components';
 import ProgressBar from '../components/progress-bar-presentation';
 import Constants from '../constants';
 
@@ -19,75 +18,6 @@ import {
   setPrevTrack,
   setNextTrack
 } from '../store/player';
-
-const progressBarHeight = 5;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: ${props => props.theme.miniPlayer.height};
-  width: 100%;
-  max-width: 500px;
-  background: ${props => props.theme.miniPlayer.background};
-  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
-`;
-
-const ProgressContainer = styled.div`
-  position: absolute;
-  top: ${-progressBarHeight}px;
-  width: 100%;
-  left: 0;
-  height: ${progressBarHeight}px;
-`;
-
-const MiniCoverContainer = styled.div`
-  height: 100%;
-  margin-right: 10px;
-`;
-
-const MiniCoverArtwork = styled.img`
-  height: 100%;
-  max-width: 100%;
-`;
-
-const MusicInfosContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-  flex-grow: 1;
-`;
-
-const Artist = styled.div`
-  font-size: 12px;
-`;
-
-const Title = styled.div`
-  font-size: 14px;
-
-  @media(max-width: ${props => props.theme.mobile}) {
-    font-size: 12px;
-  }
-`;
-
-const ControlsContainer = styled.div`
-  height: 100%;
-  /*min-width: 200px;*/
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Button = styled.button`
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: none;
-  background: none;
-  padding: 0 10px;
-`;
 
 const mapStateToProps = state => ({
   coverURL: getCoverURL(state),
@@ -155,25 +85,25 @@ class MiniPlayer extends Component {
     currentTime
   }) {
     return (
-      <Container onClick={this.showPlayer}>
-        <ProgressContainer>
+      <div class="mini-player" onClick={this.showPlayer}>
+        <section class="mini-player__progress-container">
           <ProgressBar duration={duration} currentTime={currentTime} borderRadius={false} />
-        </ProgressContainer>
+        </section>
 
         {
           coverURL &&
-          <MiniCoverContainer>
-            <MiniCoverArtwork src={`${Constants.CDN_URL}/${coverURL}`} alt="mini cover artwork"/>
-          </MiniCoverContainer>
+          <section class="mini-player__cover-container">
+            <img class="mini-player__cover-artwork" src={`${Constants.CDN_URL}/${coverURL}`} alt="mini cover artwork"/>
+          </section>
         }
 
-        <MusicInfosContainer>
-          <Artist>{artist}</Artist>
-          <Title>{track && track.title}</Title>
-        </MusicInfosContainer>
+        <section class="mini-player__infos-container">
+          <div class="mini-player__artist">{artist}</div>
+          <div class="mini-player__title">{track && track.title}</div>
+        </section>
 
-        <ControlsContainer>
-          <Button disabled={!track} onClick={this.onPrevClick} aria-label="prev track">
+        <section class="mini-player__controls-container">
+          <button class="mini-player__button" disabled={!track} onClick={this.onPrevClick} aria-label="prev track">
             <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -197,8 +127,8 @@ class MiniPlayer extends Component {
                 </g>
               </g>
             </svg>
-          </Button>
-          <Button disabled={!track} onClick={this.onPlayClick} aria-label="play or pause track">
+          </button>
+          <button class="mini-player__button" disabled={!track} onClick={this.onPlayClick} aria-label="play or pause track">
             {
               playing ?
               <svg fill="#FFFFFF" height="35" width="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -217,8 +147,8 @@ class MiniPlayer extends Component {
                 />
               </svg>
             }
-          </Button>
-          <Button disabled={!track} onClick={this.onNextClick} aria-label="next track">
+          </button>
+          <button class="mini-player__button" disabled={!track} onClick={this.onNextClick} aria-label="next track">
             <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                 <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -239,10 +169,10 @@ class MiniPlayer extends Component {
                 </g>
               </g>
             </svg>
-          </Button>
+          </button>
           {
           chromecastAvailable &&
-          <Button disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
+          <button class="mini-player__button" disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
@@ -266,10 +196,10 @@ class MiniPlayer extends Component {
               />
             </svg>
           }
-          </Button>
+          </button>
           }
-        </ControlsContainer>
-      </Container>
+        </section>
+      </div>
     );
   }
 }

@@ -1,62 +1,10 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-import LibraryIcon from '../assets/svg/library.svg';
 
 import {
   switchPlayerStatus, getTrack
 } from '../store/player';
-
-const activeClassName = 'nav-active';
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: ${props => props.theme.navbar.height};
-  width: 100%;
-  max-width: 500px;
-  background: ${props => props.theme.navbar.background};
-`;
-
-const Button = styled.button`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  background: none;
-  border-radius: none;
-`;
-
-const Icon = styled.div`
-  height: 25px;
-  width: 25px;
-`;
-
-const Title = styled.div`
-  font-size: 10px;
-  font-weight: 500;
-  margin-top: 5px;
-`;
-
-const NavBarLink = styled(NavLink).attrs({
-  activeClassName
-})`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-
-  &.${activeClassName} g, &.${activeClassName} svg {
-    fill: #03A9F4;
-  }
-
-  &.${activeClassName} ${Title} {
-    color: #03A9F4;
-  }
-`;
 
 const mapStateToProps = state => ({
   track: getTrack(state)
@@ -88,10 +36,10 @@ class Navbar extends Component {
 
   render () {
     return (
-      <Container>
-        <NavBarLink to="/" activeClassName="nav-active">
-          <Button aria-label="library">
-            <Icon>
+      <div class="navbar">
+        <NavLink class="navbar__link" to="/">
+          <button class="navbar__button" aria-label="library">
+            <div class="navbar__icon">
               <svg viewBox="0 0 33 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <defs></defs>
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -102,15 +50,15 @@ class Navbar extends Component {
                   </g>
                 </g>
               </svg>
-            </Icon>
-            <Title>
+            </div>
+            <div class="navbar__icon-title">
               Bibliothèque
-            </Title>
-          </Button>
-        </NavBarLink>
-        <NavBarLink to="/playlist"  activeClassName="nav-active">
-          <Button aria-label="playlists">
-            <Icon>
+            </div>
+          </button>
+        </NavLink>
+        <NavLink class="navbar__link" to="/playlist">
+          <button class="navbar__button" aria-label="playlists">
+            <div class="navbar__icon">
               <svg viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <title>Queue</title>
                 <desc>Created with Sketch.</desc>
@@ -140,14 +88,14 @@ class Navbar extends Component {
                   </g>
                 </g>
               </svg>
-            </Icon>
-            <Title>
+            </div>
+            <div class="navbar__icon-title">
               Playlists
-            </Title>
-          </Button>
-        </NavBarLink>
-        <Button onClick={this.showPlayer} aria-label="currently playing music">
-          <Icon>
+            </div>
+          </button>
+        </NavLink>
+        <button class="navbar__button" onClick={this.showPlayer} aria-label="currently playing music">
+          <div class="navbar__icon">
             <svg xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -160,38 +108,38 @@ class Navbar extends Component {
               <polyline points="9 17 9 5 21 3 21 15">
               </polyline>
             </svg>
-          </Icon>
-          <Title>
+          </div>
+          <div class="navbar__icon-title">
             En écoute
-          </Title>
-        </Button>
-        <NavBarLink to="/search" activeClassName="nav-active">
-          <Button aria-label="search">
-            <Icon>
+          </div>
+        </button>
+        <NavLink class="navbar__link" to="/search">
+          <button class="navbar__button" aria-label="search">
+            <div class="navbar__icon">
               <svg fill="#FFFFFF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 <path d="M0 0h24v24H0z" fill="none"/>
               </svg>
-            </Icon>
-            <Title>
+            </div>
+            <div class="navbar__icon-title">
               Rechercher
-            </Title>
-          </Button>
-        </NavBarLink>
-        <NavBarLink to="/settings" activeClassName="nav-active">
-          <Button aria-label="settings">
-            <Icon>
+            </div>
+          </button>
+        </NavLink>
+        <NavLink class="navbar__link" to="/settings">
+          <button class="navbar__button" aria-label="settings">
+            <div class="navbar__icon">
               <svg fill="#FFFFFF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
                 <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
               </svg>
-            </Icon>
-            <Title>
+            </div>
+            <div class="navbar__icon-title">
               Paramètres
-            </Title>
-          </Button>
-        </NavBarLink>
-      </Container>
+            </div>
+          </button>
+        </NavLink>
+      </div>
     )
   }
 }

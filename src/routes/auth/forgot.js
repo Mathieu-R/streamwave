@@ -1,28 +1,11 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Constants from '../../constants';
-import styled from 'styled-components';
 import TopBarBack from '../../components/topbar-back';
-import { Container as UIContainer, Form, FormButton } from '../../components/ui';
-
-const Container = styled(UIContainer)`
-  flex-direction: column;
-`;
 
 import {
   toasting
 } from '../../store/toast';
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 17px 0;
-`;
-
-const Label = styled.label`
-  font-size: 18px;
-  margin-bottom: 2px;
-`;
 
 const mapDispatchToProps = dispatch => ({
   toasting: (messages, buttons, duration) => dispatch(toasting(messages, buttons, duration))
@@ -77,18 +60,18 @@ class Forgot extends Component {
 
   render () {
     return (
-      <Container>
+      <div class="container-column">
         <TopBarBack url='/auth' />
-        <Form onSubmit={this.sendPasswordChangeEmail}>
-          <InputContainer>
-            <Label htmlFor="email">E-mail</Label>
+        <form class="form" onSubmit={this.sendPasswordChangeEmail}>
+          <div class="forgot__input-container">
+            <label class="label" for="email">E-mail</label>
             <input ref={input => this.email = input} type="email" id="email" autocomplete="email"/>
-          </InputContainer>
-          <FormButton aria-label="send email to change password">
+          </div>
+          <button class="form-button" aria-label="send email to change password">
             Envoyer un e-mail de changement de mot de passe
-          </FormButton>
-        </Form>
-      </Container>
+          </button>
+        </form>
+      </div>
     );
   }
 }

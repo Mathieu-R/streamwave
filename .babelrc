@@ -5,16 +5,6 @@
       "targets": {
         "browsers": ["last 2 versions"]
       },
-      "development": {
-        "plugins": [
-          "babel-plugin-styled-components"
-        ]
-      },
-      "production": {
-        "plugins": [
-          "babel-plugin-styled-components"
-        ]
-      },
       "exclude": ["transform-regenerator", "transform-async-to-generator"]
     }]
   ],
@@ -22,7 +12,6 @@
     ["@babel/plugin-transform-react-jsx", {"pragma": "h"}],
     ["@babel/plugin-proposal-object-rest-spread"],
     ["transform-react-remove-prop-types"],
-    ["babel-plugin-styled-components"],
     ["syntax-dynamic-import"],
     ["module:fast-async", {
       "compiler": {

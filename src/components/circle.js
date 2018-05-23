@@ -1,31 +1,4 @@
 import { h, Component } from 'preact';
-import styled from 'styled-components';
-
-const AverageCircle = styled.div`
-  margin: 0 auto;
-  width: 300px;
-  max-width: 90%;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-`;
-
-const Infos = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #FFF;
-`;
-
-const Percentage = styled.span`
-  margin-top: 5px;
-  font-size: 20px;
-  font-weight: bold;
-`;
 
 class Circle extends Component {
   constructor() {
@@ -154,9 +127,9 @@ class Circle extends Component {
 
   render () {
     return (
-      <AverageCircle innerRef={container => this.container = container}>
+      <div class='average-circle' ref={container => this.container = container}>
         <canvas ref={canvas => this.canvas = canvas}></canvas>
-      </AverageCircle>
+      </div>
     );
   }
 }
@@ -166,5 +139,4 @@ class Circle extends Component {
  * volume => 2 decimal float in Mo
  * dataMax => integer in Mo
  */
-
 export default Circle;

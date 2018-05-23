@@ -1,16 +1,12 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import ProgressBar from './progress-bar';
-import { shuffle, formatDuration, getRGBCssFromObject } from '../utils';
+import { shuffle, formatDuration } from '../utils';
 import Range from './range';
+import ProgressBar from './progress-bar';
 import PlaylistModal from './playlist-modal';
 import Constants from '../constants';
 
-import closeIcon from '../assets/svg/close.svg';
 import addIcon from '../assets/svg/add.svg';
-import volumeMuteIcon from '../assets/svg/volume-mute.svg';
-import volumeMaxIcon from '../assets/svg/volume-max.svg';
 
 import {
   getShowPlayer,
@@ -35,187 +31,6 @@ import {
   switchRepeatStatus,
   switchPlayerStatus
 } from '../store/player';
-
-const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: ${props => props.theme.background};
-  overflow: hidden;
-  z-index: 10000;
-  opacity: ${props => props.show ? 1 : 0};
-  transform: translateY(${props => props.show ? 0 : '100%'});
-  pointer-events: ${props => props.show ? 'auto' : 'none'};
-  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
-  /* mémoire consommée par will-change trop importante dans Firefox */
-  /*will-change: transform, opacity;*/
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  border: none;
-  background: none;
-`;
-
-const Close = styled(Button)`
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: url(${closeIcon}) no-repeat no-repeat;
-  background-size: 24px 24px;
-  width: 24px;
-  height: 24px;
-`;
-
-const CoverContainer = styled.section`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 60px;
-`;
-
-const Cover = styled.div``;
-
-const Artwork = styled.img`
-  max-width: 300px;
-`;
-
-const InfoContainer = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-`;
-
-const Infos = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const Artist = styled.span`
-  font-size: 12px;
-  font-weight: 400;
-`;
-
-const Title = styled.span``;
-
-const AddToPlaylist = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-50%);
-  border: none;
-  background: none;
-`;
-
-const ProgressAndControlsContainer = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  /* prevent focus on time when moving progress-bar */
-  user-select: none;
-`;
-
-const ProgressWrapper = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  max-width: 800px;
-  margin: 5px 0;
-`;
-
-const VolumeWrapper = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 500px;
-  margin-top: 20px;
-`;
-
-const CurrentTime = styled.span`
-  margin: 0 10px;
-  font-weight: bold;
-`;
-
-const TotalTime = styled.div`
-  margin: 0 10px;
-  font-weight: bold;
-`;
-
-const Controls = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CenterControls = styled(Button)`
-  margin: 0 5px;
-  transition: 0.1s opacity linear;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const OutsideControls = styled(Button)`
-  margin: 0 10px;
-
-  transition: 0.1s opacity linear;
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const Shuffle = styled(OutsideControls)``;
-const Prev = styled(CenterControls)``;
-const Play = styled(CenterControls)``;
-const Next = styled(CenterControls)``;
-const Repeat = styled(OutsideControls)``;
-
-const SVG = styled.svg`
-`;
-
-const Chromecast = styled(Button)`
-  position: absolute;
-  top: 15px;
-  right: 15px;
-`;
-
-const VolumeMute = styled.div`
-  background: url(${volumeMuteIcon}) no-repeat no-repeat center;
-  background-size: 18px 18px;
-  width: 18px;
-  height: 18px;
-  margin: 0 10px;
-`;
-
-const VolumeMax = styled.div`
-  background: url(${volumeMaxIcon}) no-repeat no-repeat center;
-  background-size: 20px 20px;
-  width: 20px;
-  height: 20px;
-  margin: 0 10px;
-`;
 
 const mapStateToProps = state => ({
   showPlayer: getShowPlayer(state),
@@ -267,13 +82,6 @@ class Player extends Component {
     if (this.props.tracks !== nextProps.tracks) {
       return false;
     }
-
-    //console.log(this.props.showPlayer, nextProps.showPlayer)
-
-    // do not rerender if player is not shown
-    // if (!this.props.showPlayer && !nextProps.showPlayer) {
-    //   return false;
-    // }
 
     return true;
   }
@@ -353,7 +161,7 @@ class Player extends Component {
   render ({
     showPlayer, coverURL, artist, title, duration, playing,
     chromecastAvailable, chromecasting, shuffle, repeat,
-    track, currentTime, totalTime, primaryColor,
+    track, currentTime, totalTime,
     seek, onVolumeChange
   }, {
     showPlaylistModal
@@ -364,15 +172,19 @@ class Player extends Component {
     }
 
     return (
-      <Container show={showPlayer}>
+      <div class={
+        showPlayer ?
+        'player player--visible' :
+        'player'
+      }>
         <div
           class="ripple"
           ref={ripple => this.ripple = ripple}
         ></div>
-        <Close onClick={this.closePlayer} aria-label="close player"/>
+        <button class="player__close" onClick={this.closePlayer} aria-label="close player"></button>
         {
         chromecastAvailable &&
-        <Chromecast
+        <button class="player__chromecast"
           onClick={this.onChromecastClick}
           onMouseDown={this.expandRipple}
           onTouchStart={this.expandRipple}
@@ -402,31 +214,31 @@ class Player extends Component {
               />
             </svg>
           }
-        </Chromecast>
+        </button>
         }
-        <CoverContainer background={primaryColor}>
-          <Cover>
-            <Artwork src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
-            <InfoContainer>
-              <Infos>
-                <Title>{track && track.title}</Title>
-                <Artist>{artist && artist}</Artist>
-              </Infos>
-              <AddToPlaylist onClick={this.addToPlaylist} aria-label="add to playlist">
+        <section class="player__cover-container">
+          <section class="player__cover">
+            <img class="player__artwork" src={coverURL && `${Constants.CDN_URL}/${coverURL}`} alt="cover artwork" />
+            <section class="player__infos-container">
+              <div class="player__infos">
+                <div class="player__title">{track && track.title}</div>
+                <div class="player__artist">{artist && artist}</div>
+              </div>
+              <div class="player__add-to-playlist" onClick={this.addToPlaylist} aria-label="add to playlist">
                 <img src={addIcon} alt="add to playlist" />
-              </AddToPlaylist>
-            </InfoContainer>
-          </Cover>
-        </CoverContainer>
-        <ProgressAndControlsContainer>
-          <ProgressWrapper>
-            <CurrentTime>{formatDuration(currentTime)}</CurrentTime>
+              </div>
+            </section>
+          </section>
+        </section>
+        <section class="player__progress-and-controls-container">
+          <section class="player__progress-wrapper">
+            <div class="player__current-time">{formatDuration(currentTime)}</div>
             <ProgressBar seek={seek} borderRadius={true} />
-            <TotalTime>{formatDuration(totalTime)}</TotalTime>
-          </ProgressWrapper>
-          <Controls>
-            <Shuffle onClick={this.onShuffleClick} aria-label="shuffle tracklist">
-              <SVG width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <div class="player__total-time">{formatDuration(totalTime)}</div>
+          </section>
+          <section class="player__controls">
+            <button class="player__outside-controls" onClick={this.onShuffleClick} aria-label="shuffle tracklist">
+              <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-105.000000, -284.000000)" fill-rule="nonzero" fill={shuffle ? "#03A9F4" : "#FFF"}>
                     <g id="Shuffle" transform="translate(105.000000, 279.000000)">
@@ -450,9 +262,9 @@ class Player extends Component {
                     </g>
                   </g>
                 </g>
-              </SVG>
-            </Shuffle>
-            <Prev onClick={this.onPrevClick} aria-label="prev track">
+              </svg>
+            </button>
+            <button class="player__centers-controls" onClick={this.onPrevClick} aria-label="prev track">
               <svg width="27px" height="22px" viewBox="0 0 37 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-709.000000, -286.000000)" fill="#FFF">
@@ -476,8 +288,8 @@ class Player extends Component {
                   </g>
                 </g>
               </svg>
-            </Prev>
-            <Play onClick={this.onPlayClick} aria-label="play or pause track">
+            </button>
+            <button class="player__centers-controls" onClick={this.onPlayClick} aria-label="play or pause track">
             {
               playing ?
               <svg fill="#FFFFFF" height="65" width="65" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -496,8 +308,8 @@ class Player extends Component {
                 />
               </svg>
             }
-            </Play>
-            <Next onClick={this.onNextClick} aria-label="next track">
+            </button>
+            <button class="player__centers-controls" onClick={this.onNextClick} aria-label="next track">
               <svg width="27px" height="22px" viewBox="0 0 36 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none">
                   <g id="Icons-Pattern-One" transform="translate(-558.000000, -286.000000)" fill="#FFF">
@@ -518,9 +330,9 @@ class Player extends Component {
                   </g>
                 </g>
               </svg>
-            </Next>
-            <Repeat onClick={this.onRepeatClick} aria-label="repeat tracklist">
-              <SVG width="28px" height="22px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            </button>
+            <button class="player__outside-controls" onClick={this.onRepeatClick} aria-label="repeat tracklist">
+              <svg width="28px" height="22px" viewBox="0 0 36 30" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Icons-Pattern-One" transform="translate(-256.000000, -282.000000)" fill-rule="nonzero" fill={repeat ? "#03A9F4" : "#FFF"}>
                     <g id="Repeat" transform="translate(256.000000, 279.000000)">
@@ -536,21 +348,21 @@ class Player extends Component {
                     </g>
                   </g>
                 </g>
-              </SVG>
-            </Repeat>
-          </Controls>
-          <VolumeWrapper>
-            <VolumeMute />
+              </svg>
+            </button>
+          </section>
+          <section class="player__volume-wrapper">
+            <div class="player__volume-mute"></div>
             <Range min={0} max={100} showToolTip={false} onChange={onVolumeChange} />
-            <VolumeMax />
-          </VolumeWrapper>
-        </ProgressAndControlsContainer>
+            <div class="player__volume-max"></div>
+          </section>
+        </section>
         <PlaylistModal
           show={showPlaylistModal}
           removePlaylistModal={this.removePlaylistModal}
           track={track}
         />
-      </Container>
+      </div>
     );
   }
 }

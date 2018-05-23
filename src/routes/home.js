@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import shaka from 'shaka-player';
 import debounce from 'debounce';
 import { updateDataVolume, getDataVolumeDownloaded } from '../utils/download'
@@ -66,25 +65,6 @@ import {
   setPrevTrack,
   setNextTrack
 } from '../store/player';
-
-const Container = styled.section`
-  height: 100%;
-  /* prevent navbar and mini-player to overlap */
-  margin-bottom: 100px;
-`;
-
-const MiniPlayerAndNavBarContainer = styled.section`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100px;
-  width: 100%;
-  background: #212121;
-`;
 
 const mapStateToProps = state => ({
   userId: getUserId(state)
@@ -386,7 +366,7 @@ class Home extends Component {
 
   render () {
     return (
-      <Container>
+      <section class="home">
         <SideNav />
         <Switch>
           <Route exact path="/" component={Library} />
@@ -414,7 +394,7 @@ class Home extends Component {
           onVolumeChange={this.changeVolume}
           seek={this.seek}
         />
-        <MiniPlayerAndNavBarContainer>
+        <section class="home__mini-player-and-navbar-container">
           <MiniPlayer
             //listen={this.listen}
             onPlayClick={this.onPlayClick}
@@ -424,14 +404,14 @@ class Home extends Component {
             seek={this.seek}
           />
           <NavBar />
-        </MiniPlayerAndNavBarContainer>
+        </section>
         <Audio
           ref={audio => this.audio = audio}
           preload="metadata"
           next={this.setNextTrack}
           //crossFade={this.crossFade}
         />
-      </Container>
+      </section>
     );
   }
 }

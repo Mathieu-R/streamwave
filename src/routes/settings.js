@@ -8,7 +8,6 @@ import DownloadWithMobileNetwork from '../components/settings/download-mobile-ne
 import StorageQuota from '../components/settings/storage-quota';
 import DataVolume from '../components/settings/data-volume';
 import { getDataVolumeDownloaded } from '../utils/download';
-import styled from 'styled-components';
 import Constants from '../constants';
 
 import {
@@ -33,45 +32,6 @@ import {
 import {
   toasting
 } from '../store/toast';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const SettingsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 0 20px;
-  width: 100%;
-`;
-
-const ButtonsContainer = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${props => props.theme.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const SettingsButton = styled.button`
-  display: flex;
-  align-self: center;
-  margin: 10px;
-  padding: 10px 25px;
-  border-radius: 5px;
-  background: #696969;
-  color: #FFF;
-
-  @media (max-width: ${props => props.theme.mobile}) {
-    justify-content: center;
-    width: 100%;
-  }
-`;
 
 const mapStateToProps = state => ({
   fade: getFade(state),
@@ -186,9 +146,9 @@ class Settings extends Component {
 
   render ({fade, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
     return (
-      <Container>
+      <div class="settings">
         <TopBarHamburger />
-        <SettingsContainer>
+        <div class="settings__container">
           {
             Constants.SUPPORT_NETWORK_INFORMATION_API &&
             <DownloadWithMobileNetwork
@@ -210,15 +170,15 @@ class Settings extends Component {
             onLimitDataStatusChange={this.onLimitDataStatusChange}
             onMaxDataVolumeChange={this.onMaxDataVolumeChange}
           />
-          <ButtonsContainer>
+          <div class="settings__buttons">
             { Constants.SUPPORT_CACHE_API &&
-              <SettingsButton onClick={this.clearCache} aria-label="clear cache">Vider le cache</SettingsButton>
+              <button class="settings__button" onClick={this.clearCache} aria-label="clear cache">Vider le cache</button>
             }
-            <SettingsButton onClick={this.restore} aria-label="restore settings">Restaurer</SettingsButton>
-            <SettingsButton onClick={this.logout} aria-label="logout">Déconnexion</SettingsButton>
-          </ButtonsContainer>
-        </SettingsContainer>
-      </Container>
+            <button class="settings__button" onClick={this.restore} aria-label="restore settings">Restaurer</button>
+            <button class="settings__button" onClick={this.logout} aria-label="logout">Déconnexion</button>
+          </div>
+        </div>
+      </div>
     );
   }
 }

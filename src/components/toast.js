@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import Transition from 'react-transition-group/Transition';
-import styled from 'styled-components';
 
 import {
   getMessages,
@@ -9,82 +8,6 @@ import {
   toShow,
   stopToastMessage
  } from '../store/toast';
-
-const Inner = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 5px;
-  left: 5px;
-  right: auto;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-  font-size: 15px;
-  background: #323232;
-  color: #FFF;
-  opacity: 0;
-  z-index: 10000;
-  transition: opacity .3s cubic-bezier(0, 0, 0.3, 1),
-  transform .3s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity, transform;
-
-  &.entered, &.exiting {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  &.entering, &.exited {
-    opacity: 0;
-    transform: translateY(100px);
-  }
-
-  @media (max-width: ${props => props.theme.mobile}) {
-    left: 0;
-    bottom: 0;
-    right: 0;
-    font-size: 14px;
-  }
-`;
-
-const Messages = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  word-wrap: break-word;
-  font-weight: 400;
-  padding-right: 20px;
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Button = styled.button`
-  background: none;
-  border: none;
-  color: #03A9F4;
-  font-size: 16px;
-  text-transform: uppercase;
-
-  &:focus {
-    outline: none;
-    color: #FFF;
-  }
-
-  @media (max-width: ${props => props.theme.mobile}) {
-    font-size: 15px;
-  }
-`;
-
-const Content = styled.p`
-  margin: 0;
-`;
 
 const mapStateToProps = state => ({
   messages: getMessages(state),
@@ -103,7 +26,7 @@ class Toast extends Component {
   }
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.messages !== this.props.messages;
+    return nextProps.messages !== this.props.messages || nextProps.show !== this.props.show;
   }
 
   onClick (evt) {
@@ -122,21 +45,22 @@ class Toast extends Component {
   }
 
   render ({messages, buttons, show}) {
+    console.log(show);
     return (
       <Transition in={show} timeout={300}>
       {state => (
-        <Inner state={state} className={state}>
-          <Messages>
+        <div class={`toast ${state}`} state={state}>
+          <div class="toast__messages">
             {messages.map((message, index) => (
-              <Content key={index}>{message}</Content>
+              <div class="toast__content" key={index}>{message}</div>
             ))}
-          </Messages>
-          <Buttons>
+          </div>
+          <div class="toast__buttons">
             {buttons.map((name, index) => (
-              <Button key={index} data-action={name} onClick={this.onClick}>{name}</Button>
+              <button class="toast__button" key={index} data-action={name} onClick={this.onClick}>{name}</button>
             ))}
-          </Buttons>
-        </Inner>
+          </div>
+        </div>
       )}
       </Transition>
     );

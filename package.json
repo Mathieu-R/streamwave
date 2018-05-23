@@ -23,7 +23,6 @@
     "@babel/preset-env": "^7.0.0-beta.46",
     "babel-loader": "^8.0.0-beta.2",
     "babel-minify-webpack-plugin": "^0.3.1",
-    "babel-plugin-styled-components": "^1.5.1",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-imports": "^1.5.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
@@ -79,13 +78,9 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.3.1",
-    "recompose": "^0.27.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
-    "shaka-player": "^2.3.7",
-    "shallow-compare": "^1.2.2",
-    "styled-components": "^3.2.6",
-    "styled-transition-group": "^1.0.0"
+    "shaka-player": "^2.3.7"
   }
 }
