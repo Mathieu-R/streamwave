@@ -19,12 +19,9 @@ const mapDispatchToProps = dispatch => ({
 class Audio extends Component {
   constructor () {
     super();
-
     this.audio = null;
 
-    this.onTimeUpdate = this.onTimeUpdate.bind(this);
     this.trackTimeUpdate = this.trackTimeUpdate.bind(this);
-    this.onLoadedMetadata = this.onLoadedMetadata.bind(this);
     this.onEnded = this.onEnded.bind(this);
   }
 
@@ -36,14 +33,6 @@ class Audio extends Component {
 
   componentDidMount () {
     requestAnimationFrame(this.trackTimeUpdate);
-  }
-
-  onTimeUpdate (evt) {
-    const {duration, currentTime} = this.audio;
-    // onTimeUpdate fires up even when no audio is played.
-    if (!duration) return;
-
-    this.props.setCurrentTime(currentTime);
   }
 
   trackTimeUpdate () {
@@ -68,10 +57,6 @@ class Audio extends Component {
     this.props.setCurrentTime(currentTime);
   }
 
-  onLoadedMetadata (evt) {
-    this.onTimeUpdate(evt);
-  }
-
   onEnded (evt) {
     this.props.next({continuous: true});
   }
@@ -81,8 +66,6 @@ class Audio extends Component {
       <audio
         ref={audio => this.audio = audio}
         preload="metadata"
-        //onTimeUpdate={this.onTimeUpdate}
-        //onLoadedMetadata={this.onLoadedMetadata}
         onEnded={this.onEnded}
       />
     );

@@ -19,7 +19,8 @@ import {
   setQueue,
   setPrimaryColor,
   isShuffle,
-  getDownloads
+  getDownloads,
+  getTrackId
 } from '../store/player';
 
 import {
@@ -33,7 +34,8 @@ import {
 const mapStateToProps = state => ({
   shuffle: isShuffle(state),
   downloads: getDownloads(state),
-  downloadWithMobileNetwork: getDownloadWithMobileNetwork(state)
+  downloadWithMobileNetwork: getDownloadWithMobileNetwork(state),
+  currentTrackId: getTrackId(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -176,7 +178,7 @@ class TrackList extends Component {
     this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL}, true);
   }
 
-  render ({downloads}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
+  render ({downloads, currentTrackId}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
     if (tracks === undefined) return null;
     return (
       <div class="tracklist">
@@ -212,8 +214,9 @@ class TrackList extends Component {
         <section class="tracklist__tracks">
           {tracks.map(track => (
             <Track
-              number={track.number} title={track.title} duration={track.duration} track={track}
-              handleTrackClick={this.handleTrackClick}
+              key={track._id} id={track._id} currentTrackId={currentTrackId}
+              number={track.number} title={track.title} duration={track.duration}
+              track={track} handleTrackClick={this.handleTrackClick}
             />
           ))}
         </section>

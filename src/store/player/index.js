@@ -217,8 +217,9 @@ export function removeDownloadPercentage ({id}) {
 export const getTrack = state => state.player.track;
 export const getArtist = state => state.player.artist;
 export const getAlbum = state => state.player.album;
+export const getTrackId = state => getTrack(state) && getTrack(state)._id;
 export const getTrackName = state => getTrack(state) && getTrack(state).title;
-export const getCoverURL = state => getTrack(state) && getTrack(state).coverURL; /*state.player.coverURL;*/
+export const getCoverURL = state => getTrack(state) && getTrack(state).coverURL;
 export const isMusicPlaying = state => state.player.playing;
 export const isChromecastAvailable = state => state.player.chromecastAvailable;
 export const isMusicChromecasting = state => state.player.chromecasting;

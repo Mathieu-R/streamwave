@@ -12,6 +12,10 @@ class Track extends Component {
       return true;
     }
 
+    if (nextProps.currentTrackId !== this.props.currentTrackId) {
+      return true;
+    }
+
     return false;
   }
 
@@ -20,9 +24,14 @@ class Track extends Component {
     this.props.handleTrackClick(track);
   }
 
-  render ({number, title, duration}) {
+  render ({number, title, duration, id, currentTrackId}) {
+    console.log(id, currentTrackId);
     return (
-      <div class="track" onClick={this.onClick}>
+      <div class={
+        id === currentTrackId ?
+        'track track--active' :
+        'track'
+        } onClick={this.onClick}>
         <div class="track__number">{number}</div>
         <div class="track__title">{title}</div>
         <div class="track__duration">{formatDuration(duration)}</div>
