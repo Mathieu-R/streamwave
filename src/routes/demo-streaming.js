@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import TopBarHamburger from '../components/topbar-hamburger';
 
 class Demo extends Component {
   constructor () {
@@ -120,13 +119,12 @@ class Demo extends Component {
   render ({}, {bitrate}) {
     return (
       <div class="demo-streaming">
-        <TopBarHamburger />
         <div class="demo-streaming__wrapper">
           <div class="demo-streaming__bitrate">
             <span class="demo-streaming__bitrate-title">Bitrate</span>
             <span class="demo-streaming__bitrate-content">{bitrate} kb/s</span>
           </div>
-          <div class="canvas-container" ref={container => this.container = container}>
+          <div class="demo-streaming__canvas-container" ref={container => this.container = container}>
             <canvas ref={canvas => this.canvas = canvas}></canvas>
           </div>
         </div>

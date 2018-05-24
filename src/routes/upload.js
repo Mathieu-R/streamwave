@@ -4,6 +4,15 @@ import Constants from '../constants';
 class Upload extends Component {
   constructor () {
     super();
+    this.input = null;
+    this.progressValue = null;
+    this.progress = null;
+
+    this.onClickImportButton = this.onClickImportButton.bind(this);
+    this.importMedias = this.importMedias.bind(this);
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   onClickImportButton () {
@@ -11,7 +20,7 @@ class Upload extends Component {
   }
 
   importMedias (evt) {
-    const files = this.polarFileInput.files;
+    const files = this.input.files;
     if (!files) {
       return;
     }
@@ -22,11 +31,12 @@ class Upload extends Component {
   }
 
   async uploadMedias (files) {
-    let total, downloaded = 0;
+    const total = Array.from(files).reduce((total, file) => total += file.size, 0);
+    let downloaded = 0;
 
-    // TODO: calculate total download
     const onStream = ({done, value}) => {
       if (done) {
+        this.progressBar.classList.remove('upload__progress-bar--active');
         return;
       }
 
@@ -40,7 +50,7 @@ class Upload extends Component {
     const body = new FormData();
     body.append('musics', files);
 
-    const response = await fetch(`${Constants.API_URL}/albums/upload`, {
+    const response = await fetch(`${Constants.API_URL}/album/upload`, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${localStorage.getItem('streamwave-token')}`
@@ -49,6 +59,7 @@ class Upload extends Component {
     });
 
     // track file upload progress
+    this.progressBar.classList.add('upload__progress-bar--active');
     const reader = response.body.getReader();
     reader.read().then(onStream);
   }
@@ -97,7 +108,7 @@ class Upload extends Component {
             afin de les ajouter à votre catalogue musical.
           </p>
           <div>
-            <p class="upload__alternative">ou bien...</p>
+            <p class="upload__alternative">ou bien</p>
             <div class="upload__button-container">
               <button
                 class="upload__button"
@@ -114,7 +125,7 @@ class Upload extends Component {
               />
             </div>
           </div>
-          <div class="upload__progress-bar">
+          <div class="upload__progress-bar" ref={container => this.progressBar = container}>
             <div class="upload__progression-value" ref={value => this.progressValue = value}></div>
             <div class="upload__progression-track" ref={progress => this.progress = progress}></div>
           </div>
@@ -123,3 +134,5 @@ class Upload extends Component {
     );
   }
 }
+
+export default Upload;

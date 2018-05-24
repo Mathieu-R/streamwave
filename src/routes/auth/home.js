@@ -115,6 +115,7 @@ class Auth extends Component {
           iconURL: profile.avatar
         }
       });
+      console.log('credentials to save: ', credentials);
       return navigator.credentials.store(credentials);
     }
   }

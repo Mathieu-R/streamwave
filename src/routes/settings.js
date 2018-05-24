@@ -2,7 +2,6 @@ import { h, Component } from 'preact';
 import { connect } from 'react-redux';
 import { set } from 'idb-keyval';
 import debounce from 'debounce';
-import TopBarHamburger from '../components/topbar-hamburger';
 import DownloadQuality from '../components/settings/download-quality';
 import DownloadWithMobileNetwork from '../components/settings/download-mobile-network';
 import StorageQuota from '../components/settings/storage-quota';
@@ -147,7 +146,6 @@ class Settings extends Component {
   render ({fade, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
     return (
       <div class="settings">
-        <TopBarHamburger />
         <div class="settings__container">
           {
             Constants.SUPPORT_NETWORK_INFORMATION_API &&

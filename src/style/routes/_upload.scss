@@ -3,19 +3,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  flex: 1;
   padding: 20px;
 
   &__drag-drop {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100vh;
     border-radius: 5px;
     border: 2px dashed;
-    border-color: #000;
+    border-color: #9E9E9E;
+    padding: 20px;
     opacity: 0.7;
     transition: opacity 0.2s linear, transform 0.3s linear;
 
@@ -27,16 +28,23 @@
 
   &__icon {
     background: url(/assets/svg/upload.svg);
+    background-size: 100% 100%;
+    height: 150px;
+    width: 150px;
   }
 
   &__description {
+    max-width: 300px;
     font-size: 18px;
-    font-weight: lighter;
-    margin-bottom: 10px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 100px;
   }
 
   &__alternative {
-    &-description {}
+    text-align: center;
+    font-weight: 400;
+    margin: 5px;
   }
 
   &__button-container {
@@ -52,6 +60,7 @@
     border-radius: 3px;
     text-transform: uppercase;
     color: #FFF;
+    padding: 10px 20px;
   }
 
   &__input {
@@ -59,11 +68,16 @@
   }
 
   &__progress-bar {
-    position: relative;
     height: 15px;
-    width: 100%;
+    width: 95%;
     background: rgba(255, 255, 255, 0.5);
-    margin: 5px 0 10px 0;
+    margin-top: 20px;
+    opacity: 0;
+    transition: 0.2s opacity cubic-bezier(0, 0, 0.3, 1);
+
+    &--active {
+      opacity: 1;
+    }
   }
 
   &__progression-value {

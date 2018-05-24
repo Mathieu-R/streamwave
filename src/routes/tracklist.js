@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { get, set } from 'idb-keyval';
 import Track from '../components/track';
 import Switch from '../components/switch';
-import TopBarBack from '../components/topbar-back';
 import ProgressLine from '../components/progress-line';
 import { shuffle } from '../utils';
 import {
@@ -182,7 +181,6 @@ class TrackList extends Component {
     if (tracks === undefined) return null;
     return (
       <div class="tracklist">
-        <TopBarBack url='/' />
         <section class="tracklist__infos">
           <div class="tracklist__infos-wrapper">
             {coverURL && <img class="tracklist__cover" alt="cover" src={`${Constants.CDN_URL}/${coverURL}`} />}
