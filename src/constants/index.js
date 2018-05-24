@@ -33,7 +33,11 @@ class Constants {
     return '/presentation';
   }
 
-  static get SUPPORT_CREDENTIALS_MANAGEMENT_API () {
+  static get SUPPORT_CREDENTIAL_MANAGEMENT_API () {
+    return (window.PasswordCredential || window.FederatedCredential);
+  }
+
+  static get SUPPORT_PREVENT_SILENT_ACCESS () {
     return (navigator.credentials && navigator.credentials.preventSilentAccess);
   }
 

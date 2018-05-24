@@ -70,7 +70,7 @@ class Login extends Component {
   }
 
   async storeCredentials (email, password) {
-    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+    if (Constants.SUPPORT_CREDENTIAL_MANAGEMENT_API) {
       const credentials = await navigator.credentials.create({
         password: {
           id: email,

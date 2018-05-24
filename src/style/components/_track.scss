@@ -13,7 +13,11 @@ $padding: 5px;
   animation: fade-track linear .5s;
 
   &:hover, &:focus {
-    background: #22242d;
+    background: #22242D;
+  }
+
+  &--active {
+    color: #03A9F4;
   }
 
   &__number {
