@@ -127,10 +127,13 @@ class Chromecaster {
       let connection;
 
       if (!id) {
-        this.request.start();
+        connection = await this.request.start();
       } else {
-        this.reconnect(id);
+        connection = await this.reconnect(id);
       }
+
+      await this.setConnection(connection);
+      resolve();
 
       // wait until connection is available
       // otherwise we would send data before connection is ready

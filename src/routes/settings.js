@@ -134,7 +134,7 @@ class Settings extends Component {
   }
 
   logout (evt) {
-    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+    if (Constants.SUPPORT_PREVENT_SILENT_ACCESS) {
       // disable auto signin next visite
       // until user signin again
       navigator.credentials.preventSilentAccess().then(_ => {

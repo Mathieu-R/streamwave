@@ -39,7 +39,7 @@ class Auth extends Component {
   }
 
   async autoSignOnConnect () {
-    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+    if (Constants.SUPPORT_CREDENTIAL_MANAGEMENT_API) {
       const credentials = await navigator.credentials.get({
         password: true,
         federated: {
@@ -106,7 +106,7 @@ class Auth extends Component {
   }
 
   async storeFederatedCredentials (profile) {
-    if (Constants.SUPPORT_CREDENTIALS_MANAGEMENT_API) {
+    if (Constants.SUPPORT_CREDENTIAL_MANAGEMENT_API) {
       const credentials = await navigator.credentials.create({
         federated: {
           id: profile.id,
