@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import Uploader from '../utils/upload';
 import Constants from '../constants';
 
 class Upload extends Component {
@@ -31,37 +32,24 @@ class Upload extends Component {
   }
 
   async uploadMedias (files) {
-    const total = Array.from(files).reduce((total, file) => total += file.size, 0);
-    let downloaded = 0;
+    //const total = Array.from(files).reduce((total, file) => total += file.size, 0);
 
-    const onStream = ({done, value}) => {
-      if (done) {
-        this.progressBar.classList.remove('upload__progress-bar--active');
-        return;
-      }
-
-      downloaded += value.length;
-      // TODO: update progress bar
-      this.progressValue.innerText = `${Math.round((downloaded / total) * 100)}%`;
-      this.progress.style.transform = `scaleX(${downloaded / total}%)`;
-      return reader.read().then(onStream);
-    }
-
+    const url = `${Constants.API_URL}/album/upload`;
     const body = new FormData();
     body.append('musics', files);
 
-    const response = await fetch(`${Constants.API_URL}/album/upload`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${localStorage.getItem('streamwave-token')}`
-      },
-      body
+    const uploader = new Uploader(url, body);
+    this.progressBar.classList.add('upload__progress-bar--active');
+
+    uploader.on('upload-progress', evt => {
+      const {uploaded, total} = evt.detail;
+      this.progressValue.innerText = `${Math.round((uploaded / total) * 100)}%`;
+      this.progress.style.transform = `scaleX(${uploaded / total})`;
     });
 
-    // track file upload progress
-    this.progressBar.classList.add('upload__progress-bar--active');
-    const reader = response.body.getReader();
-    reader.read().then(onStream);
+    uploader.on('upload-finished', evt => {
+      this.progressBar.classList.remove('upload__progress-bar--active');
+    });
   }
 
   preventOpenFile (evt) {

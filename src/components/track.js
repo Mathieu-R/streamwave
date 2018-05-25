@@ -25,7 +25,6 @@ class Track extends Component {
   }
 
   render ({number, title, duration, id, currentTrackId}) {
-    console.log(id, currentTrackId);
     return (
       <div class={
         id === currentTrackId ?
