@@ -24,9 +24,10 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] Background Sync     
 - [X] Median Cut 
 - [X] Track data volume    
-    https://github.com/google/shaka-player/issues/1416
-    https://github.com/google/shaka-player/issues/1439
-    https://github.com/google/shaka-player/issues/1439 
+    https://github.com/google/shaka-player/issues/1416    
+    https://github.com/google/shaka-player/issues/1439    
+    https://github.com/google/shaka-player/issues/1439     
+- [X] Upload your own music
 
 ### Notes
 Background Fetch : 
