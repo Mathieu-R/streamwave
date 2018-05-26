@@ -10,6 +10,7 @@ import Chromecaster from '../utils/chromecast';
 import Constants from '../constants';
 
 import Loading from '../components/loading';
+import TopBarHamburger from '../components/topbar-hamburger';
 import SideNav from '../components/side-nav';
 import MiniPlayer from '../components/mini-player';
 import Player from '../components/player';
@@ -39,6 +40,12 @@ const Settings = Loadable({
   loading: Loading,
   timeout: 10000
 });
+
+const Upload = Loadable({
+  loader: () => import('./upload', /* webpackPrefetch: true, webpackChunkName: "route-upload" */),
+  loading: Loading,
+  timeout: 10000
+})
 
 const Demo = Loadable({
   loader: () => import('./demo-streaming', /* webpackPrefetch: true, webpackChunkName: "route-demo" */),
@@ -367,6 +374,7 @@ class Home extends Component {
   render () {
     return (
       <section class="home">
+        <TopBarHamburger />
         <SideNav />
         <Switch>
           <Route exact path="/" component={Library} />
@@ -383,6 +391,7 @@ class Home extends Component {
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/about" component={About} />
           <Route exact path="/licences" component={Licences} />
+          <Route exact path="/upload" component={Upload} />
           <Route exact path="/demo" component={Demo} />
         </Switch>
         <Player
@@ -407,6 +416,12 @@ class Home extends Component {
         </section>
         <Audio
           ref={audio => this.audio = audio}
+          preload="metadata"
+          next={this.setNextTrack}
+          //crossFade={this.crossFade}
+        />
+        <Audio
+          ref={audio => this.audioNext = audio}
           preload="metadata"
           next={this.setNextTrack}
           //crossFade={this.crossFade}

@@ -45,7 +45,6 @@ class Toast extends Component {
   }
 
   render ({messages, buttons, show}) {
-    console.log(show);
     return (
       <Transition in={show} timeout={300}>
       {state => (

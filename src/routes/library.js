@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { get, set } from 'idb-keyval';
 import Constants from '../constants';
 import Cover from '../components/cover';
-import TopBarHamburger from '../components/topbar-hamburger';
 
 import {
   storeLibrary,
@@ -111,6 +110,7 @@ class Library extends Component {
     // disable albums that are not in the cache
     return Promise.all(coverLinks.map(link => {
       const url = new URL(link.href).pathname;
+      console.log(`${Constants.API_URL}/${url}`);
       return caches.has(`${Constants.API_URL}/${url}`).then(cached => {
         if (!cached) {
           link.classList.add('cover--disabled');
@@ -129,9 +129,8 @@ class Library extends Component {
 
   render ({library}) {
     return (
-      <div>
-        <TopBarHamburger />
-        <section class="library" ref={gallery => this.gallery = gallery}>
+      <div class="library">
+        <section class="library__inner" ref={gallery => this.gallery = gallery}>
           {library.map(({artist, title, coverURL, primaryColor, _id}) => (
             <Cover
               key={_id}

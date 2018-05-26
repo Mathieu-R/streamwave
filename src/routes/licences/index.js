@@ -1,9 +1,7 @@
 import { h } from 'preact';
-import TopBarHamburger from '../../components/topbar-hamburger';
 
 const Licences = props => (
   <div class="licences">
-    <TopBarHamburger />
     <section class="licences__wrapper">
       <section class="licences__inner">
         <div class="licences__album">Borrtex - Ability</div><a class="licences__licence" href="http://creativecommons.org/licenses/by-nc/3.0/">http://creativecommons.org/licenses/by-nc/3.0/</a>

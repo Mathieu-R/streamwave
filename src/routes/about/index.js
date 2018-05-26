@@ -1,9 +1,7 @@
 import { h } from 'preact';
-import TopBarHamburger from '../../components/topbar-hamburger';
 
 const About = () => (
-  <div>
-    <TopBarHamburger />
+  <div class="about">
   </div>
 );
 

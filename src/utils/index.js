@@ -35,3 +35,28 @@ export function pluralize (string, len) {
 export function isMobile () {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+
+export function crossFade (context, fade = 6) {
+  const audio = this.audio.base;
+
+  // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
+  context.resume().then(_ => {
+    // gain node
+    const gainNode = context.createGain();
+    // current time
+    const currentTime = audio.currentTime;
+    // duration
+    const duration = audio.duration;
+
+    // fade in launched track
+    gainNode.gain.linearRampToValueAtTime(0, currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, currentTime + fade);
+
+    // fade out
+    gainNode.gain.linearRampToValueAtTime(1, duration - fade / 2);
+    gainNode.gain.linearRampToValueAtTime(0, duration);
+
+    // call this function when current music is finished playing (next is playing so ;))
+    //setTimeout(this.crossFade(), (duration - FADE_TIME) * 1000);
+  });
+}

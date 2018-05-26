@@ -57,6 +57,7 @@ class SideNav extends Component {
             <li class="side-nav__element"><Link class="side-nav__link" to="/" onClick={hideSideNav} aria-label="home">Home</Link></li>
             <li class="side-nav__element"><Link class="side-nav__link" to="/about" onClick={hideSideNav} aria-label="about">A propos</Link></li>
             <li class="side-nav__element"><Link class="side-nav__link" to="/licences" onClick={hideSideNav} aria-label="licences">Licenses musicales</Link></li>
+            <li class="side-nav__element"><Link class="side-nav__link" to="/upload" onClick={hideSideNav} aria-label="upload music albums">Importer ma musique</Link></li>
             <li class="side-nav__element"><Link class="side-nav__link" to="/demo" onClick={hideSideNav} aria-label="demo streaming">Demo</Link></li>
           </ul>
         </aside>

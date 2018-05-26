@@ -1,4 +1,7 @@
 .playlists {
+  display: flex;
+  flex: 1;
+
   &__wrapper {
     display: flex;
     flex-direction: column;

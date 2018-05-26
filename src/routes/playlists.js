@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { Link } from 'react-router-dom';
 import { pluralize } from '../utils';
-import TopBarHamburger from '../components/topbar-hamburger';
 import Constants from '../constants';
 
 class Playlists extends Component {
@@ -25,9 +24,8 @@ class Playlists extends Component {
 
   render ({}, {playlists}) {
     return (
-      <div>
-        <TopBarHamburger />
-        <section class="container playlists__wrapper">
+      <div class="playlists">
+        <section class="playlists__wrapper">
           {playlists.map((playlist, index) => (
             <Link class="playlists__link" to={`/playlist/${playlist._id}`} key={playlist._id}>
               <div class="playlists__playlist">
