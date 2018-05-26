@@ -1,6 +1,7 @@
 .playlists {
   display: flex;
   flex: 1;
+  overflow-y: auto;
 
   &__wrapper {
     display: flex;

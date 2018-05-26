@@ -1,5 +1,6 @@
 .tracklist {
   flex: 1;
+  overflow-y: auto;
 
   &__infos {
     position: relative;
