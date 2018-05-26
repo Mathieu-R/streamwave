@@ -420,6 +420,12 @@ class Home extends Component {
           next={this.setNextTrack}
           //crossFade={this.crossFade}
         />
+        <Audio
+          ref={audio => this.audioNext = audio}
+          preload="metadata"
+          next={this.setNextTrack}
+          //crossFade={this.crossFade}
+        />
       </section>
     );
   }

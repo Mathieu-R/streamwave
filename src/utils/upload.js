@@ -5,8 +5,11 @@ import { toasting } from '../store/toast';
 class Uploader extends EventEmitter {
   constructor (url, files) {
     super();
+    this.xhr = null;
+
     this.onSuccess = this.onSuccess.bind(this);
     this.onProgress = this.onProgress.bind(this);
+    this.onUploadStart = this.onUploadStart.bind(this);
     this.onUploadSucessed = this.onUploadSucessed.bind(this);
     this.onUploadFinished = this.onUploadFinished.bind(this);
     this.onError = this.onError.bind(this);
@@ -15,44 +18,32 @@ class Uploader extends EventEmitter {
   }
 
   // fetch does not support upload progress //
-  // streams only works for download-progress //
+  // streams only work for download-progress //
   // waiting for FetchObserver //
   upload (url, files) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.setRequestHeader('authorization', `Bearer ${localStorage.getItem('streamwave-token')}`);
-    xhr.send(files);
+    this.xhr = new XMLHttpRequest();
+    this.xhr.open('POST', url, true);
+    this.xhr.setRequestHeader('authorization', `Bearer ${localStorage.getItem('streamwave-token')}`);
 
-    xhr.addEventListener('load', this.onSuccess);
-    xhr.upload.addEventListener('progress', this.onProgress);
-    xhr.upload.addEventListener('load', this.onUploadSucessed);
-    xhr.upload.addEventListener('loadend', this.onUploadFinished);
-    xhr.addEventListener('error', this.onError);
+    this.xhr.upload.addEventListener('loadstart', this.onUploadStart);
+    this.xhr.upload.addEventListener('progress', this.onProgress);
+    this.xhr.upload.addEventListener('load', this.onUploadSucessed);
+    this.xhr.upload.addEventListener('loadend', this.onUploadFinished);
+    this.xhr.addEventListener('load', this.onSuccess);
+    this.xhr.addEventListener('error', this.onError);
+
+    this.xhr.send(files);
   }
 
-  onSuccess (evt) {
-    if (evt.target.status === 200) {
-
-    } else {
-
-    }
+  onUploadStart (evt) {
+    this.emit('upload-started');
   }
 
   onProgress (evt) {
-    console.log(evt);
     if (!evt.lengthComputable) {
       console.warn('[Upload Progress] Unknown total size.');
       return;
     }
-
-    // const customEvent = new CustomEvent('upload-progress', {
-    //   bubbles: true,
-    //   detail: {
-    //     uploaded: evt.loaded,
-    //     total: evt.total
-    //   },
-    //   cancelable: true
-    // });
 
     this.emit('upload-progress', {
       uploaded: evt.loaded,
@@ -76,8 +67,16 @@ class Uploader extends EventEmitter {
     this.emit('upload-finished');
   }
 
+  onSuccess (evt) {
+    console.log('Request successed');
+  }
+
   onError (evt) {
-    console.error(evt.responseText);
+    console.error('Error when uploading...');
+  }
+
+  abort () {
+    return this.xhr.abort();
   }
 }
 

@@ -8,6 +8,7 @@ class Upload extends Component {
     this.input = null;
     this.progressValue = null;
     this.progress = null;
+    this.uploader = null;
 
     this.onClickImportButton = this.onClickImportButton.bind(this);
     this.importMedias = this.importMedias.bind(this);
@@ -33,23 +34,32 @@ class Upload extends Component {
 
   async uploadMedias (files) {
     //const total = Array.from(files).reduce((total, file) => total += file.size, 0);
-
     const url = `${Constants.API_URL}/album/upload`;
     const body = new FormData();
-    body.append('musics', files);
+    Array.from(files).forEach(file => {
+      body.append('musics', file);
+    });
 
-    const uploader = new Uploader(url, body);
-    this.progressBar.classList.add('upload__progress-bar--active');
+    this.uploader = new Uploader(url, body);
 
-    uploader.on('upload-progress', evt => {
-      const {uploaded, total} = evt.detail;
+    this.uploader.on('upload-started', _ => {
+      console.log('started 2');
+      this.progressBar.classList.add('upload__progress-bar--active');
+    });
+
+    this.uploader.on('upload-progress', evt => {
+      const {uploaded, total} = evt;
       this.progressValue.innerText = `${Math.round((uploaded / total) * 100)}%`;
       this.progress.style.transform = `scaleX(${uploaded / total})`;
     });
 
-    uploader.on('upload-finished', evt => {
+    this.uploader.on('upload-finished', _ => {
       this.progressBar.classList.remove('upload__progress-bar--active');
     });
+  }
+
+  abort () {
+    this.uploader.abort();
   }
 
   preventOpenFile (evt) {
