@@ -1,7 +1,5 @@
-import { get, set, del } from 'idb-keyval';
-import { isMobile } from './index';
-import Constants from '../constants';
 import store from '../store';
+import Constants from '../constants';
 
 import {
   setChromecastStatus,
@@ -19,40 +17,83 @@ class Chromecaster {
     }
   }
 
+  get CONTENT_TYPE () {
+    return 'application/dash+xml';
+  }
+
   init () {
-    cast.framework.CastContext.getInstance().setOptions({
-      receiverApplicationId: '9F0538CD',
+    const options = {
+      receiverApplicationId: Constants.PRESENTATION_ID,
       autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-    });
+    }
+
+    cast.framework.CastContext.getInstance().setOptions(options);
+
+    this.remote = new cast.framework.RemotePlayer();
+    this.controller = new cast.framework.RemotePlayerController(this.remote);
+
     console.log(cast.framework.CastContext.getInstance().getCurrentSession());
   }
 
-  cast (manifest, mimetype = 'audio/mpeg') {
+  cast (manifest) {
     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-    const mediaInfo = new chrome.cast.media.MediaInfo(manifest, mimetype);
+    const mediaInfo = this.setMediaInfo(manifest);
     const request = new chrome.cast.media.LoadRequest(mediaInfo);
     console.log(castSession);
 
     castSession.loadMedia(request)
       .then(() => {
         console.log('[Google Cast] Loaded.');
-        this.player = new cast.framework.RemotePlayer();
-        this.controller = new cast.framework.RemotePlayerController(this.player);
         this.controller.playOrPause();
       })
       .catch(err => console.error(err));
+  }
+
+  setMediaInfo (manifest) {
+    const state = store.getState();
+    const data = {
+      artist: state.player.artist,
+      album: state.player.album,
+      year: state.player.year,
+      track: state.player.track,
+      currentTime: state.player.currentTime,
+      playing: state.player.playing,
+      primaryColor: state.player.primaryColor
+    };
+
+    const mediaInfo = new chrome.cast.media.MediaInfo(manifest, Chromecaster.CONTENT_TYPE);
+
+    mediaInfo.metadata = new chrome.cast.media.MusicTrackMediaMetadata();
+    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+    mediaInfo.metadata.albumArtist = data.artist;
+    mediaInfo.metadata.artist = data.artist;
+    mediaInfo.metadata.albumName = data.album;
+    mediaInfo.metadata.releaseYear = data.year;
+    mediaInfo.metadata.title = data.track.title;
+    mediaInfo.metadata.trackNumber = data.track.number;
+    mediaInfo.metadata.images = [
+      {'url': `${Constants.CDN_URL}/${data.track.coverURL}`}
+    ];
+
+    return mediaInfo;
   }
 
   pause () {
     this.controller.playOrPause();
   }
 
-  stop () {
-    this.controller.stop();
+  seek (time) {
+    this.remote.currentTime = time;
+    this.controller.seek();
   }
 
-  seek () {
-    this.controller.seek();
+  setVolume (volume) {
+    this.remote.volumeLevel = volume;
+    this.controller.setVolumeLevel();
+  }
+
+  stop () {
+    this.controller.stop();
   }
 }
 
