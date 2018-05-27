@@ -75,8 +75,8 @@ class MiniPlayer extends Component {
 
   onChromecastClick (evt) {
     evt.stopPropagation();
-    const {chromecasting} = this.props;
-    this.props.chromecast({chromecasting});
+    const {chromecasting, track} = this.props;
+    this.props.chromecast({chromecasting, manifest: track.manifestURL});
   }
 
   render ({
@@ -172,7 +172,7 @@ class MiniPlayer extends Component {
           </button>
           {
           chromecastAvailable &&
-          <button class="mini-player__button" disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
+          <button class="mini-player__button" is="google-cast-button" disabled={!track} onClick={this.onChromecastClick} aria-label="chromecast music">
           {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">

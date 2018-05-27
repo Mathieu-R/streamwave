@@ -9,212 +9,50 @@ import {
 } from '../store/player';
 
 class Chromecaster {
-  constructor (url, audio) {
-    this.connection = null;
+  constructor () {
+    this.cast = this.cast.bind(this);
 
-    this.send = this.send.bind(this);
-    this.stop = this.stop.bind(this);
-
-    if (isMobile() && Constants.SUPPORT_REMOTE_PLAYBACK_API) {
-      // presentation api is only supported on mobile
-      // with the chrome sdk + url of type cast:<cast-id>
-      // don't like this approach
-      // in that case => switch on Remote Playback API if supported
-      this.monitorRemoteAvailability(audio);
-    } else if (Constants.SUPPORT_PRESENTATION_API) {
-      // on desktop, if presentation api is supported, use it.
-      this.request = new PresentationRequest(url);
-      navigator.presentation.defaultRequest = this.request;
-      this.monitorPresentationAvailability();
-    } else {
-      // if nothing is supported
-      // remove chromecast button
-      this.updateChromecastButtonDisplay({available: false});
+    window.__onGCastApiAvailable = (available) => {
+      if (available) {
+        this.init();
+      }
     }
-
-    //navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
   }
 
-  static get CLOSED_STATE () {
-    return 'closed';
-  }
-
-  static get CHROMECAST_IDB_KEY () {
-    return 'chromecast_presentation_id';
-  }
-
-  monitorPresentationAvailability () {
-    // monitor receiver availability
-    // not if we are connected
-    // useful to know if we shoud show/hide
-    // chromecast button
-    this.request.getAvailability().then(availability => {
-      const available = availability.value;
-      this.updateChromecastButtonDisplay({available: available});
-
-      availability.onchange = evt => {
-        this.updateChromecastButtonDisplay({available: evt.target.value});
-      }
-    }).catch(_ => {
-      // availibility monitoring is not available on that platform
-      // assuming receiver is available
-      this.updateChromecastButtonDisplay({available: true});
+  init () {
+    cast.framework.CastContext.getInstance().setOptions({
+      receiverApplicationId: '9F0538CD',
+      autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
     });
+    console.log(cast.framework.CastContext.getInstance().getCurrentSession());
   }
 
-  async setConnection (connection) {
-    return new Promise(async resolve => {
-      // 1. disconnect from existing presentation if any
-      if (this.connection && this.connection !== connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
-        this.connection.close();
-      }
+  cast (manifest, mimetype = 'audio/mpeg') {
+    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+    const mediaInfo = new chrome.cast.media.MediaInfo(manifest, mimetype);
+    const request = new chrome.cast.media.LoadRequest(mediaInfo);
+    console.log(castSession);
 
-      // 2. set the connection, save the presentation id in cache in order to allow reconnection
-      this.connection = connection;
-      window.__connection__ = connection;
-      await set(Chromecaster.CHROMECAST_IDB_KEY, connection.id);
-
-      // event listeners
-      this.connection.onmessage = evt => {
-        console.log(`message from: ${evt.target.id}. Received: "${evt.data}"`);
-      }
-
-      this.connection.onconnect = _ => {
-        this.updateUI({chromecasting: true});
-        resolve();
-      }
-
-      this.connection.onclose = _ => {
-        this.connection = null;
-        this.updateUI({chromecasting: false});
-      }
-
-      this.connection.onterminate = _ => {
-        del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
-          this.connection = null;
-          this.updateUI({chromecasting: false});
-        });
-      }
-    });
+    castSession.loadMedia(request)
+      .then(() => {
+        console.log('[Google Cast] Loaded.');
+        this.player = new cast.framework.RemotePlayer();
+        this.controller = new cast.framework.RemotePlayerController(this.player);
+        this.controller.playOrPause();
+      })
+      .catch(err => console.error(err));
   }
 
-  updateChromecastButtonDisplay ({available}) {
-    return store.dispatch(setChromecastAvailable({available}));
-  }
-
-  updateUI ({chromecasting}) {
-    return store.dispatch(setChromecastStatus({chromecasting}));
-  }
-
-  // cast audio
-  // through Presentation API
-  // or Remote Playback API
-  // presenting: true => presentation api chosen
-  // presenting: false => remote playback api chosen
-  cast (audio) {
-    if (isMobile()) {
-      // on mobile remote audio
-      return this.remote(audio).then(() => ({presenting: false}));
-    }
-
-    return this.present().then(() => ({presenting: true}));
-  }
-
-  present () {
-    return new Promise(async (resolve) => {
-      // try to reconnect to old presentation
-      const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
-      let connection;
-
-      if (!id) {
-        connection = await this.request.start();
-      } else {
-        connection = await this.reconnect(id);
-      }
-
-      await this.setConnection(connection);
-      resolve();
-
-      // wait until connection is available
-      // otherwise we would send data before connection is ready
-      navigator.presentation.defaultRequest.onconnectionavailable = async evt => {
-        await this.setConnection(evt.connection);
-        resolve();
-      }
-    });
-  }
-
-  sendTrackInformations () {
-    const state = store.getState();
-    const data = {
-      type: 'song',
-      artist: state.player.artist,
-      album: state.player.album,
-      track: state.player.track,
-      currentTime: state.player.currentTime,
-      playing: state.player.playing,
-      primaryColor: state.player.primaryColor
-    };
-    this.send(data);
-  }
-
-  send (data) {
-    if (!this.connection) {
-      console.warn('[Presentation API] no active connection...');
-      return;
-    }
-
-    this.connection.send(JSON.stringify(data));
-  }
-
-  reconnect (id) {
-    return navigator.presentation.defaultRequest.reconnect(id);
+  pause () {
+    this.controller.playOrPause();
   }
 
   stop () {
-    if (!this.connection) {
-      return;
-    }
-    // close() still allow to reconnect unlike terminate()
-    this.connection.terminate();
+    this.controller.stop();
   }
 
-  /* Remote Playback API - not available in chrome desktop for now */
-
-  monitorRemoteAvailability (audio) {
-    return audio.remote.watchAvailability(available => {
-      console.log('remote available:', available);
-      this.updateChromecastButtonDisplay({available});
-    }).catch(_ => {
-      // same logic as for presentation api
-      // assume remote device is available
-      this.updateChromecastButtonDisplay({available: true});
-    })
-  }
-
-  remote (audio) {
-    audio.remote.onconnecting = _ => {
-      this.updateUI({chromecasting: true});
-      // do not need to track device availibility anymore
-      audio.remote.cancelWatchAvailibility();
-    }
-
-    // from Remote Playback API spec.
-    // handles both 'connecting' and 'connected' state. Calling more than once
-    // is a no-op.
-    audio.remote.onconnect = _ => {
-      this.updateUI({chromecasting: true});
-      // do not need to track device availibility anymore
-      audio.remote.cancelWatchAvailibility();
-    }
-
-    audio.remote.ondisconnect = _ => {
-      this.updateUI({chromecasting: true});
-      // track device availability again
-      this.monitorRemoteAvailability();
-    }
-
-    return audio.remote.prompt();
+  seek () {
+    this.controller.seek();
   }
 }
 

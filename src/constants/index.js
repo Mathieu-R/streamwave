@@ -30,7 +30,7 @@ class Constants {
   }
 
   static get PRESENTATION_URL () {
-    return '/presentation';
+    return 'cast:9F0538CD';
   }
 
   static get SUPPORT_CREDENTIAL_MANAGEMENT_API () {

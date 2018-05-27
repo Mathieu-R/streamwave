@@ -106,8 +106,8 @@ class Player extends Component {
   }
 
   onChromecastClick () {
-    const {chromecasting} = this.props;
-    this.props.chromecast({chromecasting});
+    const {chromecasting, track} = this.props;
+    this.props.chromecast({chromecasting, manifest: track.manifestURL});
   }
 
   onShuffleClick (evt) {
@@ -184,7 +184,9 @@ class Player extends Component {
         <button class="player__close" onClick={this.closePlayer} aria-label="close player"></button>
         {
         chromecastAvailable &&
-        <button class="player__chromecast"
+        <button
+          class="player__chromecast"
+          is="google-cast-button"
           onClick={this.onChromecastClick}
           onMouseDown={this.expandRipple}
           onTouchStart={this.expandRipple}
