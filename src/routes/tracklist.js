@@ -178,7 +178,8 @@ class TrackList extends Component {
   }
 
   render ({downloads, currentTrackId}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
-    if (tracks === undefined) return null;
+    {/* return div to prepare space for album (flex: 1) */}
+    if (tracks === undefined) return <div class="tracklist"></div>;
     return (
       <div class="tracklist">
         <section class="tracklist__infos">
