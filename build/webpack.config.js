@@ -56,19 +56,6 @@ if (production) {
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
     }),
-    new HtmlCriticalWebpackPlugin({
-      base: path.resolve(__dirname, '../dist'),
-      src: path.resolve(__dirname, '../dist/index.html'),
-      dest: path.resolve(__dirname, '../dist/index.html'),
-      inline: true,
-      minify: true,
-      extract: true,
-      width: 530,
-      height: 565,
-      penthouse: {
-        blockJSRequests: false,
-      }
-    }),
     // preload main bundles
     // prefetch should be done with webpack
     // when native support for prefetch will land
@@ -76,7 +63,6 @@ if (production) {
       rel: 'preload',
       include: 'initial'
     }),
-    // new TidyHtmlWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../src/assets/'),
@@ -121,13 +107,8 @@ const common = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.css', '.scss'],
+    extensions: ['.js', '.css', '.scss'],
     alias: {
-      // in order to use css-transition-group
-      // you have to aliase react and react-dom
-      react: 'preact-compat',
-			'react-dom': 'preact-compat',
-			'react-addons-css-transition-group': 'preact-css-transition-group',
       components: config.componentsPath,
       routes: config.routesPath,
       src: config.staticPath
