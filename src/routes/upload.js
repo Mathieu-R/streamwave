@@ -17,6 +17,10 @@ class Upload extends Component {
     this.onDrop = this.onDrop.bind(this);
   }
 
+  componentDidMount () {
+    this.uploader = new Uploader();
+  }
+
   onClickImportButton () {
     this.input.click();
   }
@@ -40,10 +44,9 @@ class Upload extends Component {
       body.append('musics', file);
     });
 
-    this.uploader = new Uploader(url, body);
+    this.uploader.upload(url, body);
 
     this.uploader.on('upload-started', _ => {
-      console.log('started 2');
       this.progressBar.classList.add('upload__progress-bar--active');
     });
 
