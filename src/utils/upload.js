@@ -3,7 +3,7 @@ import store from '../store';
 import { toasting } from '../store/toast';
 
 class Uploader extends EventEmitter {
-  constructor (url, files) {
+  constructor () {
     super();
     this.xhr = null;
 
@@ -13,8 +13,6 @@ class Uploader extends EventEmitter {
     this.onUploadSucessed = this.onUploadSucessed.bind(this);
     this.onUploadFinished = this.onUploadFinished.bind(this);
     this.onError = this.onError.bind(this);
-
-    this.upload(url, files);
   }
 
   // fetch does not support upload progress //
@@ -56,7 +54,7 @@ class Uploader extends EventEmitter {
     store.dispatch(toasting([
       'Fichiers envoyés avec succès',
       'Votre album sera bientôt disponible dans votre catalogue'
-    ], ['dismiss'], 5000));
+    ], ['dismiss'], 8000));
   }
 
   // loadend event

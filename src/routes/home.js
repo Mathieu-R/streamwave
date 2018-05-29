@@ -355,20 +355,13 @@ class Home extends Component {
     });
   }
 
-  chromecast ({chromecasting}) {
+  chromecast ({chromecasting, manifest}) {
     if (chromecasting) {
       this.chromecaster.stop();
       return;
     }
 
-    this.chromecaster.cast(this.audio.base).then(({presenting}) => {
-      // if we cast through presentation api
-      // send information for the receiver
-      if (presenting) {
-        this.chromecaster.sendTrackInformations();
-      }
-      this.presenting = presenting;
-    }).catch(err => console.error(err));
+    this.chromecaster.cast(manifest);
   }
 
   render () {

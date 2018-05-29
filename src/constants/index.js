@@ -29,8 +29,8 @@ class Constants {
     );
   }
 
-  static get PRESENTATION_URL () {
-    return '/presentation';
+  static get PRESENTATION_ID () {
+    return '9F0538CD';
   }
 
   static get SUPPORT_CREDENTIAL_MANAGEMENT_API () {

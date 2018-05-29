@@ -66,6 +66,7 @@
     "@7rulnik/react-loadable": "^5.3.4",
     "css-paint-polyfill": "^1.0.0",
     "debounce": "^1.1.0",
+    "events": "^3.0.0",
     "idb-keyval": "^3.0.3",
     "jwt-decode": "^2.2.0",
     "material-ui": "^1.0.0-beta.47",

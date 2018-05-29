@@ -63,4 +63,11 @@
     background: none;
     padding: 0 10px;
   }
+
+  &__chromecast-button {
+    height: 35px;
+    width: 55px;
+    --connected-color: #FFF;
+    --disconnected-color: #FFF;
+  }
 }
