@@ -88,7 +88,6 @@ class TrackList extends Component {
     const checked = evt.target.checked;
     const {type} = this.props;
 
-    console.log('connection type:', navigator.connection && navigator.connection.type);
     // if user is on mobile, on mobile network
     // and do not want to download on mobile network
     if (Constants.SUPPORT_NETWORK_INFORMATION_API) {
