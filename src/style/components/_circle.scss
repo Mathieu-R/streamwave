@@ -4,8 +4,17 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  width: 300px;
-  max-width: 90%;
-  height: 300px;
   margin: 0 auto;
+
+  &__canvas-container {
+    height: 300px;
+    width: 300px;
+    max-width: 90%;
+  }
+
+  &__reset {
+    background: rgba(158, 158, 158, 0.4);
+    padding: 10px 15px;
+    margin: 5px;
+  }
 }

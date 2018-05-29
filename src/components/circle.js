@@ -1,4 +1,11 @@
 import { h, Component } from 'preact';
+import { connect } from 'react-redux';
+import { resetDataVolume } from '../utils/download';
+import { toasting } from '../store/toast';
+
+const mapDispatchToProps = dispatch => ({
+  toasting: (messages) => dispatch(toasting(messages))
+});
 
 class Circle extends Component {
   constructor() {
@@ -11,6 +18,7 @@ class Circle extends Component {
     // then live update
     this.volume = 0;
 
+    this.reset = this.reset.bind(this);
     this.draw = this.draw.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onVolumeDownloading = this.onVolumeDownloading.bind(this);
@@ -30,6 +38,12 @@ class Circle extends Component {
   componentDidUpdate () {
     this.volume = this.props.volume;
     requestAnimationFrame(() => this.draw());
+  }
+
+  reset () {
+    resetDataVolume().then(() => {
+      this.props.toasting(['Volume de données remis à zéro']);
+    })
   }
 
   onVolumeDownloading (evt) {
@@ -127,8 +141,11 @@ class Circle extends Component {
 
   render () {
     return (
-      <div class='average-circle' ref={container => this.container = container}>
-        <canvas ref={canvas => this.canvas = canvas}></canvas>
+      <div class="average-circle">
+        <div className="average-circle__canvas-container" ref={container => this.container = container}>
+          <canvas ref={canvas => this.canvas = canvas}></canvas>
+        </div>
+        <button class="average-circle__reset" onClick={this.reset}>Remettre à zéro</button>
       </div>
     );
   }
@@ -139,4 +156,4 @@ class Circle extends Component {
  * volume => 2 decimal float in Mo
  * dataMax => integer in Mo
  */
-export default Circle;
+export default connect(null, mapDispatchToProps)(Circle);
