@@ -8,7 +8,7 @@ import {
 } from '../store/player';
 
 class Chromecaster {
-  constructor (url, audio) {
+  constructor () {
     this.connection = null;
 
     this.send = this.send.bind(this);
@@ -16,7 +16,7 @@ class Chromecaster {
 
     if (Constants.SUPPORT_PRESENTATION_API) {
       // on desktop, if presentation api is supported, use it.
-      this.request = new PresentationRequest(url);
+      this.request = new PresentationRequest(Constants.PRESENTATION_ID);
       navigator.presentation.defaultRequest = this.request;
       this.monitorPresentationAvailability();
     } else {
