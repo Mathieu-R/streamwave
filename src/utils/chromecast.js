@@ -17,6 +17,7 @@ class Chromecaster {
     if (Constants.SUPPORT_PRESENTATION_API) {
       // on desktop, if presentation api is supported, use it.
       this.request = new PresentationRequest(Constants.PRESENTATION_ID);
+      // Make this presentation the default one when using the "Cast" browser menu.
       navigator.presentation.defaultRequest = this.request;
       this.monitorPresentationAvailability();
     } else {
@@ -24,8 +25,6 @@ class Chromecaster {
       // remove chromecast button
       this.updateChromecastButtonDisplay({available: false});
     }
-
-    //navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
   }
 
   static get CLOSED_STATE () {
@@ -102,31 +101,44 @@ class Chromecaster {
   // cast audio
   // through Presentation API
   cast (audio) {
-    return this.present().then(() => ({presenting: true}));
+    return this.present()
+      .then(() => ({presenting: true}))
+      .catch(err => {
+        console.error(err);
+        return del(Chromecaster.CHROMECAST_IDB_KEY).then(() => {
+          console.warn('Try casting again :)');
+        });
+      })
   }
 
-  present () {
-    return new Promise(async (resolve) => {
-      // try to reconnect to old presentation
-      const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
-      let connection;
+  async present () {
+    // try to reconnect to old presentation
+    const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
 
-      if (!id) {
-        connection = await this.request.start();
-      } else {
-        connection = await this.reconnect(id);
-      }
+    if (!id) {
+      this.connection = await this.request.start();
+    } else {
+      this.connection = await this.reconnect(id);
+    }
 
-      await this.setConnection(connection);
-      resolve();
+    console.log('Connected to ' + this.connection.url + ', id: ' + this.connection.id);
 
-      // wait until connection is available
-      // otherwise we would send data before connection is ready
-      navigator.presentation.defaultRequest.onconnectionavailable = async evt => {
-        await this.setConnection(evt.connection);
-        resolve();
-      }
-    });
+
+    this.request.onconnectionavailable = evt => {
+      this.updateUI({chromecasting: true});
+      set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id);
+    }
+
+    this.connection.onmessage = evt => {
+      console.log('Received message', evt);
+    }
+
+    this.connection.onterminate = _ => {
+      del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
+        this.connection = null;
+        this.updateUI({chromecasting: false});
+      });
+    }
   }
 
   sendTrackInformations () {
