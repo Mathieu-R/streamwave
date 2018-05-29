@@ -210,7 +210,7 @@ class Home extends Component {
   }
 
   initPresentation () {
-    this.chromecaster = new Chromecaster(Constants.PRESENTATION_URL, this.audio.base);
+    this.chromecaster = new Chromecaster();
   }
 
   /**
