@@ -112,21 +112,26 @@ class Chromecaster {
   }
 
   async present () {
-    // try to reconnect to old presentation
-    const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
+    // // try to reconnect to old presentation
+    // const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
+    // console.log(id);
 
-    if (!id) {
-      this.connection = await this.request.start();
-    } else {
-      this.connection = await this.reconnect(id);
-    }
+    // if (!id) {
+    //   this.connection = await this.request.start();
+    // } else {
+    //   this.connection = await this.reconnect(id);
+    // }
+
+    this.connection = await this.request.start();
 
     console.log('Connected to ' + this.connection.url + ', id: ' + this.connection.id);
 
 
     this.request.onconnectionavailable = evt => {
       this.updateUI({chromecasting: true});
-      set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id);
+      set(Chromecaster.CHROMECAST_IDB_KEY, evt.connection.id).then(() => {
+        this.sendTrackInformations();
+      });
     }
 
     this.connection.onmessage = evt => {

@@ -30,7 +30,7 @@ class Constants {
   }
 
   static get PRESENTATION_ID () {
-    return '9F0538CD';
+    return 'A7FCF506';
   }
 
   static get SUPPORT_CREDENTIAL_MANAGEMENT_API () {
