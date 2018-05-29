@@ -179,7 +179,7 @@ class MiniPlayer extends Component {
             onClick={this.onChromecastClick}
             aria-label="chromecast music"
           >
-          {/*
+          {
             chromecasting ?
             <svg fill="#FFFFFF" height="27" width="27" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 0h24v24H0z" fill="none" opacity=".1"/>
@@ -201,7 +201,7 @@ class MiniPlayer extends Component {
                   5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"
               />
             </svg>
-          */}
+          }
           </button>
           }
         </section>

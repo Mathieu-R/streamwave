@@ -162,7 +162,7 @@ class PlaylistModal extends Component {
           'playlist-modal'
         } onClick={this.blockClick}>
           <section class="playlist-modal__create-container">
-            <div class="playlist-modal__create-button" onClick={this.showPlaylistInput} aria-label="create playlist">Créer une nouvelle playlist</div>
+            <button class="playlist-modal__create-button" onClick={this.showPlaylistInput} aria-label="create playlist">Créer une nouvelle playlist</button>
             <div class={
               showPlaylistInput ?
               'playlist-modal__create-input-container playlist-modal__create-input-container--visible' :
@@ -187,7 +187,7 @@ class PlaylistModal extends Component {
               )
             }
           </section>
-          <div class="playlist-modal__cancel" onClick={removePlaylistModal}>Annuler</div>
+          <button class="playlist-modal__cancel" onClick={removePlaylistModal}>Annuler</button>
         </div>
       </div>
     );

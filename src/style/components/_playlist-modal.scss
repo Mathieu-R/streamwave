@@ -12,8 +12,8 @@
   background: #000;
   opacity: 0;
   transform: translateX(-50%) scale(0.7);
-  transition: opacity .3s cubic-bezier(0, 0, 0.3, 1);
-  will-change: opacity;
+  transition: opacity .2s cubic-bezier(0, 0, 0.3, 1), .3s transform cubic-bezier(0, 0, 0.3, 1);
+  will-change: opacity, transform;
 
   &--visible {
     opacity: 1;
@@ -109,6 +109,7 @@
     width: 100%;
     min-height: 50px;
     background: #3F51B5;
+    font-size: 16px;
     color: #FFF;
     border: none;
     border-radius: 3px;

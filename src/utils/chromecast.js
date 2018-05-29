@@ -1,5 +1,6 @@
-import store from '../store';
+import { get, set, del } from 'idb-keyval';
 import Constants from '../constants';
+import store from '../store';
 
 import {
   setChromecastStatus,
@@ -7,93 +8,160 @@ import {
 } from '../store/player';
 
 class Chromecaster {
-  constructor () {
-    this.cast = this.cast.bind(this);
+  constructor (url, audio) {
+    this.connection = null;
 
-    window.__onGCastApiAvailable = (available) => {
-      if (available) {
-        this.init();
+    this.send = this.send.bind(this);
+    this.stop = this.stop.bind(this);
+
+    if (Constants.SUPPORT_PRESENTATION_API) {
+      // on desktop, if presentation api is supported, use it.
+      this.request = new PresentationRequest(url);
+      navigator.presentation.defaultRequest = this.request;
+      this.monitorPresentationAvailability();
+    } else {
+      // if nothing is supported
+      // remove chromecast button
+      this.updateChromecastButtonDisplay({available: false});
+    }
+
+    //navigator.presentation.defaultRequest.onconnectionavailable = this.onConnectionAvailable;
+  }
+
+  static get CLOSED_STATE () {
+    return 'closed';
+  }
+
+  static get CHROMECAST_IDB_KEY () {
+    return 'chromecast_presentation_id';
+  }
+
+  monitorPresentationAvailability () {
+    // monitor receiver availability
+    // not if we are connected
+    // useful to know if we shoud show/hide
+    // chromecast button
+    this.request.getAvailability().then(availability => {
+      const available = availability.value;
+      this.updateChromecastButtonDisplay({available: available});
+
+      availability.onchange = evt => {
+        this.updateChromecastButtonDisplay({available: evt.target.value});
       }
-    }
+    }).catch(_ => {
+      // availibility monitoring is not available on that platform
+      // assuming receiver is available
+      this.updateChromecastButtonDisplay({available: true});
+    });
   }
 
-  get CONTENT_TYPE () {
-    return 'application/dash+xml';
+  async setConnection (connection) {
+    return new Promise(async resolve => {
+      // 1. disconnect from existing presentation if any
+      if (this.connection && this.connection !== connection && this.connection.state !== Chromecaster.CLOSED_STATE) {
+        this.connection.close();
+      }
+
+      // 2. set the connection, save the presentation id in cache in order to allow reconnection
+      this.connection = connection;
+      window.__connection__ = connection;
+      await set(Chromecaster.CHROMECAST_IDB_KEY, connection.id);
+
+      // event listeners
+      this.connection.onmessage = evt => {
+        console.log(`message from: ${evt.target.id}. Received: "${evt.data}"`);
+      }
+
+      this.connection.onconnect = _ => {
+        this.updateUI({chromecasting: true});
+        resolve();
+      }
+
+      this.connection.onclose = _ => {
+        this.connection = null;
+        this.updateUI({chromecasting: false});
+      }
+
+      this.connection.onterminate = _ => {
+        del(Chromecaster.CHROMECAST_IDB_KEY).then(_ => {
+          this.connection = null;
+          this.updateUI({chromecasting: false});
+        });
+      }
+    });
   }
 
-  init () {
-    const options = {
-      receiverApplicationId: Constants.PRESENTATION_ID,
-      autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-    }
-
-    cast.framework.CastContext.getInstance().setOptions(options);
-
-    this.remote = new cast.framework.RemotePlayer();
-    this.controller = new cast.framework.RemotePlayerController(this.remote);
-
-    console.log(cast.framework.CastContext.getInstance().getCurrentSession());
+  updateChromecastButtonDisplay ({available}) {
+    return store.dispatch(setChromecastAvailable({available}));
   }
 
-  cast (manifest) {
-    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-    const mediaInfo = this.setMediaInfo(manifest);
-    const request = new chrome.cast.media.LoadRequest(mediaInfo);
-    console.log(castSession);
-
-    castSession.loadMedia(request)
-      .then(() => {
-        console.log('[Google Cast] Loaded.');
-        this.controller.playOrPause();
-      })
-      .catch(err => console.error(err));
+  updateUI ({chromecasting}) {
+    return store.dispatch(setChromecastStatus({chromecasting}));
   }
 
-  setMediaInfo (manifest) {
+  // cast audio
+  // through Presentation API
+  cast (audio) {
+    return this.present().then(() => ({presenting: true}));
+  }
+
+  present () {
+    return new Promise(async (resolve) => {
+      // try to reconnect to old presentation
+      const id = await get(Chromecaster.CHROMECAST_IDB_KEY);
+      let connection;
+
+      if (!id) {
+        connection = await this.request.start();
+      } else {
+        connection = await this.reconnect(id);
+      }
+
+      await this.setConnection(connection);
+      resolve();
+
+      // wait until connection is available
+      // otherwise we would send data before connection is ready
+      navigator.presentation.defaultRequest.onconnectionavailable = async evt => {
+        await this.setConnection(evt.connection);
+        resolve();
+      }
+    });
+  }
+
+  sendTrackInformations () {
     const state = store.getState();
     const data = {
+      type: 'song',
       artist: state.player.artist,
       album: state.player.album,
-      year: state.player.year,
       track: state.player.track,
       currentTime: state.player.currentTime,
       playing: state.player.playing,
       primaryColor: state.player.primaryColor
     };
-
-    const mediaInfo = new chrome.cast.media.MediaInfo(manifest, Chromecaster.CONTENT_TYPE);
-
-    mediaInfo.metadata = new chrome.cast.media.MusicTrackMediaMetadata();
-    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-    mediaInfo.metadata.albumArtist = data.artist;
-    mediaInfo.metadata.artist = data.artist;
-    mediaInfo.metadata.albumName = data.album;
-    mediaInfo.metadata.releaseYear = data.year;
-    mediaInfo.metadata.title = data.track.title;
-    mediaInfo.metadata.trackNumber = data.track.number;
-    mediaInfo.metadata.images = [
-      {'url': `${Constants.CDN_URL}/${data.track.coverURL}`}
-    ];
-
-    return mediaInfo;
+    this.send(data);
   }
 
-  pause () {
-    this.controller.playOrPause();
+  send (data) {
+    if (!this.connection) {
+      console.warn('[Presentation API] no active connection...');
+      return;
+    }
+
+    this.connection.send(JSON.stringify(data));
   }
 
-  seek (time) {
-    this.remote.currentTime = time;
-    this.controller.seek();
-  }
-
-  setVolume (volume) {
-    this.remote.volumeLevel = volume;
-    this.controller.setVolumeLevel();
+  reconnect (id) {
+    return navigator.presentation.defaultRequest.reconnect(id);
   }
 
   stop () {
-    this.controller.stop();
+    if (!this.connection) {
+      return;
+    }
+    // close() still allow to reconnect unlike terminate()
+    this.connection.terminate();
   }
 }
 

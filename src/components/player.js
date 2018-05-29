@@ -226,9 +226,9 @@ class Player extends Component {
                 <div class="player__title">{track && track.title}</div>
                 <div class="player__artist">{artist && artist}</div>
               </div>
-              <div class="player__add-to-playlist" onClick={this.addToPlaylist} aria-label="add to playlist">
+              <button class="player__add-to-playlist" onClick={this.addToPlaylist} aria-label="add to playlist">
                 <img src={addIcon} alt="add to playlist" />
-              </div>
+              </button>
             </section>
           </section>
         </section>
