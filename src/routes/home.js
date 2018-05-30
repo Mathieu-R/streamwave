@@ -7,6 +7,7 @@ import { updateDataVolume, getDataVolumeDownloaded } from '../utils/download'
 import SettingsManager from '../utils/settings-manager';
 import Loadable from '@7rulnik/react-loadable';
 import Chromecaster from '../utils/chromecast';
+import Cast from '../utils/cast';
 import Constants from '../constants';
 
 import Loading from '../components/loading';
@@ -210,7 +211,8 @@ class Home extends Component {
   }
 
   initPresentation () {
-    this.chromecaster = new Chromecaster();
+    //this.chromecaster = new Chromecaster();
+    this.cast = new Cast();
   }
 
   /**
@@ -357,11 +359,13 @@ class Home extends Component {
 
   chromecast ({chromecasting, manifest}) {
     if (chromecasting) {
-      this.chromecaster.stop();
+      this.cast.stop();
       return;
     }
 
-    this.chromecaster.cast(manifest);
+    this.cast.requestRemoteDevicesAvailable()
+      .then(() => this.cast.cast(manifest))
+      .catch(err => console.error(err));
   }
 
   render () {
