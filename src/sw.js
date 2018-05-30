@@ -84,6 +84,11 @@ self.onfetch = event => {
 }
 
 self.onbackgroundfetched = event => {
+  if (event.id.startsWith('album-upload')) {
+    event.updateUI('Album téléversé.');
+    return;
+  }
+
   event.waitUntil(async function () {
     // open the cache
     const cache = await caches.open(MUSIC_CACHE_NAME);
@@ -95,10 +100,16 @@ self.onbackgroundfetched = event => {
 }
 
 self.onbackgroundfetchfail = event => {
-  console.log(event);
-  event.waitUntil(async function () {
-    event.updateUI('Erreur lors du téléchargement de la tracklist !');
-  }());
+  if (event.id.startsWith('album-upload')) {
+    event.updateUI('Téléversement raté !');
+    return;
+  }
+
+  event.updateUI('Erreur lors du téléchargement de la tracklist !');
+}
+
+self.onbackgroundfetchclick = event => {
+  clients.openWindow(location.origin);
 }
 
 self.onsync = event => {
@@ -222,9 +233,9 @@ const downloadInForeground = async () => {
       trackDownload(responses, tracklistId);
       const cache = await caches.open(MUSIC_CACHE_NAME);
       await Promise.all(files.map(file => file.response.then(response => cache.put(file.request, response))));
-      self.registration.showNotification('Tracklist téléchargée.', {
+      self.registration.showNotification('Liste de lecture téléchargée.', {
         // could show more infos.
-        body: 'Accéder à la tracklist.',
+        body: 'Accéder à la liste de lecture.',
         // usefull to redirect user when
         // he clicks on the notification
         data: {type, id: tracklistId}
@@ -305,9 +316,6 @@ const createRangedResponse = (request, response, rangeHeader) => {
       status: 206,
       headers: response.headers
     });
-
-    //console.log(`ranged response from service-worker from ${start} to ${end}`);
-    console.log(response.headers);
 
     slicedResponse.headers.set('X-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);

@@ -115,7 +115,8 @@ class Settings extends Component {
   }
 
   resetDataVolume () {
-    set(`data-volume_${this.props.userId}`, 0);
+    this.setState({volume: 0});
+    return set(`data-volume_${this.props.userId}`, 0);
   }
 
   // clear settings idb cache
@@ -165,6 +166,7 @@ class Settings extends Component {
             limitData={limitData}
             dataMax={dataMax}
             volume={volume}
+            resetDataVolume={this.resetDataVolume}
             onLimitDataStatusChange={this.onLimitDataStatusChange}
             onMaxDataVolumeChange={this.onMaxDataVolumeChange}
           />

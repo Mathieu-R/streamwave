@@ -20,7 +20,7 @@ class DataVolume extends Component {
     return false;
   }
 
-  render ({limitData, dataMax, volume, onLimitDataStatusChange, onMaxDataVolumeChange}) {
+  render ({limitData, dataMax, volume, onLimitDataStatusChange, onMaxDataVolumeChange, resetDataVolume}) {
     return (
       <div class="data-volume">
         <Switch
@@ -46,7 +46,7 @@ class DataVolume extends Component {
         {/* SVG arc with data consumed until today */}
         {
           limitData &&
-          <Circle volume={volume} dataMax={dataMax} />
+          <Circle volume={volume} dataMax={dataMax} resetDataVolume={resetDataVolume} />
         }
       </div>
     );

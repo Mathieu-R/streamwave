@@ -1,6 +1,11 @@
 import { h, Component } from 'preact';
+import { connect } from 'react-redux';
 import Uploader from '../utils/upload';
 import Constants from '../constants';
+
+const mapDispatchToProps = dispatch => ({
+  toasting: (message, buttons, duration) => dispatch(toasting(message, buttons, duration))
+});
 
 class Upload extends Component {
   constructor () {
@@ -59,6 +64,17 @@ class Upload extends Component {
       body.append('musics', file);
     });
 
+    // upload with background fetch if possible
+    if (Constants.SUPPORT_BACKGROUND_FETCH && Constants.PRODUCTION) {
+      this.uploader.inBackground(url, body, 'album-upload').then(() => {
+        this.props.toasting([
+          'Votre album va être téléversé en arrière-plan.',
+          'Vous pouvez fermer l\'application si vous le désirez.'
+        ], ['dismiss'], 5000);
+      }).catch(err => console.error(err));
+    }
+
+    // simple upload with progress bar in ui
     this.uploader.upload(url, body);
   }
 
@@ -137,4 +153,4 @@ class Upload extends Component {
   }
 }
 
-export default Upload;
+export default connect(null, mapDispatchToProps)(Upload);
