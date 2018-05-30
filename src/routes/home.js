@@ -363,9 +363,13 @@ class Home extends Component {
       return;
     }
 
-    this.cast.requestRemoteDevicesAvailable()
-      .then(() => this.cast.cast(manifest))
-      .catch(err => console.error(err));
+    const proxy = new shaka.cast.CastProxy(this.audio.base, this.player, Constants.PRESENTATION_ID);
+    console.log(proxy.canCast());
+    proxy.cast().then(() => {
+      console.log('connected to stuff');
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   render () {
