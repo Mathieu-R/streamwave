@@ -42,12 +42,15 @@ class Chromecaster {
     // chromecast button
     this.request.getAvailability().then(availability => {
       const available = availability.value;
-      this.updateChromecastButtonDisplay({available: available});
+      console.log('chromecast available', available);
+      this.updateChromecastButtonDisplay({available});
 
       availability.onchange = evt => {
+        console.log('chromecast available - availabily change', evt.target.value);
         this.updateChromecastButtonDisplay({available: evt.target.value});
       }
     }).catch(_ => {
+      console.log('chromecast available - catch', false);
       // availibility monitoring is not available on that platform
       // assuming receiver is available
       this.updateChromecastButtonDisplay({available: true});

@@ -49,6 +49,7 @@ export async function simpleDownloadTracklist ({tracklist, cover, id: tracklistI
 }
 
 export async function downloadTracklist ({tracklist, cover, id: tracklistId, type}) {
+  console.log('download');
   const registration = await navigator.serviceWorker.ready;
 
   if (!registration.active) {
@@ -73,6 +74,7 @@ export async function downloadTracklist ({tracklist, cover, id: tracklistId, typ
 }
 
 export async function removeTracklistFromCache (tracklist, id) {
+  console.log('remove tracklist');
   const cache = await caches.open(MUSIC_CACHE_NAME);
   const keys = await cache.keys();
 
@@ -182,6 +184,11 @@ export function getDataVolumeDownloaded ({userId}) {
       volume: parseFloat(volumeInMo.toFixed(1))
     }
   }).catch(err => console.error(err));
+}
+
+export function resetDataVolume () {
+  const userId = store.getState().user.id;
+  return set(`data-volume_${userId}`, 0);
 }
 
 export function trackDownload (responses, tracklistId) {

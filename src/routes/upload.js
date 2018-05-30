@@ -19,6 +19,21 @@ class Upload extends Component {
 
   componentDidMount () {
     this.uploader = new Uploader();
+
+    this.uploader.on('upload-started', _ => {
+      console.log('started');
+      this.progressBar.classList.add('upload__progress-bar--active');
+    });
+
+    this.uploader.on('upload-progress', evt => {
+      const {uploaded, total} = evt;
+      this.progressValue.innerText = `${Math.round((uploaded / total) * 100)}%`;
+      this.progress.style.transform = `scaleX(${uploaded / total})`;
+    });
+
+    this.uploader.on('upload-finished', _ => {
+      this.progressBar.classList.remove('upload__progress-bar--active');
+    });
   }
 
   onClickImportButton () {
@@ -45,20 +60,6 @@ class Upload extends Component {
     });
 
     this.uploader.upload(url, body);
-
-    this.uploader.on('upload-started', _ => {
-      this.progressBar.classList.add('upload__progress-bar--active');
-    });
-
-    this.uploader.on('upload-progress', evt => {
-      const {uploaded, total} = evt;
-      this.progressValue.innerText = `${Math.round((uploaded / total) * 100)}%`;
-      this.progress.style.transform = `scaleX(${uploaded / total})`;
-    });
-
-    this.uploader.on('upload-finished', _ => {
-      this.progressBar.classList.remove('upload__progress-bar--active');
-    });
   }
 
   abort () {

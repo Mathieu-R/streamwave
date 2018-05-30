@@ -106,6 +106,7 @@ class TrackList extends Component {
       return;
     }
 
+    console.log('checked', checked);
     if (!checked) {
       removeTracklistFromCache(this.state.tracks, id);
       return;
