@@ -22,7 +22,12 @@ async function getRequestsUrls (tracklist, cover) {
     return [audio, manifestURL, playlistHLSURL].map(url => `${Constants.CDN_URL}/${url}`);
   });
 
-  return [...flatten(urls), `${Constants.CDN_URL}/${cover}`];
+  if (cover) {
+    return [...flatten(urls), `${Constants.CDN_URL}/${cover}`];
+  }
+
+  // tracklists have no cover
+  return flatten(urls);
 }
 
 // download without bg-sync or bg-fetch

@@ -30,6 +30,8 @@ export function createPlaylist ({title}) {
         type: CREATE_PLAYLIST,
         playlist: data
       });
+
+      resolve();
     });
   }
 }

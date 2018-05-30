@@ -66,20 +66,20 @@ class PlaylistModal extends Component {
     }
 
     this.props.createPlaylist({title: this.input.value})
-      .then(playlist => {
+      .then(_ => {
         // reset input value
         this.input.value = '';
-        console.log(playlist);
       })
       .catch(msg => this.props.toasting(msg));
   }
 
-  addTrackToPlaylist (playlistId) {
+  addTrackToPlaylist (evt) {
+    const playlistId = evt.target.dataset.id;
     const {track} = this.props;
     // if bg-sync supported
     // register a bg-sync event so user can add
     // track to playlist even offline
-    if (Constants.SUPPORT_BACKGROUND_SYNC) {
+    if (Constants.SUPPORT_BACKGROUND_SYNC && Constants.PRODUCTION) {
       this.addTrackWhenConnectionAvailable({playlistId, track});
       return
     }
@@ -168,7 +168,7 @@ class PlaylistModal extends Component {
               'playlist-modal__create-input-container playlist-modal__create-input-container--visible' :
               'playlist-modal__create-input-container'
             }>
-              <div class="playlist-modal__create-back" onClick={this.removePlaylistInput} aria-label="cancel playlist creation"/>
+              <button class="playlist-modal__create-back" onClick={this.removePlaylistInput} aria-label="cancel playlist creation"></button>
               <input
                 class="playlist-modal__create-input"
                 ref={input => this.input = input}
@@ -180,10 +180,10 @@ class PlaylistModal extends Component {
           <section class="playlist-modal__playlists">
             {
               playlists.map(playlist =>
-                <div class="playlist-modal__playlist" key={playlist._id} onClick={evt => this.addTrackToPlaylist(playlist._id)} aria-label="add to this playlist">
+                <button class="playlist-modal__playlist" data-id={playlist._id} key={playlist._id} onClick={this.addTrackToPlaylist} aria-label="add to this playlist">
                   <span class="playlist-modal__playlist__title">{playlist.title}</span>
                   <span class="playlist-modal__playlist__tracks-counter">{playlist.tracks.length} {pluralize('titre', playlist.tracks.length)}</span>
-                </div>
+                </button>
               )
             }
           </section>
