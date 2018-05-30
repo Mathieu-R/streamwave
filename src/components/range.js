@@ -31,7 +31,6 @@ class Range extends Component {
   }
 
   onChange (evt) {
-    console.log('change');
     const { value } = this.range;
     this.props.onChange(parseInt(value, 10));
     requestAnimationFrame(() => this.update(value));
@@ -40,8 +39,8 @@ class Range extends Component {
   update (value) {
     const { min, max } = this.range;
     const position = (parseInt(value, 10) - parseInt(min, 10)) / (parseInt(max, 10) - parseInt(min, 10)); // [0, 1]
-    this.track.style.transform = `translate(0, -50%) scaleX(${position})`;
-    this.round.style.transform = `translate(${position * 100}%, -35%)`;
+    this.track.style.transform = `translate(-50%, -50%) scaleX(${position})`;
+    this.round.style.transform = `translateX(${position * 100}%)`;
   }
 
   render ({min, max, onChange, value, showToolTip}, {position, active}) {
@@ -64,7 +63,8 @@ class Range extends Component {
           value={value}
         />
         <div class="range__ui-container">
-          <div class="range__track" ref={track => this.track = track} />
+          <div class="range__track"></div>
+          <div class="range__track-used" ref={track => this.track = track} />
           <div class="range__round-container" ref={round => this.round = round} >
             <div class={
               showToolTip ?

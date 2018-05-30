@@ -97,7 +97,7 @@ class ProgressBar extends Component {
   }
 
   update (position) {
-    this.track.style.transform = `translate(0, -50%) scaleX(${position})`;
+    this.track.style.transform = `translate(-50%, -50%) scaleX(${position})`;
     this.round.style.transform = `translateX(${position * 100}%)`;
   }
 
@@ -143,10 +143,11 @@ class ProgressBar extends Component {
         onTouchStart={this.onSwipeStart}
         onMouseDown={this.onSwipeStart}
       >
+        <div class="progress-bar__track"></div>
         <div class={
           borderRadius ?
-          'progress-bar__track progress-bar__track--radius' :
-          'progress-bar__track'
+          'progress-bar__track-used progress-bar__track-used--radius' :
+          'progress-bar__track-used'
         } ref={track => this.track = track}></div>
         <div class="progress-bar__round-container" ref={round => this.round = round}>
           <div class="progress-bar__round" ref={round => this.innerRound = round} />

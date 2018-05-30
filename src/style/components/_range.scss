@@ -1,3 +1,5 @@
+$range-height: 5px;
+
 .range {
   position: relative;
   display: flex;
@@ -20,21 +22,37 @@
 
   &__ui-container {
     position: relative;
-    height: 3px;
+    height: 100%;
     width: 100%;
-    background: $slider-background;
+    /* important to make round container vertical centered */
+    /* which means that round head can be on the progress bar */
+    /* and not outside */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     pointer-events: none;
   }
 
   &__track {
     position: absolute;
     top: 50%;
-    left: 0;
+    left: 50%;
+    height: $range-height;
     width: 100%;
-    height: 100%;
+    transform: translate(-50%, -50%);
+    background: $slider-background;
+  }
+
+  &__track-used {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: $range-height;
     background: #FFF;
-    transform: translate(0, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
     transform-origin: 0 50%;
+    will-change: transform;
   }
 
   &__round-container {
@@ -43,20 +61,19 @@
     background: 0 0;
     border: none;
     outline: none;
-    transform: translate(0, -50%);
   }
 
   &__round {
     position: absolute;
     top: 50%;
     left: -5px;
-    height: 15px;
-    width: 15px;
+    height: 20px;
+    width: 20px;
     outline: 0;
     border-radius: 50%;
     background: #FFF;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    transform: translateY(-35%) scale(0.7);
+    transform: translateY(-50%) scale(0.7);
     transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
   }
 
@@ -70,10 +87,10 @@
     background: #DEDEDE;
     border-radius: 5px;
     color: #000;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
     opacity: 0;
     transform: translateY(-50%) scale(0.2);
     transition: transform .2s cubic-bezier(0, 0, 0.3, 1);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
 
     &--visible {
       display: flex;
