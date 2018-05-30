@@ -33,6 +33,43 @@ class Uploader extends EventEmitter {
     this.xhr.send(files);
   }
 
+  async inBackground (url, files, id) {
+    // get service worker registration
+    const registration = await navigator.serviceWorker.ready;
+    if (!registration.active) {
+      return;
+    }
+
+    // request object
+    const request = new Request(url, {body: files, method: 'POST'});
+
+    // options
+    const icons = [
+      {
+        "src": "/assets/icons/icon-128x128.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/assets/icons/icon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/assets/icons/icon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ];
+
+    const options = {
+      icons,
+      title: 'Téléversement en cours'
+    }
+
+    return registration.backgroundFetch.fetch(id, request, options);
+  }
+
   onUploadStart (evt) {
     this.emit('upload-started');
   }

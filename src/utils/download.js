@@ -143,7 +143,6 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
   ];
 
   const options = {
-    // could also put the icon of the app in icons property
     icons,
     title: `Téléchargement de "${album}" en arrière-plan pour la lecture hors-ligne.`
   }

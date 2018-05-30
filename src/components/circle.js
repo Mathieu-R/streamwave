@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
-import { resetDataVolume } from '../utils/download';
 import { toasting } from '../store/toast';
 
 const mapDispatchToProps = dispatch => ({
@@ -41,9 +40,9 @@ class Circle extends Component {
   }
 
   reset () {
-    resetDataVolume().then(() => {
+    this.props.resetDataVolume().then(() => {
       this.props.toasting(['Volume de données remis à zéro']);
-    })
+    });
   }
 
   onVolumeDownloading (evt) {
