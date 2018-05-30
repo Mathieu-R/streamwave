@@ -104,7 +104,6 @@ class Library extends Component {
   }
 
   disableWhenOffline () {
-    console.log('offline');
     // get all the covers links
     const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
     // disable albums that are not in the cache
@@ -119,7 +118,6 @@ class Library extends Component {
   }
 
   activateWhenOnline () {
-    console.log('online');
     const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
     coverLinks.forEach(link => {
       link.classList.remove('cover--disabled');

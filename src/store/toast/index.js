@@ -44,7 +44,7 @@ export default (state = {}, action) => {
       return {
         ...state,
         //messages: [],
-        buttons: [],
+        //buttons: [],
         show: false
       }
     default:

@@ -4,7 +4,7 @@ import { get, set } from 'idb-keyval';
 import Track from '../components/track';
 import Switch from '../components/switch';
 import ProgressLine from '../components/progress-line';
-import { shuffle } from '../utils';
+import { shuffle, pluralize } from '../utils';
 import {
   simpleDownloadTracklist,
   downloadTracklist,
@@ -51,6 +51,7 @@ class TrackList extends Component {
     this.handleTrackClick = this.handleTrackClick.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
     this.download = this.download.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
 
     this.state = {
       downloaded: false
@@ -177,7 +178,31 @@ class TrackList extends Component {
     this.props.listen(manifestURL, playlistHLSURL, {artist, album, title: track.title, coverURL}, true);
   }
 
-  render ({downloads, currentTrackId}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
+  removeTrack (trackId) {
+    const playlistId = this.props.match.params.id;
+    fetch(`${Constants.API_URL}/playlist/${playlistId}/${trackId}`, {
+      method: 'delete',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('streamwave-token')}`
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        this.props.toasting(['Titre supprimé de cette playlist'], ['dismiss']);
+        this.updateState(trackId);
+      }
+    }).catch(err => console.error(err));
+  }
+
+  // update state when remove track from playlist
+  updateState (trackId) {
+    // copy of the state
+    const {tracks} = this.state;
+    const index = tracks.findIndex(track => track._id === trackId);
+    const update = [...tracks.slice(0, index), ...tracks.slice(index + 1)];
+    this.setState({tracks: update});
+  }
+
+  render ({downloads, currentTrackId, type}, {artist, coverURL, genre, primaryColor, title, tracks, year, downloaded}) {
     {/* return div to prepare space for album (flex: 1) */}
     if (tracks === undefined) return <div class="tracklist"></div>;
     return (
@@ -191,7 +216,7 @@ class TrackList extends Component {
               <div class="tracklist__line">
                 <span class="tracklist__year">{year ? year : 'année de parution inconnue'}</span>
                 •
-                <span class="tracklist__tracks-counter">{tracks.length} titres</span>
+                <span class="tracklist__tracks-counter">{tracks.length} {pluralize('titre', tracks.length)}</span>
                 •
                 <span class="tracklist__genre">{genre ? genre : 'playlist'}</span>
               </div>
@@ -216,6 +241,7 @@ class TrackList extends Component {
               key={track._id} id={track._id} currentTrackId={currentTrackId}
               number={track.number} title={track.title} duration={track.duration}
               track={track} handleTrackClick={this.handleTrackClick}
+              removeTrack={this.removeTrack} type={type}
             />
           ))}
         </section>

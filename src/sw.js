@@ -7,8 +7,9 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest);
 workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute('/settings', workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute('/settings', workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
@@ -33,8 +34,8 @@ self.onfetch = event => {
     return;
   }
 
-   // network-first for playlists
-   if (url.hostname === 'api.streamwave.be' && url.pathname === '/v1/playlists') {
+  // network-first for playlists
+  if (url.hostname === 'api.streamwave.be' && url.pathname === '/v1/playlists') {
     // bail non-get request (e.g. POST to api)
     if (event.request.method !== 'GET') {
       return;
@@ -42,12 +43,23 @@ self.onfetch = event => {
 
     networkFirst(event);
     return;
-   }
+  }
 
   // api call
   if (url.hostname === 'api.streamwave.be') {
+    // bail non-get request (e.g. POST to api)
+    if (event.request.method !== 'GET') {
+      return;
+    }
+
     // get something from the cache
     // then update it
+    staleWhileRevalidate(event);
+    return;
+  }
+
+  // artworks
+  if (url.hostname === 'cdn.streamwave.be' && url.pathname.endsWith('.jpg')) {
     staleWhileRevalidate(event);
     return;
   }
