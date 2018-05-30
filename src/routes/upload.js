@@ -72,6 +72,8 @@ class Upload extends Component {
           'Vous pouvez fermer l\'application si vous le désirez.'
         ], ['dismiss'], 5000);
       }).catch(err => console.error(err));
+
+      return;
     }
 
     // simple upload with progress bar in ui

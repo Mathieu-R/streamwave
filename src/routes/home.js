@@ -100,6 +100,7 @@ class Home extends Component {
 
     this.audio = null;
     this.player = null;
+    this.castProxy = null;
     this.skipTime = 15;
 
     this.listen = this.listen.bind(this);
@@ -143,6 +144,7 @@ class Home extends Component {
     }
 
     this.player = new shaka.Player(this.audio.base);
+    this.castProxy = new shaka.cast.CastProxy(this.audio.base, this.player, Constants.PRESENTATION_ID);
 
     // put it in window so it's easy to access
     // even in console.
@@ -210,7 +212,7 @@ class Home extends Component {
   }
 
   initPresentation () {
-    this.chromecaster = new Chromecaster();
+    this.chromecaster = new Chromecaster(this.castProxy);
   }
 
   /**
@@ -356,12 +358,7 @@ class Home extends Component {
   }
 
   chromecast ({chromecasting, manifest}) {
-    if (chromecasting) {
-      this.chromecaster.stop();
-      return;
-    }
-
-    this.chromecaster.cast(manifest);
+    this.chromecaster.castIfNeeded();
   }
 
   render () {
