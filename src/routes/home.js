@@ -121,6 +121,7 @@ class Home extends Component {
     this.initShakaPlayer();
     this.initMediaSession();
     this.initPresentation();
+    this.offlineListener();
     this.props.restoreSettings();
   }
 
@@ -223,6 +224,8 @@ class Home extends Component {
    * @param {Boolean} play play/pause media
    */
   async listen (manifest, m3u8playlist, trackInfos, play) {
+    // update chromecast receiver UI (if needed)
+    this.chromecaster.updateReceiverUI();
     // TODO: use redux store cache
     const limit = await this.settings.get('limit-data');
     if (limit) {
@@ -231,8 +234,8 @@ class Home extends Component {
         this.settings.get('data-max')
       ]);
 
-      console.log(volume, max);
-      console.log('cached: ', await caches.has(`${Constants.CDN_URL}/${manifest}`));
+      //console.log(volume, max);
+      //console.log('cached: ', await caches.has(`${Constants.CDN_URL}/${manifest}`));
 
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
@@ -359,6 +362,48 @@ class Home extends Component {
 
   chromecast ({chromecasting, manifest}) {
     this.chromecaster.castIfNeeded();
+  }
+
+
+  offlineListener () {
+    window.addEventListener('offline', _ => this.disableWhenOffline())
+    window.addEventListener('online', _ => this.activateWhenOnline());
+  }
+
+  disableWhenOffline () {
+    // get all the covers links
+    const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
+    // disable albums that are not in the cache
+    return Promise.all(coverLinks.map(link => {
+      const url = new URL(link.href).pathname;
+      return caches.match(`${Constants.API_URL}${url}`).then(cached => {
+        if (!cached) {
+          link.classList.add('cover--disabled');
+        }
+      });
+    }));
+
+    const tracks = Array.from(document.querySelectorAll('.track'));
+    Promise.all(tracks.map(track => {
+      const url = `${Constants.CDN_URL}/${track.dataset.manifest}`;
+      return caches.match(url).then(cached => {
+        if (!cached) {
+          track.classList.add('track--disabled');
+        }
+      });
+    }));
+  }
+
+  activateWhenOnline () {
+    const coverLinks = Array.from(document.querySelectorAll('.cover__link'));
+    coverLinks.forEach(link => {
+      link.classList.remove('cover--disabled');
+    });
+
+    const tracks = Array.from(document.querySelectorAll('.track'));
+    tracks.map(track => {
+      track.classList.remove('track--disabled');
+    });
   }
 
   render () {

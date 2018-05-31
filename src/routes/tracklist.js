@@ -240,7 +240,7 @@ class TrackList extends Component {
             <Track
               key={track._id} id={track._id} currentTrackId={currentTrackId}
               number={track.number} title={track.title} duration={track.duration}
-              track={track} handleTrackClick={this.handleTrackClick}
+              manifest={track.manifestURL} track={track} handleTrackClick={this.handleTrackClick}
               removeTrack={this.removeTrack} type={type}
             />
           ))}

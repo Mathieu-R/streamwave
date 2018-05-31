@@ -32,13 +32,13 @@ class Track extends Component {
     this.props.removeTrack(this.props.id);
   }
 
-  render ({number, title, duration, id, currentTrackId, type}) {
+  render ({number, title, duration, id, manifest, currentTrackId, type}) {
     return (
       <div class={
         id === currentTrackId ?
         'track track--active' :
         'track'
-        } onClick={this.onClick}>
+        } data-manifest={manifest} onClick={this.onClick}>
         <div class="track__number">{number}</div>
         <div class="track__title">{title}</div>
         <div class="track__duration">{formatDuration(duration)}</div>

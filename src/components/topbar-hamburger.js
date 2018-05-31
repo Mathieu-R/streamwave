@@ -23,6 +23,10 @@ class TopBarHamburger extends Component {
         <div class="top-bar__title">
           Streamwave
         </div>
+        <div class="top-bar__cast-receiver">
+          <p class="top-bar__cast-receiver__description">Ecoute en cours sur</p>
+          <p class="top-bar__cast-receiver__name"></p>
+        </div>
       </div>
     );
   }

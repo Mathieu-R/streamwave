@@ -8,6 +8,11 @@ import {
 class Chromecaster {
   constructor (castProxy) {
     this.castProxy = castProxy;
+    this.onCastStatusChange = this.onCastStatusChange.bind(this);
+    this.castProxy.addEventListener('caststatuschanged', this.onCastStatusChange);
+
+    this.castReceiver = document.querySelector('.top-bar__cast-receiver');
+    this.castReceiverName = document.querySelector('.top-bar__cast-receiver__name');
   }
 
   castIfNeeded () {
@@ -20,6 +25,9 @@ class Chromecaster {
     this.castProxy.setAppData(this.getMediaInfo());
     this.castProxy.cast().then(() => {
       console.log(`casting on a remote device: ${this.castProxy.receiverName()}`);
+      // innerText FTW
+      this.castReceiverName.innerText = this.castProxy.receiverName();
+      this.castReceiver.classList.add('top-bar__cast-receiver--visible');
       //this.updateUI({chromecasting: true});
     }).catch(err => {
       console.error(err);
@@ -30,15 +38,22 @@ class Chromecaster {
     const canCast = this.castProxy.canCast();
     const isCasting = this.castProxy.isCasting();
 
+    console.log(canCast, isCasting);
+
     if (this.canCast !== canCast) {
       this.canCast = canCast;
       this.updateChromecastButtonDisplay({available: this.canCast ? true : false});
     }
 
     if (this.isCasting !== isCasting) {
+      this.isCasting = isCasting;
       this.updateUI({chromecasting: this.isCasting ? true : false});
     }
-    //const receiverName = this.castProxy.receiverName();
+
+    // we stop casting
+    if (!isCasting) {
+      this.castReceiver.classList.remove('top-bar__cast-receiver--visible');
+    }
   }
 
   stop () {
@@ -59,7 +74,7 @@ class Chromecaster {
       title: state.player.track.title,
       number: state.player.track.number,
       year: state.player.year,
-      coverURL: `${Constants.CDN_URL}/${data.track.coverURL}`,
+      coverURL: `${Constants.CDN_URL}/${state.player.track.coverURL}`,
       currentTime: state.player.currentTime,
       //playing: state.player.playing,
       //primaryColor: state.player.primaryColor
