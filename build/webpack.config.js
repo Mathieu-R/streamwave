@@ -10,7 +10,6 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const WebpackBar = require('webpackbar');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const critters = require('critters-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const production = process.env.NODE_ENV === 'production';
 
@@ -49,7 +48,7 @@ if (production) {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new htmlWebpackPlugin({
       // prerendering with prerender-loader
-      template: `!!prerender-loader?string!${config.template}`,
+      template: config.template,
       minify: {
         removeComments: true
       },
@@ -103,7 +102,9 @@ const common = {
   bail: true,
   // watch mode
   watch: !production,
-  entry: config.entry.front,
+  entry: {
+    app: config.entry.front
+  },
   output: {
     path: path.resolve('dist'),
     filename: production ? '[name].bundle.[hash].js' : '[name].bundle.js',

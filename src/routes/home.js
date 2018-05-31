@@ -223,6 +223,8 @@ class Home extends Component {
    * @param {Boolean} play play/pause media
    */
   async listen (manifest, m3u8playlist, trackInfos, play) {
+    // update chromecast receiver UI (if needed)
+    this.chromecaster.updateReceiverUI();
     // TODO: use redux store cache
     const limit = await this.settings.get('limit-data');
     if (limit) {
