@@ -1,4 +1,5 @@
 import store from '../store';
+import Constants from '../constants';
 import {
   setChromecastAvailable,
   setChromecastStatus
