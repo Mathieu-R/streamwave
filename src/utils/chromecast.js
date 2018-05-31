@@ -59,7 +59,7 @@ class Chromecaster {
       title: state.player.track.title,
       number: state.player.track.number,
       year: state.player.year,
-      coverURL: `${Constants.CDN_URL}/${data.track.coverURL}`,
+      coverURL: `${Constants.CDN_URL}/${state.player.track.coverURL}`,
       currentTime: state.player.currentTime,
       //playing: state.player.playing,
       //primaryColor: state.player.primaryColor
