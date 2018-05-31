@@ -234,8 +234,8 @@ class Home extends Component {
         this.settings.get('data-max')
       ]);
 
-      console.log(volume, max);
-      console.log('cached: ', await caches.has(`${Constants.CDN_URL}/${manifest}`));
+      //console.log(volume, max);
+      //console.log('cached: ', await caches.has(`${Constants.CDN_URL}/${manifest}`));
 
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
