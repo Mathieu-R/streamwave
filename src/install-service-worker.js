@@ -33,7 +33,7 @@ export default (store) => {
 
           // new update
           if (event.target.state === 'activated' && navigator.serviceWorker.controller) {
-            store.dispatch(toasting(['Streamwave updated', 'Refresh to get the new version'], ['reload']));
+            store.dispatch(toasting(['Streamwave updated', 'Refresh to get the new version'], ['reload'], 8000));
             return;
           }
         }
