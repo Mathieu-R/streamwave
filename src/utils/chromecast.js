@@ -1,4 +1,8 @@
 import store from '../store';
+import {
+  setChromecastAvailable,
+  setChromecastStatus
+} from '../store/player';
 
 class Chromecaster {
   constructor (castProxy) {
@@ -8,12 +12,14 @@ class Chromecaster {
   castIfNeeded () {
     if (this.castProxy.isCasting()) {
       this.stop();
-      this.updateUI({chromecasting: false});
+      //this.updateUI({chromecasting: false});
       return;
     }
 
+    this.castProxy.setAppData(this.getMediaInfo());
     this.castProxy.cast().then(() => {
-      this.updateUI({chromecasting: true});
+      console.log(`casting on a remote device: ${this.castProxy.receiverName()}`);
+      //this.updateUI({chromecasting: true});
     }).catch(err => {
       console.error(err);
     })
@@ -22,15 +28,42 @@ class Chromecaster {
   onCastStatusChange () {
     const canCast = this.castProxy.canCast();
     const isCasting = this.castProxy.isCasting();
-    //const receiverName = this.castProxy.receiverName();
 
-    this.updateChromecastButtonDisplay({available: canCast ? true : false});
+    if (this.canCast !== canCast) {
+      this.canCast = canCast;
+      this.updateChromecastButtonDisplay({available: this.canCast ? true : false});
+    }
+
+    if (this.isCasting !== isCasting) {
+      this.updateUI({chromecasting: this.isCasting ? true : false});
+    }
+    //const receiverName = this.castProxy.receiverName();
   }
 
   stop () {
     // Show a dialog where user can choose to disconnect from the cast connection
     // could also force with forceDisconnect()
     this.castProxy.suggestDisconnect();
+  }
+
+  updateReceiverUI () {
+    this.castProxy.setAppData(this.getMediaInfo());
+  }
+
+  getMediaInfo () {
+    const state = store.getState();
+    const data = {
+      artist: state.player.artist,
+      album: state.player.album,
+      title: state.player.track.title,
+      number: state.player.track.number,
+      year: state.player.year,
+      coverURL: `${Constants.CDN_URL}/${data.track.coverURL}`,
+      currentTime: state.player.currentTime,
+      //playing: state.player.playing,
+      //primaryColor: state.player.primaryColor
+    };
+    return data;
   }
 
   updateChromecastButtonDisplay ({available}) {

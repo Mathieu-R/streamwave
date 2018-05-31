@@ -10,7 +10,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const WebpackBar = require('webpackbar');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin');
+const critters = require('critters-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const production = process.env.NODE_ENV === 'production';
 
@@ -48,7 +48,8 @@ if (production) {
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
     new htmlWebpackPlugin({
-      template: config.template,
+      // prerendering with prerender-loader
+      template: `!!prerender-loader?string!${config.template}`,
       minify: {
         removeComments: true
       },
@@ -56,9 +57,12 @@ if (production) {
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
     }),
+    // inline critical style
+    // new critters({
+    //   preload: 'swap'
+    // }),
     // preload main bundles
-    // prefetch should be done with webpack
-    // when native support for prefetch will land
+    // prefetch should is done with webpack
     new PreloadWebpackPlugin({
       rel: 'preload',
       include: 'initial'
@@ -99,9 +103,7 @@ const common = {
   bail: true,
   // watch mode
   watch: !production,
-  entry: {
-    app: config.entry.front
-  },
+  entry: config.entry.front,
   output: {
     path: path.resolve('dist'),
     filename: production ? '[name].bundle.[hash].js' : '[name].bundle.js',
