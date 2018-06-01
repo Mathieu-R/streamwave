@@ -12,14 +12,24 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class TopBarHamburger extends Component {
+  constructor () {
+    super();
+    this.showSideNav = this.showSideNav.bind(this);
+  }
+
   shouldComponentUpdate (nextProps) {
     return false;
+  }
+
+  showSideNav () {
+    console.log('topbar')
+    this.props.showSideNav();
   }
 
   render ({showSideNav}) {
     return (
       <div class="top-bar">
-        <img class="top-bar__button" role="button" src={hamburger} onClick={showSideNav} alt="hamburger open menu" />
+        <img class="top-bar__button" role="button" src={hamburger} onClick={this.showSideNav} alt="hamburger open menu" />
         <div class="top-bar__title">
           Streamwave
         </div>

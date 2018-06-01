@@ -21,6 +21,21 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SideNav extends Component {
+  constructor () {
+    super();
+    this.startX = 0;
+    this.currentX = 0;
+
+    this.showSideNav = this.showSideNav.bind(this);
+    this.hideSideNav = this.hideSideNav.bind(this);
+    this.blockClick = this.blockClick.bind(this);
+    this.onTouchStart = this.onTouchStart.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.onTransitionEnd = this.onTransitionEnd.bind(this);
+    this.close = this.close.bind(this);
+  }
+
   shouldComponentUpdate (nextProps) {
     if (nextProps.user !== this.props.user) {
       return true;
@@ -30,21 +45,85 @@ class SideNav extends Component {
 
   componentWillReceiveProps (props) {
     if (props.showSideNav) {
-      this.overlay.classList.add('overlay--visible');
-      this.container.classList.add('side-nav--visible');
+      console.log('show')
+      this.showSideNav();
       return;
     }
 
+    console.log('hide');
+    this.hideSideNav();
+  }
+
+  onTransitionEnd () {
+    this.container.classList.remove('side-nav--animatable');
+    this.container.removeEventListener('transitionend', this.onTransitionEnd);
+  }
+
+  showSideNav () {
+    this.overlay.classList.add('overlay--visible');
+    this.container.classList.add('side-nav--animatable');
+    this.container.classList.add('side-nav--visible');
+    this.container.addEventListener('transitionend', this.onTransitionEnd);
+  }
+
+  hideSideNav () {
     this.overlay.classList.remove('overlay--visible');
+    this.container.classList.add('side-nav--animatable');
     this.container.classList.remove('side-nav--visible');
+    this.container.addEventListener('transitionend', this.onTransitionEnd);
+  }
+
+  blockClick (evt) {
+    evt.stopPropagation();
+  }
+
+  onTouchStart (evt) {
+    if (!(this.container.classList.contains('side-nav--visible'))) {
+      return;
+    }
+
+    this.startX = evt.touches[0].pageX;
+    this.currentX = this.startX;
+  }
+
+  onTouchMove (evt) {
+    this.currentX = evt.touches[0].pageX;
+    this.translateX = Math.min(0, this.currentX - this.startX);
+
+    if (this.translateX < 0) {
+      evt.preventDefault();
+    }
+
+    this.container.style.transform = `translateX(${this.translateX}px)`;
+  }
+
+  onTouchEnd () {
+    if (this.translateX < 0) {
+      this.props.hideSideNav();
+      this.container.style.transform = '';
+    }
+  }
+
+  close (evt) {
+    evt.stopPropagation();
+    this.props.hideSideNav();
   }
 
   render ({hideSideNav, user}) {
     return (
-      <div class="overlay" ref={overlay => this.overlay = overlay}>
-        <aside class="side-nav" ref={container => this.container = container}>
+      <div class="overlay"
+        ref={overlay => this.overlay = overlay}
+        onClick={hideSideNav}
+      >
+        <aside class="side-nav"
+          ref={container => this.container = container}
+          onTouchStart={this.onTouchStart}
+          onTouchMove={this.onTouchMove}
+          onTouchEnd={this.onTouchEnd}
+          onClick={this.blockClick}
+        >
           <div class="side-nav__hamburger-container">
-            <button class="side-nav__hamburger" onClick={hideSideNav} aria-label="hide sidenav"></button>
+            <button class="side-nav__hamburger" onClick={this.close} aria-label="hide sidenav"></button>
           </div>
           <div class="side-nav__user">
             <img class="side-nav__avatar" src={user.avatar} alt="avatar" />
