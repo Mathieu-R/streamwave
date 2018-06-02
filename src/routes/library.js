@@ -22,11 +22,7 @@ class Library extends Component {
   constructor () {
     super();
     this.onIntersection = this.onIntersection.bind(this);
-
     this.observer = null;
-    this.state = {
-      albums: []
-    }
   }
 
   componentWillMount () {
@@ -40,10 +36,6 @@ class Library extends Component {
     if (this.observer) {
       this.observer.disconnect();
     }
-  }
-
-  getGalleryFromCache () {
-    return get('library');
   }
 
   fetchGallery () {

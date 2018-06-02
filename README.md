@@ -12,7 +12,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 - [X] NodeJS    
 - [X] Basic auth + Google Oauth2     
 - [X] Credential Management API    
-- [ ] Presentation API (Chromecast)    
+- [X] Presentation API (Chromecast)    
     https://github.com/w3c/presentation-api/issues/448#issuecomment-387071162   
     https://github.com/w3c/remote-playback/issues/117    
     https://bugs.chromium.org/p/chromium/issues/detail?id=843965    
@@ -38,6 +38,9 @@ I noticed that Background Fetch works in chrome mobile with `experimental web pl
 You need these 2 API to make the app work.
 - https://github.com/Mathieu-R/streamwave-auth
 - https://github.com/Mathieu-R/streamwave-library
+
+In order to use the chromecast feature you need the receiver
+- https://github.com/Mathieu-R/streamwave-presentation
 
 ```
 npm install && npm run start
