@@ -22,7 +22,6 @@ class TopBarHamburger extends Component {
   }
 
   showSideNav () {
-    console.log('topbar')
     this.props.showSideNav();
   }
 

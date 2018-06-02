@@ -25,6 +25,7 @@ class SideNav extends Component {
     super();
     this.startX = 0;
     this.currentX = 0;
+    this.dragging = false;
 
     this.showSideNav = this.showSideNav.bind(this);
     this.hideSideNav = this.hideSideNav.bind(this);
@@ -45,13 +46,23 @@ class SideNav extends Component {
 
   componentWillReceiveProps (props) {
     if (props.showSideNav) {
-      console.log('show')
       this.showSideNav();
       return;
     }
 
-    console.log('hide');
     this.hideSideNav();
+  }
+
+  componentDidMount () {
+    document.addEventListener('touchstart', this.onTouchStart);
+    document.addEventListener('touchmove', this.onTouchMove);
+    document.addEventListener('touchend', this.onTouchEnd);
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('touchstart', this.onTouchStart);
+    document.removeEventListener('touchmove', this.onTouchMove);
+    document.removeEventListener('touchend', this.onTouchEnd);
   }
 
   onTransitionEnd () {
@@ -82,30 +93,36 @@ class SideNav extends Component {
       return;
     }
 
+    this.dragging = true;
     this.startX = evt.touches[0].pageX;
     this.currentX = this.startX;
   }
 
   onTouchMove (evt) {
-    this.currentX = evt.touches[0].pageX;
-    this.translateX = Math.min(0, this.currentX - this.startX);
-
-    if (this.translateX < 0) {
-      evt.preventDefault();
+    if (!this.dragging) {
+      return;
     }
 
+    this.currentX = evt.touches[0].pageX;
+    this.translateX = Math.min(0, this.currentX - this.startX);
     this.container.style.transform = `translateX(${this.translateX}px)`;
   }
 
   onTouchEnd () {
+    if (!this.dragging) {
+      return;
+    }
+
+    this.dragging = false;
+    this.container.style.transform = '';
+
     if (this.translateX < 0) {
       this.props.hideSideNav();
-      this.container.style.transform = '';
     }
   }
 
   close (evt) {
-    evt.stopPropagation();
+    //evt.stopPropagation();
     this.props.hideSideNav();
   }
 
@@ -117,9 +134,6 @@ class SideNav extends Component {
       >
         <aside class="side-nav"
           ref={container => this.container = container}
-          onTouchStart={this.onTouchStart}
-          onTouchMove={this.onTouchMove}
-          onTouchEnd={this.onTouchEnd}
           onClick={this.blockClick}
         >
           <div class="side-nav__hamburger-container">
