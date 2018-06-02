@@ -18,6 +18,7 @@ export default (store) => {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
       // if an update is found
       // we should have a service-worker installing
+      let firstTimeCached = false;
       registration.onupdatefound = event => {
         console.log('A new service worker has been found, installing...');
 
@@ -25,16 +26,19 @@ export default (store) => {
           console.log(`Service Worker ${event.target.state}`);
           console.log(navigator.serviceWorker.controller);
 
+          if (firstTimeCached) {
+            return;
+          }
+
           // first time service-worker installed.
           if (event.target.state === 'installed' && !navigator.serviceWorker.controller) {
-            console.log('streamwave cached.');
+            firstTimeCached = true;
             store.dispatch(toasting(['Streamwave cached', 'Ready to work offline']));
             return;
           }
 
           // new update
           if (event.target.state === 'activated' && navigator.serviceWorker.controller) {
-            console.log('streamwave updated');
             store.dispatch(toasting(['Streamwave updated', 'Refresh to get the new version'], ['reload'], 8000));
             return;
           }
