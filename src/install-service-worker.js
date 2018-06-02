@@ -26,7 +26,7 @@ export default (store) => {
           console.log(navigator.serviceWorker.controller);
 
           // first time service-worker installed.
-          if (event.target.state === 'installed' && navigator.serviceWorker.controller === null) {
+          if (event.target.state === 'installed' && !registration.active) {
             store.dispatch(toasting(['Streamwave cached', 'Ready to work offline']));
             return;
           }

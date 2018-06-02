@@ -72,7 +72,6 @@ class Upload extends Component {
           'Vous pouvez fermer l\'application si vous le désirez.'
         ], ['dismiss'], 5000);
       }).catch(err => console.error(err));
-
       return;
     }
 
@@ -120,7 +119,7 @@ class Upload extends Component {
           onDrop={this.onDrop}
           onDragEnter={this.onDragEnter}
           onDragEnd={this.onDragEnd}
-          onDragExit={this.onDragEnd}
+          onDragLeave={this.onDragEnd}
         >
           <div class="upload__icon"></div>
           <p class="upload__description">

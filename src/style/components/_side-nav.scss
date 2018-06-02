@@ -9,9 +9,13 @@
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
   transform: translateX(-102%);
   opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1), transform 0.5s cubic-bezier(0, 0, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
   will-change: opacity, transform;
   z-index: 1;
+
+  &--animatable {
+    transition: transform 0.5s cubic-bezier(0, 0, 0.3, 1);
+  }
 
   &--visible {
     transform: translateX(0);

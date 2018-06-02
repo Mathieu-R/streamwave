@@ -28,7 +28,6 @@ class Chromecaster {
       // innerText FTW
       this.castReceiverName.innerText = this.castProxy.receiverName();
       this.castReceiver.classList.add('top-bar__cast-receiver--visible');
-      //this.updateUI({chromecasting: true});
     }).catch(err => {
       console.error(err);
     })
@@ -37,8 +36,6 @@ class Chromecaster {
   onCastStatusChange () {
     const canCast = this.castProxy.canCast();
     const isCasting = this.castProxy.isCasting();
-
-    console.log(canCast, isCasting);
 
     if (this.canCast !== canCast) {
       this.canCast = canCast;
@@ -72,10 +69,9 @@ class Chromecaster {
       artist: state.player.artist,
       album: state.player.album,
       title: state.player.track.title,
-      number: state.player.track.number,
-      year: state.player.year,
       coverURL: `${Constants.CDN_URL}/${state.player.track.coverURL}`,
       currentTime: state.player.currentTime,
+      totalTime: state.player.track.duration
       //playing: state.player.playing,
       //primaryColor: state.player.primaryColor
     };
