@@ -1,6 +1,6 @@
 {
   "name": "streamwave",
-  "version": "0.3.1",
+  "version": "0.3.2-0",
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --config build/webpack.config.js",
