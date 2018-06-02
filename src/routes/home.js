@@ -93,9 +93,6 @@ class Home extends Component {
     this.source = null;
 
     this.chromecaster = null;
-    // notice if currently presenting
-    // through Presentation API
-    this.presenting = false;
     this.settings = new SettingsManager();
 
     this.audio = null;
@@ -114,7 +111,6 @@ class Home extends Component {
     this.chromecast = this.chromecast.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
     this.seek = this.seek.bind(this);
-    this.seekInChromecast = this.seekInChromecast.bind(this);
   }
 
   componentDidMount () {
@@ -146,6 +142,8 @@ class Home extends Component {
 
     this.player = new shaka.Player(this.audio.base);
     this.castProxy = new shaka.cast.CastProxy(this.audio.base, this.player, Constants.PRESENTATION_ID);
+    this.remoteAudio = this.castProxy.getVideo();
+    this.remotePlayer = this.castProxy.getPlayer();
 
     // put it in window so it's easy to access
     // even in console.
@@ -246,7 +244,7 @@ class Home extends Component {
     }
 
     // 1. Load the player
-    return this.player.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
+    return this.remotePlayer.load(`${Constants.CDN_URL}/${manifest}`).then(_ => {
       console.log(`[shaka-player] Music loaded: ${manifest}`);
       return play ? this.play() : this.pause();
     })
@@ -291,53 +289,33 @@ class Home extends Component {
   }
 
   play () {
-    return this.audio.base.play();
+    return this.remoteAudio.play();
+    //return this.audio.base.play();
   }
 
   pause () {
-    return this.audio.base.pause();
+    return this.remoteAudio.pause();
+    //return this.audio.base.pause();
   }
 
   seekBackward () {
     const time = Math.max(0, this.audio.base.currentTime - this.skipTime);
-    this.audio.base.currentTime = time;
-    this.seekInChromecastIfNeeded(time);
+    this.seek(time);
   }
 
   seekForward () {
     const time = Math.min(this.audio.base.duration, this.audio.base.currentTime + this.skipTime);
-    this.audio.base.currentTime = time;
-    this.seekInChromecastIfNeeded(time);
+    this.seek(time);
   }
 
   changeVolume (volume) {
-    this.audio.base.volume = volume / 100;
-
-    // only if we use presentation api
-    if (this.presenting) {
-      // change volume in chromecast
-      this.chromecaster.send({
-        type: 'volume',
-        volume: volume / 100
-      });
-    }
+    this.remoteAudio.volume = volume / 100;
+    //this.audio.base.volume = volume / 100;
   }
 
   seek (time) {
-    this.audio.base.currentTime = time;
-
-    // only if we use presentation api
-    if (this.presenting) {
-      this.seekInChromecast(time);
-    }
-  }
-
-  seekInChromecast (time) {
-    // seek in chromecast
-    this.chromecaster.send({
-      type: 'seek',
-      currentTime: time
-    });
+    this.remoteAudio.currentTime = time;
+    //this.audio.base.currentTime = time;
   }
 
   setPrevTrack () {
@@ -363,7 +341,6 @@ class Home extends Component {
   chromecast ({chromecasting, manifest}) {
     this.chromecaster.castIfNeeded();
   }
-
 
   offlineListener () {
     window.addEventListener('offline', _ => this.disableWhenOffline())

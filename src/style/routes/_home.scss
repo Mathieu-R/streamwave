@@ -1,6 +1,7 @@
 .home {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   height: 100vh;
   overflow: hidden;
   /* prevent navbar and mini-player to overlap */

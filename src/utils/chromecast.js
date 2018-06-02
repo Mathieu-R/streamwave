@@ -71,9 +71,7 @@ class Chromecaster {
       title: state.player.track.title,
       coverURL: `${Constants.CDN_URL}/${state.player.track.coverURL}`,
       currentTime: state.player.currentTime,
-      totalTime: state.player.track.duration
-      //playing: state.player.playing,
-      //primaryColor: state.player.primaryColor
+      duration: state.player.track.duration
     };
     return data;
   }
