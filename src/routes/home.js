@@ -149,7 +149,7 @@ class Home extends Component {
     this.remotePlayer = this.castProxy.getPlayer();
 
     requestAnimationFrame(this.trackTimeUpdate);
-    this.remoteAudio.addEventListener('onended', _ => {
+    this.remoteAudio.addEventListener('ended', _ => {
       this.setNextTrack({continuous: true});
     });
 
