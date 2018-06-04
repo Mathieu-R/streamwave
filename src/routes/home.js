@@ -70,7 +70,8 @@ import {
   switchPlayingStatus,
   setChromecastStatus,
   setPrevTrack,
-  setNextTrack
+  setNextTrack,
+  setCurrentTime
 } from '../store/player';
 
 const mapStateToProps = state => ({
@@ -82,7 +83,8 @@ const mapDispatchToProps = dispatch => ({
   setPlayingStatus: payload => dispatch(setPlayingStatus(payload)),
   setPrevTrack: _ => dispatch(setPrevTrack()),
   setNextTrack: payload => dispatch(setNextTrack(payload)),
-  switchPlayingStatus: _ => dispatch(switchPlayingStatus())
+  switchPlayingStatus: _ => dispatch(switchPlayingStatus()),
+  setCurrentTime: time => dispatch(setCurrentTime(time))
 });
 
 class Home extends Component {
@@ -110,6 +112,7 @@ class Home extends Component {
     this.setNextTrack = this.setNextTrack.bind(this);
     this.chromecast = this.chromecast.bind(this);
     this.changeVolume = this.changeVolume.bind(this);
+    this.trackTimeUpdate = this.trackTimeUpdate.bind(this);
     this.seek = this.seek.bind(this);
   }
 
@@ -144,6 +147,11 @@ class Home extends Component {
     this.castProxy = new shaka.cast.CastProxy(this.audio.base, this.player, Constants.PRESENTATION_ID);
     this.remoteAudio = this.castProxy.getVideo();
     this.remotePlayer = this.castProxy.getPlayer();
+
+    requestAnimationFrame(this.trackTimeUpdate);
+    this.remoteAudio.addEventListener('onended', _ => {
+      this.setNextTrack({continuous: true});
+    });
 
     // put it in window so it's easy to access
     // even in console.
@@ -381,6 +389,29 @@ class Home extends Component {
     tracks.map(track => {
       track.classList.remove('track--disabled');
     });
+  }
+
+  trackTimeUpdate () {
+    if (!this.remoteAudio) {
+      return;
+    }
+
+    // ontimeupdate event does not allow me to have 60fps
+    // cause it does not fire enough
+    const {duration, currentTime} = this.remoteAudio;
+    requestAnimationFrame(this.trackTimeUpdate);
+
+    // bail if no music played
+    if (!duration) {
+      return;
+    }
+
+    // bail if audio paused
+    if (this.remoteAudio.paused) {
+      return;
+    }
+
+    this.props.setCurrentTime(currentTime);
   }
 
   render () {
