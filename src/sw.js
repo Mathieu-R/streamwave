@@ -85,10 +85,10 @@ self.onfetch = event => {
 
 self.onbackgroundfetched = event => {
   console.log(event.id);
-  if (event.id.startsWith('album-upload')) {
-    event.updateUI('Album téléversé.');
-    return;
-  }
+  // if (event.id.startsWith('album-upload')) {
+  //   event.updateUI('Album téléversé.');
+  //   return;
+  // }
 
   event.waitUntil(async function () {
     // open the cache
