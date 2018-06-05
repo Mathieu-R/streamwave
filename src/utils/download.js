@@ -149,9 +149,10 @@ export async function downloadTracklistInBackground ({tracklist, album, cover, i
 
   // get requests urls
   const requests = await getRequestsUrls(tracklist, cover);
-
+  console.log(requests);
   // launch a background fetch
   const bgFetch = await registration.backgroundFetch.fetch(id, requests, options);
+  console.log(bgFetch);
 }
 
 export function updateDataVolume ({userId, value}) {
