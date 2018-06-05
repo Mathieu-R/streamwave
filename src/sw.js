@@ -101,6 +101,7 @@ self.onbackgroundfetched = event => {
 }
 
 self.onbackgroundfetchfail = event => {
+  console.log(event);
   if (event.id.startsWith('album-upload')) {
     event.updateUI('Téléversement raté !');
     return;
@@ -110,6 +111,7 @@ self.onbackgroundfetchfail = event => {
 }
 
 self.onbackgroundfetchclick = event => {
+  console.log(event);
   clients.openWindow(location.origin);
 }
 
