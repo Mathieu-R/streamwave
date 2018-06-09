@@ -1,4 +1,5 @@
 import Constants from './constants';
+import Pusher from './utils/push-notifications';
 
 import {
   setDownloadPercentage,
@@ -16,6 +17,10 @@ import {
 export default (store) => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
+      if (Constants.SUPPORT_PUSH_NOTIFICATIONS) {
+        Pusher.init();
+      }
+
       // if an update is found
       // we should have a service-worker installing
       let firstTimeCached = false;

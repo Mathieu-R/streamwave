@@ -125,6 +125,23 @@ self.onsync = event => {
   }
 }
 
+self.onpush = event => {
+  const {message, id} = event.data.json();
+  const options = {
+    body: message,
+    icon: '/assets/icons/icon-192x192.png',
+    vibrate: [200],
+    data: {
+      type: 'album',
+      id
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification('Streamwave', options)
+  );
+}
+
 self.onnotificationclick = event => {
   // close notification
   event.notification.close();
