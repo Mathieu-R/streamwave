@@ -1,12 +1,11 @@
 import { get, set } from 'idb-keyval';
-import { urlBase64ToUint8Array } from '../index';
+import { urlBase64ToUint8Array } from './index';
 import Constants from '../constants';
 import store from '../store';
 
 import {
   toasting
 } from '../store/toast';
-import { urlBase64ToUint8Array } from '.';
 
 class Pusher {
   constructor () {
@@ -82,7 +81,8 @@ class Pusher {
     const response = await fetch(`${Constants.API_URL}/push/subscribe`, {
       method: 'post',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
+        'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       },
       body: JSON.stringify(result)
     });
@@ -111,7 +111,8 @@ class Pusher {
     const response = fetch(`${Constants.API_URL}/push/unsubscribe`, {
       method: 'post',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
+        'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       },
       body: JSON.stringify({
         endpoint: subscription.toJSON().endpoint

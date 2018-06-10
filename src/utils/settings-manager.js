@@ -15,6 +15,7 @@ class SettingsManager {
 
     settings['fade'] = 0;
     settings['download-mobile-network'] = true;
+    settings['notifications'] = false;
     settings['download-quality'] = 256;
     settings['limit-data'] = false;
     settings['data-max'] = 0;
