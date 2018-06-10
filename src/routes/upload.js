@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { connect } from 'react-redux';
+import Pusher from '../utils/push-notifications';
 import Uploader from '../utils/upload';
 import Constants from '../constants';
 
@@ -57,6 +58,7 @@ class Upload extends Component {
   }
 
   async uploadMedias (files) {
+    const subscription = await Pusher.getSubscription();
     //const total = Array.from(files).reduce((total, file) => total += file.size, 0);
     const url = `${Constants.API_URL}/album/upload`;
     const body = new FormData();
@@ -66,7 +68,7 @@ class Upload extends Component {
 
     // upload with background fetch if possible
     if (Constants.SUPPORT_BACKGROUND_FETCH && Constants.PRODUCTION) {
-      this.uploader.inBackground(url, body, 'album-upload').then(() => {
+      this.uploader.inBackground(url, body, subscription, 'album-upload').then(() => {
         this.props.toasting([
           'Votre album va être téléversé en arrière-plan.',
           'Vous pouvez fermer l\'application si vous le désirez.'
@@ -76,7 +78,7 @@ class Upload extends Component {
     }
 
     // simple upload with progress bar in ui
-    this.uploader.upload(url, body);
+    this.uploader.upload(url, body, subscription);
   }
 
   abort () {

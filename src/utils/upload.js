@@ -18,10 +18,14 @@ class Uploader extends EventEmitter {
   // fetch does not support upload progress //
   // streams only work for download-progress //
   // waiting for FetchObserver //
-  upload (url, files) {
+  upload (url, files, subscription) {
     this.xhr = new XMLHttpRequest();
     this.xhr.open('POST', url, true);
     this.xhr.setRequestHeader('authorization', `Bearer ${localStorage.getItem('streamwave-token')}`);
+
+    if (subscription) {
+      this.xhr.setRequestHeader('x-push-id', subscription.toJSON().endpoint);
+    }
 
     this.xhr.upload.addEventListener('loadstart', this.onUploadStart);
     this.xhr.upload.addEventListener('progress', this.onProgress);
@@ -33,15 +37,23 @@ class Uploader extends EventEmitter {
     this.xhr.send(files);
   }
 
-  async inBackground (url, files, id) {
+  async inBackground (url, files, subscription, id) {
     // get service worker registration
     const registration = await navigator.serviceWorker.ready;
     if (!registration.active) {
       return;
     }
 
+    let headers = {
+      'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
+    }
+
+    if (subscription) {
+      headers = {...headers, 'x-push-id': subscription.toJSON().endpoint}
+    }
+
     // request object
-    const request = new Request(url, {body: files, method: 'POST'});
+    const request = new Request(url, {body: files, method: 'POST', headers});
 
     // options
     const icons = [

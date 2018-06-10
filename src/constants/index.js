@@ -65,6 +65,10 @@ class Constants {
     return 'caches' in window;
   }
 
+  static get SUPPORT_PUSH_NOTIFICATIONS () {
+    return 'PushManager' in window;
+  }
+
   static get SUPPORT_STREAMS () {
     return 'ReadableStream' in window;
   }
