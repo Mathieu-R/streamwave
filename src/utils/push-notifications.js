@@ -49,6 +49,15 @@ class Pusher {
     });
   }
 
+  static getSubscription () {
+    navigator.serviceWorker.ready.then(registration => {
+      if (!registration.active) {
+        return;
+      }
+      return registration.pushManager.getSubscription();
+    });
+  }
+
   async subscribe () {
     if (this.subscribing) {
       return;
@@ -61,12 +70,7 @@ class Pusher {
       return;
     }
 
-    const registration = await navigator.serviceWorker.ready;
-    if (!registration.active) {
-      return;
-    }
-
-    const subscription = await registration.pushManager.getSubscription();
+    // const subscription = await Pusher.getSubscription();
     // subscribe the user with the vapid key
     const result = await registration.pushManager.subscribe({
       userVisibleOnly: true,
@@ -101,12 +105,7 @@ class Pusher {
 
     this.unsubscribing = true;
 
-    const registration = await navigator.serviceWorker.ready;
-    if (!registration.active) {
-      return;
-    }
-
-    const subscription = await registration.pushManager.getSubscription();
+    const subscription = await Pusher.getSubscription();
     await subscription.unsubscribe();
 
     const response = fetch(`${Constants.API_URL}/push/unsubscribe`, {

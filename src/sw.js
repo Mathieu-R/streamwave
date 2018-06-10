@@ -126,15 +126,11 @@ self.onsync = event => {
 }
 
 self.onpush = event => {
-  const {message, id} = event.data.json();
+  const {message, album} = event.data.json();
   const options = {
     body: message,
-    icon: '/assets/icons/icon-192x192.png',
-    vibrate: [200],
-    data: {
-      type: 'album',
-      id
-    }
+    icon:  `https://cdn.streamwave.be/${album}/${album}.jpg`, //'/assets/icons/icon-192x192.png',
+    vibrate: [200]
   }
 
   event.waitUntil(
@@ -143,10 +139,16 @@ self.onpush = event => {
 }
 
 self.onnotificationclick = event => {
+  const {type, id} = event.notification.data;
   // close notification
   event.notification.close();
   // redirect user
-  clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
+  if (type && id) {
+    clients.openWindow(`${location.origin}/${type}/${id}`);
+    return;
+  }
+
+  clients.openWindow(`${location.origin}`);
 }
 
 const networkFirst = event => {
