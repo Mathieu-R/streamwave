@@ -6,7 +6,6 @@ import store from '../store';
 import {
   toasting
 } from '../store/toast';
-import { urlBase64ToUint8Array } from '.';
 
 class Pusher {
   constructor () {
@@ -64,6 +63,11 @@ class Pusher {
     const registration = await navigator.serviceWorker.ready;
     if (!registration.active) {
       return;
+    }
+    
+    // get vapid public key if needed
+    if (!this.key) {
+      Pusher.init();
     }
 
     const subscription = await registration.pushManager.getSubscription();
