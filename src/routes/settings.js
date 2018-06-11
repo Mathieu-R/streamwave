@@ -8,6 +8,7 @@ import Notifications from '../components/settings/notifications';
 import StorageQuota from '../components/settings/storage-quota';
 import DataVolume from '../components/settings/data-volume';
 import { getDataVolumeDownloaded } from '../utils/download';
+import Pusher from '../utils/push-notifications';
 import Constants from '../constants';
 
 import {
@@ -90,6 +91,10 @@ class Settings extends Component {
     });
   }
 
+  componentDidMount () {
+    this.pusher = new Pusher();
+  }
+
   onFadeChange (value) {
     // avoid unnecessary update
     if (value === this.props.fade) {
@@ -109,14 +114,20 @@ class Settings extends Component {
     const status = evt.target.checked;
     if (status) {
       Notification.requestPermission().then(permission => {
+        let p = Promise.resolve();
+        if (permission === 'granted') {
+          p = this.pusher.subscribe();
+        } else if (permission === 'denied') {
+          p = this.pusher.unsubscribe();
+        }
         // permission: denied - default / granted
-        this.props.setAllowNotifications(permission === 'denied' || permission === 'default' ? false : true);
+        p.then(_ => this.props.setAllowNotifications(permission === 'denied' || permission === 'default' ? false : true));
       }).catch(_ => {
         this.props.setAllowNotifications(false);
       });
       return;
     }
-    this.props.setAllowNotifications(value);
+    this.pusher.unsubscribe.then(_ => this.props.setAllowNotifications(value));
   }
 
   onQualityChange (evt) {
