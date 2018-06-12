@@ -105,7 +105,7 @@ self.onfetch = event => {
   }
 
   event.respondWith(async function () {
-    // console.log(event.request.url);
+    console.log(event.request.url);
     // console.log(await caches.match(event.request));
     // console.log(fetch(event.request));
 
@@ -118,6 +118,7 @@ self.onfetch = event => {
 
     // range-request (music)
     const rangeHeader = event.request.headers.get('Range');
+    console.log(rangeHeader);
 
     if (rangeHeader) {
       return createRangedResponse(event.request, response, rangeHeader);
