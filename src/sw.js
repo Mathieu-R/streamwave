@@ -1,8 +1,7 @@
 importScripts("/third_party/idb-keyval.min.js");
 
-const MUSIC_CACHE_NAME = 'streamwave-music-cache';
-
 // workbox library will be injected by webpack plugin
+// TODO: fix bug when reload page
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
 workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
@@ -10,6 +9,7 @@ workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFir
 workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute('/settings', workbox.strategies.cacheFirst());
+workbox.routing.registerRoute('/upload', workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
@@ -19,49 +19,90 @@ workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst
 workbox.skipWaiting();
 workbox.clientsClaim();
 
+const CACHENAME = 'static';
+const VERSION = '1';
+const CACHE_MANIFEST_NAME = `${CACHENAME}-v${VERSION}`;
+const MUSIC_CACHE_NAME = 'streamwave-music-cache';
+
+const routesManifest = [
+  '/',
+  '/search',
+  '/settings',
+  '/upload',
+  '/licences',
+  '/about',
+  '/demo',
+  new RegExp('/auth/'),
+  new RegExp('/album/'),
+  new RegExp('/playlist/')
+];
+
+const toCache = [
+  ...routesManifest,
+  ...self.__precacheManifest.map(e => e.url)
+];
+
+// self.oninstall = event => {
+//   event.waitUntil(async function () {
+//     const cache = await caches.open(`${CACHENAME}-v${VERSION}`);
+//     return await cache.addAll(toCache);
+//   }());
+//   self.skipWaiting();
+// }
+
+// self.onactivate = event => {
+//   caches.keys().then(cacheNames => {
+//     return Promise.all(
+//       cacheNames.map(cacheName => {
+//         // avoid removing irrelevant caches
+//         if (!cacheName.startsWith(CACHENAME)) {
+//           return null;
+//         }
+
+//         // remove old cache manifest
+//         if (cacheName !== CACHE_MANIFEST_NAME) {
+//           return caches.delete(cacheName);
+//         }
+//       })
+//     );
+//   });
+//   self.clients.claim();
+// }
+
 self.onfetch = event => {
+  console.log(event.request.url);
   // https://github.com/paulirish/caltrainschedule.io/pull/51
   // seems kind of a bug with chrome devtools open
   if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
     return;
   }
 
+  // bail non get requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const url = new URL(event.request.url);
 
-  // handle google avatar
-  if (url.hostname.includes('googleusercontent.com')) {
-    staleWhileRevalidate(event);
-    return;
+  // network-first for playlists list
+  if (url.href === 'https://api.streamwave.be/v1/playlists') {
+    return networkFirst(event);
   }
 
-  // network-first for playlists
-  if (url.hostname === 'api.streamwave.be' && url.pathname === '/v1/playlists') {
-    // bail non-get request (e.g. POST to api)
-    if (event.request.method !== 'GET') {
-      return;
-    }
-
-    networkFirst(event);
-    return;
-  }
-
-  // api call
+  // api call (library, album, playlist)
   if (url.hostname === 'api.streamwave.be') {
-    // bail non-get request (e.g. POST to api)
-    if (event.request.method !== 'GET') {
-      return;
-    }
-
-    // get something from the cache
-    // then update it
-    staleWhileRevalidate(event);
-    return;
+    // get something from the cache then update it
+    return staleWhileRevalidate(event);
   }
 
   // artworks
   if (url.hostname === 'cdn.streamwave.be' && url.pathname.endsWith('.jpg')) {
-    staleWhileRevalidate(event);
-    return;
+    return staleWhileRevalidate(event);
+  }
+
+  // google avatar
+  if (url.hostname.includes('googleusercontent.com')) {
+    return staleWhileRevalidate(event);
   }
 
   event.respondWith(async function () {
@@ -271,7 +312,7 @@ const downloadInForeground = async () => {
   }
 }
 
-uploadInForeground = async () => {
+const uploadInForeground = async () => {
   try {
     // get stuff to upload
     const toUpload = await idbKeyval.get('bg-sync-playlist-queue');

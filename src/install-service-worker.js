@@ -18,7 +18,8 @@ export default (store) => {
   if (Constants.PRODUCTION && Constants.SUPPORT_SERVICE_WORKER) {
     navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(registration => {
       if (Constants.SUPPORT_PUSH_NOTIFICATIONS) {
-        Pusher.init();
+        const pusher = new Pusher();
+        pusher.init();
       }
 
       // if an update is found

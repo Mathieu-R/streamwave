@@ -127,7 +127,7 @@ class Settings extends Component {
       });
       return;
     }
-    this.pusher.unsubscribe().then(_ => this.props.setAllowNotifications(value));
+    this.pusher.unsubscribe().then(_ => this.props.setAllowNotifications(status));
   }
 
   onQualityChange (evt) {

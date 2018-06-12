@@ -3,6 +3,8 @@ import { urlBase64ToUint8Array } from './index';
 import Constants from '../constants';
 import store from '../store';
 
+let instance = null
+
 import {
   toasting
 } from '../store/toast';
@@ -12,13 +14,19 @@ class Pusher {
     this.subscribing = false;
     this.unsubscribing = false;
     this.key = null;
+
+    if (!instance) {
+      instance = this;
+    }
+
+    return instance;
   }
 
   static get IDB_KEY () {
     return 'push-notification-key';
   }
 
-  static init () {
+  init () {
     if (Notification.permission === 'denied') {
       return;
     }
@@ -27,6 +35,7 @@ class Pusher {
     fetch(`${Constants.API_URL}/push`)
     .then(response => response.text())
     .then(key => {
+      console.log(key);
       this.key = key;
       return key;
     })
@@ -34,7 +43,7 @@ class Pusher {
     .then(key => {
       // if there's no key stored
       if (!key) {
-        set(Pusher.IDB_KEY, key);
+        set(Pusher.IDB_KEY, this.key);
         return;
       }
 
@@ -62,21 +71,35 @@ class Pusher {
       return;
     }
 
-    this.subscribing = true;
-
+    // no permission ? bail.
     const permission = await Notification.requestPermission();
-    if (!permission) {
+    if (permission === 'denied') {
       return;
     }
 
-    // const subscription = await Pusher.getSubscription();
+    // already subscribed ? bail.
+    const subscription = await Pusher.getSubscription();
+    if (subscription) {
+      return;
+    }
+
+    this.subscribing = true;
+
+    // if no key, get key
+    if (!this.key) {
+      this.init();
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    if (!registration.active) {
+      return;
+    }
+
     // subscribe the user with the vapid key
     const result = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(this.key)
     });
-
-    console.log('[PUSH]', result);
 
     const response = await fetch(`${Constants.API_URL}/push/subscribe`, {
       method: 'post',
@@ -103,10 +126,15 @@ class Pusher {
       return;
     }
 
-    this.unsubscribing = true;
-
+    // not subscribed ? bail.
     const subscription = await Pusher.getSubscription();
+    console.log(subscription);
+    if (!subscription) return;
+
+    this.unsubscribing = true;
     await subscription.unsubscribe();
+
+    console.log('unsubscribed', subscription);
 
     const response = fetch(`${Constants.API_URL}/push/unsubscribe`, {
       method: 'post',
