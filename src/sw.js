@@ -105,9 +105,9 @@ self.onfetch = event => {
   }
 
   event.respondWith(async function () {
-    console.log(event.request.url);
-    console.log(await caches.match(event.request));
-    console.log(fetch(event.request));
+    // console.log(event.request.url);
+    // console.log(await caches.match(event.request));
+    // console.log(fetch(event.request));
 
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
