@@ -8,8 +8,8 @@ workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirs
 workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute('/settings', workbox.strategies.cacheFirst());
-workbox.routing.registerRoute('/upload', workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/settings'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute(new RegExp('/upload'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
 workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
@@ -70,7 +70,6 @@ const toCache = [
 // }
 
 self.onfetch = event => {
-  console.log(event.request.url);
   // https://github.com/paulirish/caltrainschedule.io/pull/51
   // seems kind of a bug with chrome devtools open
   if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
@@ -106,6 +105,8 @@ self.onfetch = event => {
   }
 
   event.respondWith(async function () {
+    console.log(event.request.url);
+
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
 
