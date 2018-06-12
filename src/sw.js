@@ -3,16 +3,16 @@ importScripts("/third_party/idb-keyval.min.js");
 // workbox library will be injected by webpack plugin
 // TODO: fix bug when reload page
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
-workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/settings'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/upload'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/settings'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/upload'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.staleWhileRevalidate());
 
 // skipping default sw lifecycle
 // update page as soon as possible
@@ -105,7 +105,9 @@ self.onfetch = event => {
   }
 
   event.respondWith(async function () {
-    console.log(event.request.url);
+    // console.log(event.request.url);
+    // console.log(await caches.match(event.request));
+    // console.log(fetch(event.request));
 
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);

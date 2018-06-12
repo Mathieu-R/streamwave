@@ -246,8 +246,8 @@ class Home extends Component {
       // if user has exceed data limit
       // prevent streaming unless it's downloaded one.
       // note: downloaded music = manifest in cache
-      if (volume > max && (Constants.SUPPORT_CACHE_API && !await caches.has(`${Constants.CDN_URL}/${manifest}`))) {
-        console.log(`${Constants.CDN_URL}/${manifest}`, caches.has(`${Constants.CDN_URL}/${manifest}`));
+      if (volume > max && (Constants.SUPPORT_CACHE_API && !await caches.match(`${Constants.CDN_URL}/${manifest}`))) {
+        console.log(`${Constants.CDN_URL}/${manifest}`, await caches.match(`${Constants.CDN_URL}/${manifest}`));
         return;
       }
     }
