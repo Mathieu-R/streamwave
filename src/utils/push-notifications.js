@@ -94,7 +94,7 @@ class Pusher {
       this.init();
     }
 
-    const subscription = await this.getSubscription();
+    const subscription = await Pusher.getSubscription();
     this.subscribing = true;
 
     const registration = await navigator.serviceWorker.ready;
@@ -128,7 +128,7 @@ class Pusher {
     }
 
     // not subscribed ? bail.
-    const subscription = await this.getSubscription();
+    const subscription = await Pusher.getSubscription();
     if (!subscription) return;
 
     this.unsubscribing = true;
