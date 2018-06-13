@@ -384,7 +384,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
       headers: response.headers
     });
 
-    slicedResponse.headers.set('X-From-Cache', 'true');
+    slicedResponse.headers.set('X-Shaka-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
     return slicedResponse;
