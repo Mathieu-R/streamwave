@@ -1,7 +1,6 @@
 importScripts("/third_party/idb-keyval.min.js");
 
 // workbox library will be injected by webpack plugin
-// TODO: fix bug when reload page
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
 workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
 workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
@@ -105,7 +104,7 @@ self.onfetch = event => {
   }
 
   event.respondWith(async function () {
-    console.log(event.request.url);
+    // console.log(event.request.url);
     // console.log(await caches.match(event.request));
     // console.log(fetch(event.request));
 
@@ -118,7 +117,7 @@ self.onfetch = event => {
 
     // range-request (music)
     const rangeHeader = event.request.headers.get('Range');
-    console.log(rangeHeader);
+    // console.log(rangeHeader);
 
     if (rangeHeader) {
       return createRangedResponse(event.request, response, rangeHeader);
@@ -129,7 +128,7 @@ self.onfetch = event => {
 }
 
 self.onbackgroundfetched = event => {
-  console.log(event.id);
+  // console.log(event.id);
   if (event.id.startsWith('album-upload')) {
     event.updateUI('Album téléversé.');
     return;
@@ -146,7 +145,7 @@ self.onbackgroundfetched = event => {
 }
 
 self.onbackgroundfetchfail = event => {
-  console.log(event);
+  // console.log(event);
   if (event.id.startsWith('album-upload')) {
     event.updateUI('Téléversement raté !');
     return;
@@ -175,7 +174,8 @@ self.onpush = event => {
   const options = {
     body: message,
     icon:  `https://cdn.streamwave.be/${album}/${album}.jpg`, //'/assets/icons/icon-192x192.png',
-    vibrate: [200]
+    vibrate: [200],
+    data: {}
   }
 
   event.waitUntil(
