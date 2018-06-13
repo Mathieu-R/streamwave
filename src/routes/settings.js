@@ -111,23 +111,20 @@ class Settings extends Component {
 
   // TODO: rewrite
   onAllowNotificationsChange (evt) {
-    const status = evt.target.checked;
-    if (status) {
-      Notification.requestPermission().then(permission => {
-        let p = Promise.resolve();
-        if (permission === 'granted') {
-          p = this.pusher.subscribe();
-        } else if (permission === 'denied') {
-          p = this.pusher.unsubscribe();
-        }
-        // permission: denied - default / granted
-        p.then(_ => this.props.setAllowNotifications(permission === 'denied' || permission === 'default' ? false : true));
-      }).catch(_ => {
+    const allow = evt.target.checked;
+    this.props.setAllowNotifications(allow);
+
+    if (allow) {
+      this.pusher.subscribe().catch(err => {
+        console.error(err);
         this.props.setAllowNotifications(false);
       });
-      return;
+    } else {
+      this.pusher.unsubscribe().catch(err => {
+        console.error(err);
+        this.props.setAllowNotifications(true);
+      });
     }
-    this.pusher.unsubscribe().then(_ => this.props.setAllowNotifications(status));
   }
 
   onQualityChange (evt) {

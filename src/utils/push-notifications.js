@@ -3,7 +3,7 @@ import { urlBase64ToUint8Array } from './index';
 import Constants from '../constants';
 import store from '../store';
 
-let instance = null
+let instance = null;
 
 import {
   toasting
@@ -13,6 +13,7 @@ class Pusher {
   constructor () {
     this.subscribing = false;
     this.unsubscribing = false;
+    this.keyChanged = false;
     this.key = null;
 
     if (!instance) {
@@ -35,7 +36,6 @@ class Pusher {
     fetch(`${Constants.API_URL}/push`)
     .then(response => response.text())
     .then(key => {
-      console.log(key);
       this.key = key;
       return key;
     })
@@ -51,18 +51,30 @@ class Pusher {
       // but key has changed
       if (this.key !== key) {
         console.log('[PUSH] Subscription key has changed.');
+        this.keyChanged = true;
         set(Pusher.IDB_KEY, key);
+        this.unsubscribe();
         return;
       }
     });
   }
 
-  static getSubscription () {
-    navigator.serviceWorker.ready.then(registration => {
+  getSubscription () {
+    return navigator.serviceWorker.ready.then(registration => {
       if (!registration.active) {
         return;
       }
-      return registration.pushManager.getSubscription();
+
+      return registration.pushManager.getSubscription().then(subscription => {
+        if (subscription && !this.keyChanged) {
+          return subscription;
+        }
+
+        return registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(this.key)
+        });
+      });
     });
   }
 
@@ -77,29 +89,18 @@ class Pusher {
       return;
     }
 
-    // already subscribed ? bail.
-    const subscription = await Pusher.getSubscription();
-    if (subscription) {
-      return;
-    }
-
-    this.subscribing = true;
-
     // if no key, get key
     if (!this.key) {
       this.init();
     }
 
+    const subscription = await this.getSubscription();
+    this.subscribing = true;
+
     const registration = await navigator.serviceWorker.ready;
     if (!registration.active) {
       return;
     }
-
-    // subscribe the user with the vapid key
-    const result = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(this.key)
-    });
 
     const response = await fetch(`${Constants.API_URL}/push/subscribe`, {
       method: 'post',
@@ -107,7 +108,7 @@ class Pusher {
         'content-type': 'application/json',
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       },
-      body: JSON.stringify(result)
+      body: JSON.stringify(subscription)
     });
 
     if (response.status === 500) {
@@ -127,14 +128,12 @@ class Pusher {
     }
 
     // not subscribed ? bail.
-    const subscription = await Pusher.getSubscription();
-    console.log(subscription);
+    const subscription = await this.getSubscription();
     if (!subscription) return;
 
     this.unsubscribing = true;
     await subscription.unsubscribe();
-
-    console.log('unsubscribed', subscription);
+    this.keyChanged = false;
 
     const response = fetch(`${Constants.API_URL}/push/unsubscribe`, {
       method: 'post',
