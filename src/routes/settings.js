@@ -4,19 +4,23 @@ import { set } from 'idb-keyval';
 import debounce from 'debounce';
 import DownloadQuality from '../components/settings/download-quality';
 import DownloadWithMobileNetwork from '../components/settings/download-mobile-network';
+import Notifications from '../components/settings/notifications';
 import StorageQuota from '../components/settings/storage-quota';
 import DataVolume from '../components/settings/data-volume';
 import { getDataVolumeDownloaded } from '../utils/download';
+import Pusher from '../utils/push-notifications';
 import Constants from '../constants';
 
 import {
   getFade,
   getDownloadWithMobileNetwork,
+  getAllowNotifications,
   getQuality,
   getLimitDataStatus,
   getDataMax,
   setFade,
   setDownloadWithMobileNetwork,
+  setAllowNotifications,
   setDownloadQuality,
   setLimitDataStatus,
   setMaxDataVolume,
@@ -35,6 +39,7 @@ import {
 const mapStateToProps = state => ({
   fade: getFade(state),
   downloadWithMobileNetwork: getDownloadWithMobileNetwork(state),
+  notifications: getAllowNotifications(state),
   quality: getQuality(state),
   limitData: getLimitDataStatus(state),
   dataMax: getDataMax(state),
@@ -44,6 +49,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setFade: value => dispatch(setFade(value)),
   setDownloadWithMobileNetwork: value => dispatch(setDownloadWithMobileNetwork(value)),
+  setAllowNotifications: value => dispatch(setAllowNotifications(value)),
   setDownloadQuality: quality => dispatch(setDownloadQuality(quality)),
   setLimitDataStatus: status => dispatch(setLimitDataStatus(status)),
   setMaxDataVolume: value => dispatch(setMaxDataVolume(value)),
@@ -58,6 +64,8 @@ class Settings extends Component {
     this.logout = this.logout.bind(this);
     this.onFadeChange = this.onFadeChange.bind(this);
     this.onQualityChange = this.onQualityChange.bind(this);
+    this.onDownloadWithMobileNetworkChange = this.onDownloadWithMobileNetworkChange.bind(this);
+    this.onAllowNotificationsChange = this.onAllowNotificationsChange.bind(this);
     this.onLimitDataStatusChange = this.onLimitDataStatusChange.bind(this);
     this.onMaxDataVolumeChange = this.onMaxDataVolumeChange.bind(this);
     this.resetDataVolume = this.resetDataVolume.bind(this);
@@ -83,6 +91,10 @@ class Settings extends Component {
     });
   }
 
+  componentDidMount () {
+    this.pusher = new Pusher();
+  }
+
   onFadeChange (value) {
     // avoid unnecessary update
     if (value === this.props.fade) {
@@ -93,8 +105,26 @@ class Settings extends Component {
   }
 
   onDownloadWithMobileNetworkChange (evt) {
-    const {value} = evt.target;
-    this.props.setDownloadWithMobileNetwork(value);
+    const status = evt.target.checked;
+    this.props.setDownloadWithMobileNetwork(status);
+  }
+
+  // TODO: rewrite
+  onAllowNotificationsChange (evt) {
+    const allow = evt.target.checked;
+    this.props.setAllowNotifications(allow);
+
+    if (allow) {
+      this.pusher.subscribe().catch(err => {
+        console.error(err);
+        this.props.setAllowNotifications(false);
+      });
+    } else {
+      this.pusher.unsubscribe().catch(err => {
+        console.error(err);
+        this.props.setAllowNotifications(true);
+      });
+    }
   }
 
   onQualityChange (evt) {
@@ -144,7 +174,7 @@ class Settings extends Component {
     }
   }
 
-  render ({fade, downloadWithMobileNetwork, quality, limitData, dataMax}, {volume}) {
+  render ({fade, downloadWithMobileNetwork, notifications, quality, limitData, dataMax}, {volume}) {
     return (
       <div class="settings">
         <div class="settings__container">
@@ -152,7 +182,14 @@ class Settings extends Component {
             Constants.SUPPORT_NETWORK_INFORMATION_API &&
             <DownloadWithMobileNetwork
               value={downloadWithMobileNetwork}
-              onChange={this.downloadWithMobileNetwork}
+              onChange={this.onDownloadWithMobileNetworkChange}
+            />
+          }
+          {
+            Constants.SUPPORT_PUSH_NOTIFICATIONS &&
+            <Notifications
+              value={notifications}
+              onChange={this.onAllowNotificationsChange}
             />
           }
           <DownloadQuality

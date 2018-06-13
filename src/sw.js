@@ -1,23 +1,72 @@
 importScripts("/third_party/idb-keyval.min.js");
 
-const MUSIC_CACHE_NAME = 'streamwave-music-cache';
-
 // workbox library will be injected by webpack plugin
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
-workbox.routing.registerRoute('/', workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute('/settings', workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.cacheFirst());
-workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.cacheFirst());
+workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/settings'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/upload'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.staleWhileRevalidate());
+workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.staleWhileRevalidate());
 
 // skipping default sw lifecycle
 // update page as soon as possible
 workbox.skipWaiting();
 workbox.clientsClaim();
+
+const CACHENAME = 'static';
+const VERSION = '1';
+const CACHE_MANIFEST_NAME = `${CACHENAME}-v${VERSION}`;
+const MUSIC_CACHE_NAME = 'streamwave-music-cache';
+
+const routesManifest = [
+  '/',
+  '/search',
+  '/settings',
+  '/upload',
+  '/licences',
+  '/about',
+  '/demo',
+  new RegExp('/auth/'),
+  new RegExp('/album/'),
+  new RegExp('/playlist/')
+];
+
+const toCache = [
+  ...routesManifest,
+  ...self.__precacheManifest.map(e => e.url)
+];
+
+// self.oninstall = event => {
+//   event.waitUntil(async function () {
+//     const cache = await caches.open(`${CACHENAME}-v${VERSION}`);
+//     return await cache.addAll(toCache);
+//   }());
+//   self.skipWaiting();
+// }
+
+// self.onactivate = event => {
+//   caches.keys().then(cacheNames => {
+//     return Promise.all(
+//       cacheNames.map(cacheName => {
+//         // avoid removing irrelevant caches
+//         if (!cacheName.startsWith(CACHENAME)) {
+//           return null;
+//         }
+
+//         // remove old cache manifest
+//         if (cacheName !== CACHE_MANIFEST_NAME) {
+//           return caches.delete(cacheName);
+//         }
+//       })
+//     );
+//   });
+//   self.clients.claim();
+// }
 
 self.onfetch = event => {
   // https://github.com/paulirish/caltrainschedule.io/pull/51
@@ -26,45 +75,39 @@ self.onfetch = event => {
     return;
   }
 
+  // bail non get requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const url = new URL(event.request.url);
 
-  // handle google avatar
-  if (url.hostname.includes('googleusercontent.com')) {
-    staleWhileRevalidate(event);
-    return;
+  // network-first for playlists list
+  if (url.href === 'https://api.streamwave.be/v1/playlists') {
+    return networkFirst(event);
   }
 
-  // network-first for playlists
-  if (url.hostname === 'api.streamwave.be' && url.pathname === '/v1/playlists') {
-    // bail non-get request (e.g. POST to api)
-    if (event.request.method !== 'GET') {
-      return;
-    }
-
-    networkFirst(event);
-    return;
-  }
-
-  // api call
+  // api call (library, album, playlist)
   if (url.hostname === 'api.streamwave.be') {
-    // bail non-get request (e.g. POST to api)
-    if (event.request.method !== 'GET') {
-      return;
-    }
-
-    // get something from the cache
-    // then update it
-    staleWhileRevalidate(event);
-    return;
+    // get something from the cache then update it
+    return staleWhileRevalidate(event);
   }
 
   // artworks
   if (url.hostname === 'cdn.streamwave.be' && url.pathname.endsWith('.jpg')) {
-    staleWhileRevalidate(event);
-    return;
+    return staleWhileRevalidate(event);
+  }
+
+  // google avatar
+  if (url.hostname.includes('googleusercontent.com')) {
+    return staleWhileRevalidate(event);
   }
 
   event.respondWith(async function () {
+    // console.log(event.request.url);
+    // console.log(await caches.match(event.request));
+    // console.log(fetch(event.request));
+
     // cached stuff (e.g. static files - cache-manifest / routes)
     const response = await caches.match(event.request);
 
@@ -74,6 +117,7 @@ self.onfetch = event => {
 
     // range-request (music)
     const rangeHeader = event.request.headers.get('Range');
+    // console.log(rangeHeader);
 
     if (rangeHeader) {
       return createRangedResponse(event.request, response, rangeHeader);
@@ -84,7 +128,7 @@ self.onfetch = event => {
 }
 
 self.onbackgroundfetched = event => {
-  console.log(event.id);
+  // console.log(event.id);
   if (event.id.startsWith('album-upload')) {
     event.updateUI('Album téléversé.');
     return;
@@ -101,7 +145,7 @@ self.onbackgroundfetched = event => {
 }
 
 self.onbackgroundfetchfail = event => {
-  console.log(event);
+  // console.log(event);
   if (event.id.startsWith('album-upload')) {
     event.updateUI('Téléversement raté !');
     return;
@@ -125,11 +169,31 @@ self.onsync = event => {
   }
 }
 
+self.onpush = event => {
+  const {message, album} = event.data.json();
+  const options = {
+    body: message,
+    icon:  `https://cdn.streamwave.be/${album}/${album}.jpg`, //'/assets/icons/icon-192x192.png',
+    vibrate: [200],
+    data: {}
+  }
+
+  event.waitUntil(
+    self.registration.showNotification('Streamwave', options)
+  );
+}
+
 self.onnotificationclick = event => {
+  const {type, id} = event.notification.data;
   // close notification
   event.notification.close();
   // redirect user
-  clients.openWindow(`${location.origin}/${event.notification.data.type}/${event.notification.data.id}`);
+  if (type && id) {
+    clients.openWindow(`${location.origin}/${type}/${id}`);
+    return;
+  }
+
+  clients.openWindow(`${location.origin}`);
 }
 
 const networkFirst = event => {
@@ -252,7 +316,7 @@ const downloadInForeground = async () => {
   }
 }
 
-uploadInForeground = async () => {
+const uploadInForeground = async () => {
   try {
     // get stuff to upload
     const toUpload = await idbKeyval.get('bg-sync-playlist-queue');
@@ -320,7 +384,7 @@ const createRangedResponse = (request, response, rangeHeader) => {
       headers: response.headers
     });
 
-    slicedResponse.headers.set('X-From-Cache', 'true');
+    slicedResponse.headers.set('X-Shaka-From-Cache', 'true');
     slicedResponse.headers.set('Content-Length', slicedBuffer.byteLength);
     slicedResponse.headers.set('Content-Range', `bytes ${start}-${end - 1}/${buffer.byteLength}`);
     return slicedResponse;

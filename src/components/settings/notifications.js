@@ -1,22 +1,25 @@
 import { h, Component } from 'preact';
 import Switch from '../switch';
 
-class DownloadWithMobileNetwork extends Component {
+class Notifications extends Component {
   shouldComponentUpdate (nextProps) {
     return this.props.value !== nextProps.value;
   }
 
   render ({value, onChange}) {
     return (
-      <div class="download-mobile-network">
+      <div class="notifications">
         <Switch
-          label="Télécharger à l'aide du réseau mobile"
+          label="Autoriser les notifications"
           onChange={onChange}
           value={value}
         />
+        <p class="notifications__description">
+          exemple: être informé de l'ajout d'un album dans le catalogue
+        </p>
       </div>
     );
   }
 }
 
-export default DownloadWithMobileNetwork;
+export default Notifications;

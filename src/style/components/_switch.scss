@@ -17,9 +17,9 @@
   &__label {
     position: relative;
     display: flex;
-    padding: 5px 75px 5px 5px;
+    padding: 5px 75px 5px 0;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
 
     &::before {
       content: '';

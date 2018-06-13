@@ -45,7 +45,9 @@ class Auth extends Component {
         federated: {
           providers: ['https://accounts.google.com']
         },
-        mediation: 'silent' // prevent browser to show account choser
+        // shows an account chooser
+        // if preventSilentAccess called previously
+        mediation: 'optional'
       });
 
       console.log('Credentials:', credentials);

@@ -7,6 +7,7 @@ const SET_FADE = 'SET_FADE';
 const SET_EQUALIZE_VOLUME = 'SET_EQUALIZE_VOLUME';
 const SET_EQUALIZER = 'SET_EQUALIZER';
 const SET_DOWNLOAD_WITH_MOBILE_NETWORK = 'SET_DOWNLOAD_WITH_MOBILE_NETWORK';
+const SET_ALLOW_NOTIFICATIONS = 'SET_ALLOW_NOTIFICATIONS';
 const SET_DOWNLOAD_QUALITY = 'SET_DOWNLOAD_QUALITY';
 const SET_LIMIT_DATA_STATUS = 'SET_LIMIT_DATA_STATUS';
 const SET_DATA_VOLUME_MAX = 'SET_DATA_VOLUME_MAX';
@@ -41,6 +42,17 @@ export function setDownloadWithMobileNetwork (status) {
     manager.set('download-mobile-network', status).then(_ => {
       dispatch({
         type: SET_DOWNLOAD_WITH_MOBILE_NETWORK,
+        status
+      })
+    });
+  }
+}
+
+export function setAllowNotifications (status) {
+  return dispatch => {
+    manager.set('notifications', status).then(_ => {
+      dispatch({
+        type: SET_ALLOW_NOTIFICATIONS,
         status
       })
     });
@@ -95,6 +107,7 @@ export const setMaxDataVolumeInStore = (value) => {
 export const getFade = state => state.settings.fade;
 export const getQuality = state => state.settings.downloadQuality;
 export const getDownloadWithMobileNetwork = state => state.settings.downloadWithMobileNetwork;
+export const getAllowNotifications = state => state.settings.allowNotifications;
 export const getLimitDataStatus = state => state.settings.limitData;
 export const getDataMax = state => state.settings.dataMax;
 
@@ -108,6 +121,7 @@ export default (state = {}, action) => {
         ...state,
         fade: action.settings['fade'],
         downloadWithMobileNetwork: action.settings['download-mobile-network'],
+        allowNotifications: action.settings['notifications'],
         downloadQuality: action.settings['download-quality'],
         limitData: action.settings['limit-data'],
         dataMax: action.settings['data-max']
@@ -123,6 +137,12 @@ export default (state = {}, action) => {
       return {
         ...state,
         downloadWithMobileNetwork: action.status
+      }
+
+    case SET_ALLOW_NOTIFICATIONS:
+      return {
+        ...state,
+        allowNotifications: action.status
       }
 
     case SET_DOWNLOAD_QUALITY:
