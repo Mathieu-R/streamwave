@@ -27,6 +27,25 @@ class Pusher {
     return 'push-notification-key';
   }
 
+  static getSubscription () {
+    return navigator.serviceWorker.ready.then(registration => {
+      if (!registration.active) {
+        return;
+      }
+
+      return registration.pushManager.getSubscription().then(subscription => {
+        if (subscription && !this.keyChanged) {
+          return subscription;
+        }
+
+        return registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(this.key)
+        });
+      });
+    });
+  }
+
   init () {
     if (Notification.permission === 'denied') {
       return;
@@ -56,25 +75,6 @@ class Pusher {
         this.unsubscribe();
         return;
       }
-    });
-  }
-
-  getSubscription () {
-    return navigator.serviceWorker.ready.then(registration => {
-      if (!registration.active) {
-        return;
-      }
-
-      return registration.pushManager.getSubscription().then(subscription => {
-        if (subscription && !this.keyChanged) {
-          return subscription;
-        }
-
-        return registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(this.key)
-        });
-      });
     });
   }
 
