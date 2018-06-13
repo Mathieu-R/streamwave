@@ -130,9 +130,15 @@ class Settings extends Component {
     // }
     // this.pusher.unsubscribe().then(_ => this.props.setAllowNotifications(status));
     if (allow) {
-      this.pusher.subscribe().catch(_ => this.props.setAllowNotifications(false));
+      this.pusher.subscribe().catch(err => {
+        console.error(err);
+        this.props.setAllowNotifications(false);
+      });
     } else {
-      this.pusher.unsubscribe().catch(_ => this.props.setAllowNotifications(true));
+      this.pusher.unsubscribe().catch(err => {
+        console.error(err);
+        this.props.setAllowNotifications(true);
+      });
     }
   }
 

@@ -60,7 +60,7 @@ class Pusher {
   }
 
   getSubscription () {
-    navigator.serviceWorker.ready.then(registration => {
+    return navigator.serviceWorker.ready.then(registration => {
       if (!registration.active) {
         return;
       }
@@ -94,12 +94,7 @@ class Pusher {
       this.init();
     }
 
-    // already subscribed ? bail.
     const subscription = await this.getSubscription();
-    if (subscription) {
-      return;
-    }
-
     this.subscribing = true;
 
     const registration = await navigator.serviceWorker.ready;
@@ -113,7 +108,7 @@ class Pusher {
         'content-type': 'application/json',
         'authorization': `Bearer ${localStorage.getItem('streamwave-token')}`
       },
-      body: JSON.stringify(result)
+      body: JSON.stringify(subscription)
     });
 
     if (response.status === 500) {
