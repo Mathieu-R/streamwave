@@ -179,7 +179,8 @@ class Home extends Component {
       // we're only interested in segments requests
       if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
         // https://github.com/google/shaka-player/issues/1439
-        const cached = Object.keys(response.headers).includes('X-From-Cache');
+        const cached = Object.keys(response.headers).includes('X-Shaka-From-Cache');
+        console.log(response);
         //console.log('segment from service-worker cache: ', cached);
         if (cached) {
           return;
