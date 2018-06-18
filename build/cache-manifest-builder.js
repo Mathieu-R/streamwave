@@ -45,7 +45,8 @@ const getResourcesList = () => {
 }
 
 getResourcesList().then(resources => {
-  const cacheManifest = `const cacheManifest = ${JSON.stringify(resources, null, 2)}`;
+  const list = [...routes, ...resources];
+  const cacheManifest = `const cacheManifest = ${JSON.stringify(list, null, 2)}`;
   return promisify(fs.writeFile)(path.resolve(__dirname, '../dist/cache-manifest.js'), cacheManifest);
 }).catch(err => {
   console.error(err);
