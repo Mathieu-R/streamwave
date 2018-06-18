@@ -1,72 +1,38 @@
 importScripts("/third_party/idb-keyval.min.js");
-
-// workbox library will be injected by webpack plugin
-workbox.precaching.precacheAndRoute(self.__precacheManifest);
-workbox.routing.registerRoute('/', workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/auth/'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/album/'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/playlist/'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/search'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/settings'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/upload'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/licences'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/about'), workbox.strategies.staleWhileRevalidate());
-workbox.routing.registerRoute(new RegExp('/demo'), workbox.strategies.staleWhileRevalidate());
-
-// skipping default sw lifecycle
-// update page as soon as possible
-workbox.skipWaiting();
-workbox.clientsClaim();
+importScripts('/cache-manifest.js');
 
 const CACHENAME = 'static';
 const VERSION = '1';
 const CACHE_MANIFEST_NAME = `${CACHENAME}-v${VERSION}`;
 const MUSIC_CACHE_NAME = 'streamwave-music-cache';
 
-const routesManifest = [
-  '/',
-  '/search',
-  '/settings',
-  '/upload',
-  '/licences',
-  '/about',
-  '/demo',
-  new RegExp('/auth/'),
-  new RegExp('/album/'),
-  new RegExp('/playlist/')
-];
 
-const toCache = [
-  ...routesManifest,
-  ...self.__precacheManifest.map(e => e.url)
-];
+self.oninstall = event => {
+  event.waitUntil(async function () {
+    const cache = await caches.open(`${CACHENAME}-v${VERSION}`);
+    return await cache.addAll(cacheManifest);
+  }());
+  self.skipWaiting();
+}
 
-// self.oninstall = event => {
-//   event.waitUntil(async function () {
-//     const cache = await caches.open(`${CACHENAME}-v${VERSION}`);
-//     return await cache.addAll(toCache);
-//   }());
-//   self.skipWaiting();
-// }
+self.onactivate = event => {
+  caches.keys().then(cacheNames => {
+    return Promise.all(
+      cacheNames.map(cacheName => {
+        // avoid removing irrelevant caches
+        if (!cacheName.startsWith(CACHENAME)) {
+          return null;
+        }
 
-// self.onactivate = event => {
-//   caches.keys().then(cacheNames => {
-//     return Promise.all(
-//       cacheNames.map(cacheName => {
-//         // avoid removing irrelevant caches
-//         if (!cacheName.startsWith(CACHENAME)) {
-//           return null;
-//         }
-
-//         // remove old cache manifest
-//         if (cacheName !== CACHE_MANIFEST_NAME) {
-//           return caches.delete(cacheName);
-//         }
-//       })
-//     );
-//   });
-//   self.clients.claim();
-// }
+        // remove old cache manifest
+        if (cacheName !== CACHE_MANIFEST_NAME) {
+          return caches.delete(cacheName);
+        }
+      })
+    );
+  });
+  self.clients.claim();
+}
 
 self.onfetch = event => {
   // https://github.com/paulirish/caltrainschedule.io/pull/51
