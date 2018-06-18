@@ -31,7 +31,7 @@ TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mob
 
 ### Notes
 Background Fetch : 
-I noticed that Background Fetch works in chrome mobile with `experimental web platform features` flag on.
+I noticed that Background Fetch works in chrome canary with `experimental web platform features` flag on `(chrome://flags)`.
 
 ### Usage
 
@@ -42,6 +42,14 @@ You need these 2 API to make the app work.
 In order to use the chromecast feature you need the receiver
 - https://github.com/Mathieu-R/streamwave-presentation
 
+> Developpment
 ```
 npm install && npm run start
 ```
+
+> Host on your own server
+```
+npm install && npm run build
+```
+
+Once it is done, you can serve the `dist` folder (ex: with nginx, apache,...).
