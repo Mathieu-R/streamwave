@@ -13,7 +13,6 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const production = process.env.NODE_ENV === 'production';
 
-const sw = path.join(__dirname, '../src/sw.js');
 const plugins = [
   new MiniCSSExtractPlugin({
     filename: '[name].[contenthash].css'
@@ -56,10 +55,6 @@ if (production) {
       // make it work consistently with multiple chunks
       chunksSortMode: 'dependency'
     }),
-    // inline critical style
-    // new critters({
-    //   preload: 'swap'
-    // }),
     // preload main bundles
     // prefetch should is done with webpack
     new PreloadWebpackPlugin({
@@ -77,13 +72,14 @@ if (production) {
        to: path.resolve(__dirname, '../dist/manifest.json')
       },
       {
+        from: path.resolve(__dirname, '../src/sw.js'),
+        to: path.resolve(__dirname, '../dist/sw.js')
+      },
+      {
         from: path.resolve(__dirname, '../src/third_party/idb-keyval.min.js'),
         to: path.resolve(__dirname, '../dist/third_party/idb-keyval.min.js')
       }
-    ]),
-    new InjectManifest({
-      swSrc: sw
-    })
+    ])
   );
 } else {
   plugins.push(

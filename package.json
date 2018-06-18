@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack-dev-server --config build/webpack.config.js",
     "build:analyse": "rm -rf ./dist && NODE_ENV=production webpack --profile --json > stats.json --config build/webpack.config.js -p && webpack-bundle-analyzer stats.json",
-    "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p",
+    "build": "rm -rf ./dist && NODE_ENV=production webpack --config build/webpack.config.js -p && node build/cache-manifest-builder.js",
     "analyse": "webpack-bundle-analyzer stats.json",
     "bundlesize": "bundlesize"
   },
