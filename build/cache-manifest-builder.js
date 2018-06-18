@@ -1,3 +1,4 @@
+const {promisify} = require('util');
 const walk = require('walk');
 const path = require('path');
 const fs = require('fs');
@@ -22,7 +23,7 @@ const routes = [
 
 const getResourcesList = () => {
   return new Promise((resolve, reject) => {
-    const walker = walk.walk(path.resolve(__dirname, '../src'));
+    const walker = walk.walk('./dist');
     const resourcesList = [];
 
     walker.on("file", (root, stat, next) => {
@@ -32,11 +33,11 @@ const getResourcesList = () => {
         next();
       }
 
-
-      root = root.replace(/^\./, '/');
+      root = root.replace('./dist', '');
       const filepath = `${root}/${filename}`;
 
       resourcesList.push(filepath);
+      next();
     });
 
     walker.on('end', () => resolve(resourcesList));
@@ -45,7 +46,7 @@ const getResourcesList = () => {
 
 getResourcesList().then(resources => {
   const cacheManifest = `const cacheManifest = ${JSON.stringify(resources, null, 2)}`;
-  return fs.writeFile(path.resolve(__dirname, '../dist/cache-manifest.js'), cacheManifest);
+  return promisify(fs.writeFile)(path.resolve(__dirname, '../dist/cache-manifest.js'), cacheManifest);
 }).catch(err => {
   console.error(err);
 });
