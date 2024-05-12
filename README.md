@@ -4,6 +4,8 @@
 # streamwave
 TFE bachelor degree (EPHEC). Music Streaming PWA with great user experience. Mobile first.
 
+<img src="/streamwave-mobile.png" height=400/>
+
 # Goals
 - [X] Adaptive Streaming + Range Request  
 - [X] DASH + HLS (Mobile Safari)   
