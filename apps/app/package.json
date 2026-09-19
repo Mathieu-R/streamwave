@@ -1,32 +1,32 @@
 {
-	"name": "@streamwave/app",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"build": "pnpm run typecheck && vite build",
-		"dev": "vite",
-		"preview": "vite preview",
-		"typecheck": "tsc --noEmit"
-	},
-	"dependencies": {
-		"@streamwave/translations": "workspace:*",
-		"@streamwave/ui-kit": "workspace:*",
-		"@tanstack/react-router": "^1.170.31",
-		"@tanstack/react-start": "^1.168.48",
-		"react": "^19.2.8",
-		"react-dom": "^19.2.8",
-		"react-intl": "^10.1.22",
-		"tailwindcss": "^4.3.3"
-	},
-	"devDependencies": {
-		"@streamwave/typescript": "workspace:*",
-		"@tailwindcss/vite": "^4.3.3",
-		"@types/node": "^24.13.3",
-		"@types/react": "^19.2.17",
-		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^6.0.4",
-		"typescript": "^7.0.2",
-		"vite": "^8.2.0"
-	}
+  "name": "@streamwave/app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm run typecheck && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@streamwave/translations": "workspace:*",
+    "@streamwave/ui-kit": "workspace:*",
+    "@tanstack/react-router": "^1.170.31",
+    "@tanstack/react-start": "^1.168.48",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-intl": "^10.1.22",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@streamwave/typescript": "workspace:*",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0"
+  }
 }

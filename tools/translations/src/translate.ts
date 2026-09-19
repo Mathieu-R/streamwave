@@ -8,7 +8,9 @@ import {
   type MessageCatalog
 } from './catalog'
 
-async function translateNewMessages(frenchCatalog: MessageCatalog): Promise<MessageCatalog> {
+async function translateNewMessages(
+  frenchCatalog: MessageCatalog
+): Promise<MessageCatalog> {
   const previousEnglishCatalog = readCatalog(englishCatalogPath)
   const englishCatalog: MessageCatalog = {}
 

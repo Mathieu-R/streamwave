@@ -2,6 +2,7 @@
   "name": "@streamwave/mail",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
@@ -13,7 +14,6 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "@react-email/components": "^1.0.12",
     "react-email": "^6.9.2",

@@ -24,7 +24,10 @@ function readJson(filePath: string): unknown {
 export function readCatalog(filePath: string): MessageCatalog {
   const value = readJson(filePath)
 
-  if (!isRecord(value) || Object.values(value).some((message) => typeof message !== 'string')) {
+  if (
+    !isRecord(value) ||
+    Object.values(value).some((message) => typeof message !== 'string')
+  ) {
     throw new Error(`Invalid message catalog: ${filePath}`)
   }
 
@@ -37,7 +40,9 @@ export function writeCatalog(filePath: string, catalog: MessageCatalog): void {
 }
 
 export function extractFrenchCatalog(): MessageCatalog {
-  const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'streamwave-translations-'))
+  const temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'streamwave-translations-')
+  )
   const extractedCatalogPath = path.join(temporaryDirectory, 'messages.json')
   const sourceGlob = path.join(packageRoot, '../../apps/app/src/**/*.{ts,tsx}')
 
@@ -57,8 +62,14 @@ export function extractFrenchCatalog(): MessageCatalog {
       Object.entries(extractedMessages)
         .sort(([leftId], [rightId]) => leftId.localeCompare(rightId))
         .map(([id, descriptor]) => {
-          if (isRecord(descriptor) && descriptor.defaultMessage !== undefined && descriptor.defaultMessage !== id) {
-            throw new Error(`The default message must match its French ID: ${id}`)
+          if (
+            isRecord(descriptor) &&
+            descriptor.defaultMessage !== undefined &&
+            descriptor.defaultMessage !== id
+          ) {
+            throw new Error(
+              `The default message must match its French ID: ${id}`
+            )
           }
 
           return [id, id]

@@ -2,14 +2,14 @@
   "name": "@streamwave/translations",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
-  "exports": {
-    ".": "./src/index.ts"
-  },
   "description": "",
   "keywords": [],
   "license": "ISC",
   "author": "",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "translate": "tsx src/translate.ts",
     "translations:check": "tsx src/check.ts",
