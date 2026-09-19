@@ -13,12 +13,16 @@
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:migrate": "tsx src/migration.ts",
+    "db:migrate": "tsx src/migration.runner.ts",
+    "db:seed:albums": "tsx src/seedAlbums.runner.ts",
     "db:studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.11",
+    "@streamwave/cdn": "workspace:*",
+    "colorthief": "^2.7.0",
+    "csv-parse": "^5.6.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.9"

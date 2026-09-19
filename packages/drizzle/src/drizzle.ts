@@ -4,13 +4,14 @@ import { drizzle as drizzlePostgres } from 'drizzle-orm/postgres-js'
 import type postgres from 'postgres'
 import * as schema from './schema'
 
-export function createDb(client: PGlite): ReturnType<typeof drizzlePglite>
-export function createDb(
-  client: postgres.Sql
-): ReturnType<typeof drizzlePostgres>
+export type PgliteDatabase = ReturnType<typeof drizzlePglite<typeof schema>>
+export type PostgresDatabase = ReturnType<typeof drizzlePostgres<typeof schema>>
+
+export function createDb(client: PGlite): PgliteDatabase
+export function createDb(client: postgres.Sql): PostgresDatabase
 export function createDb(
   client: PGlite | postgres.Sql
-): ReturnType<typeof drizzlePglite> | ReturnType<typeof drizzlePostgres> {
+): PgliteDatabase | PostgresDatabase {
   if (client instanceof PGlite) {
     return drizzlePglite({ client, schema })
   }

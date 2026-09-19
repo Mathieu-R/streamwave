@@ -5,7 +5,7 @@ Streamwave is a monorepo (pnpm workspaces + Turborepo) for music streaming with 
 ## Package Manager
 
 Always use `pnpm`. Never use npm or yarn.
-For package type checks and local typecheck runs, prefer `tsgo --noEmit` over `tsc --noEmit`.
+For package type checks and local typecheck runs, use `tsc --noEmit`.
 
 ### pnpm-lock.yaml Integrity (CRITICAL)
 
