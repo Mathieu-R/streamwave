@@ -1,77 +1,76 @@
 {
-	"$schema": "./node_modules/oxlint/configuration_schema.json",
-	"extends": [
-		"./node_modules/@streamwave/oxlint/configs/typescript.json"
-	],
-	"categories": {
-		"correctness": "off"
-	},
-	"env": {
-		"builtin": true,
-		"es2026": true,
-		"browser": true,
-		"node": true
-	},
-	"globals": {
-		"AudioWorkletGlobalScope": "readonly",
-		"AudioWorkletProcessor": "readonly",
-		"currentFrame": "readonly",
-		"currentTime": "readonly",
-		"registerProcessor": "readonly",
-		"sampleRate": "readonly",
-		"WorkletGlobalScope": "readonly"
-	},
-	"overrides": [
-		{
-			"files": [
-				"**/*.test.ts",
-				"**/*.test.tsx",
-				"**/*.spec.ts",
-				"**/*.spec.tsx"
-			],
-			"rules": {
-				"@typescript-eslint/unbound-method": "off",
-				"typescript/unbound-method": "off"
-			}
-		},
-		{
-			"files": [
-				"packages/**/src/**/*.fixture.tsx",
-				"packages/**/src/**/*.test.tsx",
-				"packages/**/src/**/*.db.test.ts",
-				"packages/**/src/**/*.db.test.tsx"
-			]
-		}
-	],
-	"ignorePatterns": [
-		"**/node_modules/**",
-		"**/.turbo/**",
-		"**/dist/**",
-		"**/build/**",
-		"**/coverage/**",
-		"**/public/**",
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["./node_modules/@streamwave/oxlint/configs/typescript.json"],
+  "categories": {
+    "correctness": "off"
+  },
+  "env": {
+    "builtin": true,
+    "es2026": true,
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "AudioWorkletGlobalScope": "readonly",
+    "AudioWorkletProcessor": "readonly",
+    "currentFrame": "readonly",
+    "currentTime": "readonly",
+    "registerProcessor": "readonly",
+    "sampleRate": "readonly",
+    "WorkletGlobalScope": "readonly"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/unbound-method": "off",
+        "typescript/unbound-method": "off"
+      }
+    },
+    {
+      "files": [
+        "packages/**/src/**/*.fixture.tsx",
+        "packages/**/src/**/*.test.tsx",
+        "packages/**/src/**/*.db.test.ts",
+        "packages/**/src/**/*.db.test.tsx"
+      ]
+    }
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.turbo/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/public/**",
+    "apps/legacy/**",
 
-		".agents/**",
-		".cursor/**",
-		".github/**",
-		".pnpm-store/**",
-		".specify/**",
-		".turbo/**",
-		".vscode/**",
+    ".agents/**",
+    ".cursor/**",
+    ".github/**",
+    ".pnpm-store/**",
+    ".specify/**",
+    ".turbo/**",
+    ".vscode/**",
 
-		"docs/**",
-		"scripts/**",
+    "docs/**",
+    "scripts/**",
 
-		"**/vite.config.ts",
-		"**/vite.config.mjs.timestamp-*",
-		"**/vitest.setup.ts",
-		"**/vitest.setup-unit.ts",
-		"**/vitest.config.ts",
-		"**/tailwind.config.ts",
-		"**/postcss.config.js",
-		"**/tsup.config.ts",
-		"**/*.cjs",
+    "**/vite.config.ts",
+    "**/vite.config.mjs.timestamp-*",
+    "**/vitest.setup.ts",
+    "**/vitest.setup-unit.ts",
+    "**/vitest.config.ts",
+    "**/tailwind.config.ts",
+    "**/postcss.config.js",
+    "**/tsup.config.ts",
+    "**/*.cjs",
 
-		"vitest.workspace.ts"
-	]
+    "vitest.workspace.ts"
+  ]
 }
