@@ -66,6 +66,9 @@ importers:
 
   apps/app:
     dependencies:
+      '@streamwave/translations':
+        specifier: workspace:*
+        version: link:../../tools/translations
       '@streamwave/ui-kit':
         specifier: workspace:*
         version: link:../../packages/ui/kit

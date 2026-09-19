@@ -1,12 +1,18 @@
 {
   "name": "@streamwave/translations",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "description": "",
   "keywords": [],
   "license": "ISC",
   "author": "",
   "scripts": {
-    "translate": "formatjs extract 'src/**/*.js*' --ignore='**/*.d.ts' --out-file lang/en.json --format simple",
+    "translate": "tsx src/translate.ts",
+    "translations:check": "tsx src/check.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

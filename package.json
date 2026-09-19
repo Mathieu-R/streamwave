@@ -18,6 +18,7 @@
 		"lint:format:fix": "pnpm run lint:fix && pnpm run format:fix",
 		"lint:format:ci": "pnpm run lint:check && pnpm run format:check && pnpm run typecheck",
 		"translate": "turbo run translate --filter=@streamwave/translations",
+		"translations:check": "turbo run translations:check --filter=@streamwave/translations",
 		"test": "vitest",
 		"test:ci": "vitest run"
 	},

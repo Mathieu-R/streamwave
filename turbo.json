@@ -12,6 +12,13 @@
 		"typecheck": {
 			"dependsOn": ["^typecheck"],
 			"outputs": []
+		},
+		"translate": {
+			"cache": false
+		},
+		"translations:check": {
+			"cache": false,
+			"outputs": []
 		}
 	},
 	"ui": "tui"
