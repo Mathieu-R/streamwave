@@ -46,6 +46,47 @@ async function seedAlbum() {
 }
 
 describe('albumRouter', () => {
+  it('returns legacy library albums ordered by descending year', async () => {
+    const { db } = await seedAlbum()
+    await db.insert(album).values({
+      title: 'Homework',
+      artist: 'Daft Punk',
+      genre: 'Electronic',
+      year: 1997,
+      coverUrl: 'homework.jpg',
+      primaryColorR: 65,
+      primaryColorG: 65,
+      primaryColorB: 65
+    })
+
+    await expect(
+      call(albumRouter.getAlbums, undefined, { context: { db } })
+    ).resolves.toEqual([
+      {
+        id: '1',
+        title: 'Discovery',
+        artist: 'Daft Punk',
+        genre: 'Electronic',
+        year: 2001,
+        coverUrl: 'discovery.jpg',
+        primaryColorR: 12,
+        primaryColorG: 34,
+        primaryColorB: 56
+      },
+      {
+        id: '2',
+        title: 'Homework',
+        artist: 'Daft Punk',
+        genre: 'Electronic',
+        year: 1997,
+        coverUrl: 'homework.jpg',
+        primaryColorR: 65,
+        primaryColorG: 65,
+        primaryColorB: 65
+      }
+    ])
+  })
+
   it('returns the legacy album DTO with its tracks', async () => {
     const { db, id } = await seedAlbum()
 

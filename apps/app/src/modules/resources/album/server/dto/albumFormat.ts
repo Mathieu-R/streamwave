@@ -1,7 +1,20 @@
-import type { Album } from '../../shared/schemas'
+import type { Album, AlbumSummary } from '../../shared/schemas'
 import type { AlbumRecord } from '../utils/getAlbum'
 
-export function formatAlbum(album: AlbumRecord): Album {
+export function formatAlbumSummary(
+  album: Pick<
+    AlbumRecord,
+    | 'id'
+    | 'title'
+    | 'artist'
+    | 'genre'
+    | 'year'
+    | 'coverUrl'
+    | 'primaryColorR'
+    | 'primaryColorG'
+    | 'primaryColorB'
+  >
+): AlbumSummary {
   return {
     id: album.id.toString(),
     title: album.title,
@@ -11,7 +24,13 @@ export function formatAlbum(album: AlbumRecord): Album {
     coverUrl: album.coverUrl,
     primaryColorR: album.primaryColorR,
     primaryColorG: album.primaryColorG,
-    primaryColorB: album.primaryColorB,
+    primaryColorB: album.primaryColorB
+  }
+}
+
+export function formatAlbum(album: AlbumRecord): Album {
+  return {
+    ...formatAlbumSummary(album),
     tracks: album.tracks.map((track) => ({
       id: track.id.toString(),
       number: track.number,
