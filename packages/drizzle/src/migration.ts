@@ -1,20 +1,25 @@
-import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import postgres from 'postgres'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { getDatabaseUrl } from './databaseUrl'
+import { createDb, type PostgresDatabase } from './drizzle'
 import 'dotenv/config'
 
-async function runMigrations() {
-  const migrationClient = postgres(getDatabaseUrl(), { max: 1 })
-  const db = drizzle(migrationClient)
+const sourceDirectory = dirname(fileURLToPath(import.meta.url))
+export const migrationsFolder = resolve(sourceDirectory, '../drizzle')
 
-  await migrate(db, { migrationsFolder: './drizzle' })
-
-  await migrationClient.end()
-  process.exit(0)
+export async function migrateDatabase(db: PostgresDatabase): Promise<void> {
+  await migrate(db, { migrationsFolder })
 }
 
-runMigrations().catch((err: unknown) => {
-  console.error(err)
-  process.exit(1)
-})
+export async function runMigrations(): Promise<void> {
+  const migrationClient = postgres(getDatabaseUrl(), { max: 1 })
+  const db = createDb(migrationClient)
+
+  try {
+    await migrateDatabase(db)
+  } finally {
+    await migrationClient.end()
+  }
+}

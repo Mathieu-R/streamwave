@@ -29,12 +29,21 @@ importers:
 
   apps/api:
     dependencies:
+      '@streamwave/drizzle':
+        specifier: workspace:*
+        version: link:../../packages/drizzle
       '@streamwave/hono':
         specifier: workspace:*
         version: link:../../packages/hono
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       hono:
         specifier: ^4.13.3
         version: 4.13.3
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
     devDependencies:
       '@hono/vite-dev-server':
         specifier: ^0.23.0
@@ -259,11 +268,32 @@ importers:
         specifier: ^0.31.10
         version: 0.31.10
 
+  packages/cdn:
+    devDependencies:
+      '@streamwave/typescript':
+        specifier: workspace:*
+        version: link:../../tools/typescript
+      '@types/node':
+        specifier: ^26.2.0
+        version: 26.2.0
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
   packages/drizzle:
     dependencies:
       '@electric-sql/pglite':
         specifier: ^0.3.11
         version: 0.3.16
+      '@streamwave/cdn':
+        specifier: workspace:*
+        version: link:../cdn
+      colorthief:
+        specifier: ^2.7.0
+        version: 2.7.0
+      csv-parse:
+        specifier: ^5.6.0
+        version: 5.6.0
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
