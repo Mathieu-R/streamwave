@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   gate-lint:
-    name: 'Gate: Lint, Format & Typecheck'
+    name: 'Gate: Lint, Format, Typecheck & Translations'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,7 +23,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9
+          version: 12.4.2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,8 +42,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint, format & typecheck
+      - name: Lint, format, typecheck & translations
         run: pnpm run lint:format:ci
+
+      - name: Check translations
+        run: pnpm run translations:check
 
   gate-build:
     name: 'Gate: Build'
@@ -55,7 +58,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9
+          version: 12.4.2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

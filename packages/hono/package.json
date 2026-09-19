@@ -2,6 +2,7 @@
   "name": "@streamwave/hono",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
@@ -12,7 +13,6 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "hono": "^4.13.3"
   },

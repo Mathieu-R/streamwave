@@ -1,21 +1,28 @@
 {
   "name": "@streamwave/translations",
   "version": "1.0.0",
+  "private": true,
   "description": "",
-  "scripts": {
-    "translate": "formatjs extract 'src/**/*.js*' --ignore='**/*.d.ts' --out-file lang/en.json --format simple",
-    "typecheck": "tsc --noEmit"
-  },
   "keywords": [],
-  "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@formatjs/cli": "^6.16.19",
-    "@types/node": "^26.2.0",
-    "tsx": "^4.21.0",
-    "typescript": "^7.0.2"
+  "author": "",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "translate": "tsx src/translate.ts",
+    "translations:check": "tsx src/check.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vitalets/google-translate-api": "^9.2.1"
+  },
+  "devDependencies": {
+    "@formatjs/cli": "^6.16.19",
+    "@streamwave/typescript": "workspace:*",
+    "@types/node": "^26.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^7.0.2"
   }
 }

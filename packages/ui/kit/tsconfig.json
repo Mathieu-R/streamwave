@@ -1,10 +1,10 @@
 {
-	"extends": "@streamwave/typescript/base.json",
-	"compilerOptions": {
-		"jsx": "react-jsx",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
-	},
-	"include": ["src"]
+  "extends": "@streamwave/typescript/base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
 }

@@ -2,6 +2,7 @@
   "name": "@streamwave/auth",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
@@ -13,7 +14,6 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "@hono/oauth-providers": "^0.9.0",
     "bcryptjs": "^3.0.3",
@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@streamwave/typescript": "workspace:*",
-    "drizzle-kit": "^0.31.10"
+    "@types/node": "^26.2.0",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "^7.0.2"
   }
 }

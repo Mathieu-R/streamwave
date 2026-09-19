@@ -3,25 +3,25 @@ import {
   Outlet,
   createRootRoute,
   HeadContent,
-  Scripts,
+  Scripts
 } from '@tanstack/react-router'
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: 'utf-8'
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        content: 'width=device-width, initial-scale=1'
       },
       {
-        title: 'TanStack Start Starter',
-      },
-    ],
+        title: 'TanStack Start Starter'
+      }
+    ]
   }),
-  component: RootComponent,
+  component: RootComponent
 })
 
 function RootComponent() {

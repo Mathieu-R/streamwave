@@ -75,12 +75,8 @@
           "name": "album_owner_id_user_id_fk",
           "tableFrom": "album",
           "tableTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -147,12 +143,8 @@
           "name": "playlist_user_id_user_id_fk",
           "tableFrom": "playlist",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -186,12 +178,8 @@
           "name": "playlist_track_playlist_id_playlist_id_fk",
           "tableFrom": "playlist_track",
           "tableTo": "playlist",
-          "columnsFrom": [
-            "playlist_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["playlist_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -199,12 +187,8 @@
           "name": "playlist_track_track_id_track_id_fk",
           "tableFrom": "playlist_track",
           "tableTo": "track",
-          "columnsFrom": [
-            "track_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["track_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -212,10 +196,7 @@
       "compositePrimaryKeys": {
         "playlist_track_playlist_id_track_id_pk": {
           "name": "playlist_track_playlist_id_track_id_pk",
-          "columns": [
-            "playlist_id",
-            "track_id"
-          ]
+          "columns": ["playlist_id", "track_id"]
         }
       },
       "uniqueConstraints": {},
@@ -300,12 +281,8 @@
           "name": "track_album_id_album_id_fk",
           "tableFrom": "track",
           "tableTo": "album",
-          "columnsFrom": [
-            "album_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["album_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -417,10 +394,7 @@
         "user_email_provider_unique": {
           "name": "user_email_provider_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email",
-            "provider"
-          ]
+          "columns": ["email", "provider"]
         }
       },
       "policies": {},
@@ -432,11 +406,7 @@
     "public.provider": {
       "name": "provider",
       "schema": "public",
-      "values": [
-        "LOCAL",
-        "GOOGLE",
-        "GITHUB"
-      ]
+      "values": ["LOCAL", "GOOGLE", "GITHUB"]
     }
   },
   "schemas": {},

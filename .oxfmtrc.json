@@ -1,32 +1,33 @@
 {
-	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	"printWidth": 80,
-	"tabWidth": 2,
-	"useTabs": false,
-	"semi": false,
-	"singleQuote": true,
-	"trailingComma": "none",
-	"bracketSpacing": true,
-	"endOfLine": "lf",
-	"insertFinalNewline": true,
-	"ignorePatterns": [
-		"**/public/",
-		"**/coverage/",
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "insertFinalNewline": true,
+  "ignorePatterns": [
+    "**/public/",
+    "**/coverage/",
+    "apps/legacy/**",
 
-		".agents/",
-		".cursor/",
-		".github/",
-		".pnpm-store/",
-		".turbo/",
-		".vscode/",
+    ".agents/",
+    ".cursor/",
+    ".github/",
+    ".pnpm-store/",
+    ".turbo/",
+    ".vscode/",
 
-		"scripts/",
+    "scripts/",
 
-		"**/vite.config.mjs.timestamp-*",
-		"**/vite.config.ts.timestamp-*",
+    "**/vite.config.mjs.timestamp-*",
+    "**/vite.config.ts.timestamp-*",
 
-		"**/routeTree.gen.ts",
+    "**/routeTree.gen.ts",
 
-		"docs/**"
-	]
+    "docs/**"
+  ]
 }

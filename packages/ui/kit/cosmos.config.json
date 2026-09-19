@@ -1,5 +1,5 @@
 {
-	"port": 5001,
-	"plugins": ["react-cosmos-plugin-vite"],
-	"globalImports": ["../../../apps/app/src/index.css"]
+  "port": 5001,
+  "plugins": ["react-cosmos-plugin-vite"],
+  "globalImports": ["../../../apps/app/src/index.css"]
 }
