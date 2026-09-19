@@ -7,6 +7,8 @@ import * as schema from './schema'
 export type PgliteDatabase = ReturnType<typeof drizzlePglite<typeof schema>>
 export type PostgresDatabase = ReturnType<typeof drizzlePostgres<typeof schema>>
 
+export type DrizzleClient = PgliteDatabase | PostgresDatabase
+
 export function createDb(client: PGlite): PgliteDatabase
 export function createDb(client: postgres.Sql): PostgresDatabase
 export function createDb(
