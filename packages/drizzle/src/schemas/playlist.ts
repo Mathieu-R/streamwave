@@ -1,17 +1,11 @@
-import {
-  integer,
-  pgTable,
-  serial,
-  timestamp,
-  varchar
-} from 'drizzle-orm/pg-core'
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
 import { user } from './user'
 
 export const playlist = pgTable('playlist', {
   id: serial('id').primaryKey(),
   title: varchar('title').notNull(),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at', { mode: 'date' })

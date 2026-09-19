@@ -15,6 +15,13 @@
       "when": 1789812932866,
       "tag": "0001_supreme_smiling_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1799843200000,
+      "tag": "0002_authentication",
+      "breakpoints": true
     }
   ]
 }

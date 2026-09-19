@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { albumSchema } from '../../shared/schemas'
 import { idSchema } from '../../../../../libs/zod'
 import { getAlbum as getAlbumUtils } from '../utils/getAlbum'
-import { defaultProcedure } from '../../../../../server/orpc/utils'
+import { defaultProcedure } from '../../../../../libs/orpc/utils'
 
 export const getAlbum = defaultProcedure
   .input(

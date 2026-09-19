@@ -1,9 +1,9 @@
 import {
   check,
-  integer,
   pgTable,
   serial,
   smallint,
+  text,
   varchar
 } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
@@ -21,7 +21,7 @@ export const album = pgTable(
     primaryColorR: smallint('primary_color_r').notNull(),
     primaryColorG: smallint('primary_color_g').notNull(),
     primaryColorB: smallint('primary_color_b').notNull(),
-    ownerId: integer('owner_id').references(() => user.id, {
+    ownerId: text('owner_id').references(() => user.id, {
       onDelete: 'cascade'
     })
   },

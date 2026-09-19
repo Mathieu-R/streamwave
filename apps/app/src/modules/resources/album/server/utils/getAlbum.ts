@@ -39,9 +39,7 @@ export async function getAlbumQuery(
   })
 }
 
-export type AlbumRecord = NonNullable<
-  Awaited<ReturnType<typeof getAlbumQuery>>
->
+export type AlbumRecord = NonNullable<Awaited<ReturnType<typeof getAlbumQuery>>>
 
 export async function getAlbum(drizzle: DrizzleClient, { id }: { id: number }) {
   const record = await getAlbumQuery(drizzle, { id })
