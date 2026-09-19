@@ -1,0 +1,29 @@
+{
+	"name": "@streamwave/ui-kit",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*"
+	},
+	"scripts": {
+		"dev": "cosmos --port 5001",
+		"cosmos:export": "cosmos export",
+		"typecheck": "tsgo --noEmit"
+	},
+	"dependencies": {
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8"
+	},
+	"devDependencies": {
+		"@streamwave/typescript": "workspace:*",
+		"@types/node": "^24",
+		"@types/react": "^19.2.17",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react-swc": "^4.2.2",
+		"react-cosmos": "^7.4.0",
+		"react-cosmos-plugin-vite": "^7.4.0",
+		"vite": "^8.2.0"
+	}
+}

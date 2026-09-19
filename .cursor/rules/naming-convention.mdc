@@ -1,0 +1,22 @@
+---
+description: Naming conventions for the project
+alwaysApply: true
+---
+# Naming Conventions
+
+## Files
+
+- **Components**: PascalCase (`MyComponent.tsx`, `UserService.ts`)
+- **Tests**: Co-located with `.test.ts` extension (`MyComponent.test.ts`)
+- **Fixtures**: Co-located with `.fixture.tsx` extension
+
+## Code
+
+- **Components**: PascalCase (`MyComponent`)
+- **Functions/variables**: camelCase (`getUserById`, `isActive`)
+- **Constants**: UPPER_SNAKE_CASE for true constants (`MAX_RETRIES`)
+
+## Schemas & Types
+
+- **Zod schemas**: `{resourceName}FormSchema`, `{resourceName}FiltersSchema`, `{resourceName}SortingSchema`
+- **Types**: PascalCase with descriptive suffix (`UserFormValues`, `InvoiceData`, `ContactListProps`)

@@ -1,0 +1,64 @@
+---
+description: react-intl rules
+globs: **/*.{tsx,ts}
+alwaysApply: false
+---
+- Use react-intl to translate text
+- Code and comments should be in english but the UI should be in french
+- The ID of a message is ALWAYS in french
+
+- Use the `FormattedDate` component to format dates
+- Use the `FormattedNumber` component to format numbers
+- Use the `FormattedRelativeTime` component to format relative times
+- Use the `FormattedTime` component to format times
+
+- Use the `FormattedMessage` component to translate text
+
+- When using the `FormattedMessage` component, use the `id` prop to specify the id of the message to translate
+  Example:
+  ```tsx
+  <FormattedMessage id="Addresses" />
+  ```
+
+  * The id is always in french
+  * The `id` prop must always be a static string literal — never a variable, template literal, or expression (e.g. ternary). If the id is conditional, use separate `<FormattedMessage>` components.
+  * Do not use the `defaultMessage` prop if possible
+  * Use the `defaultMessage` prop only when there is a `value` prop
+    * It that case, the `defaultMessage` should be strictly equal to the `id` prop
+
+- Sometimes it is not possible to use the `FormattedMessage` component, therefore use the hook `useIntl` to get the `formatMessage` function
+  Example:
+  ```tsx
+  const { formatMessage } = useIntl()
+  formatMessage({ id: 'Addresses' })
+  ```
+
+  * The id is always in french
+  * The `id` property must always be a static string literal — never a variable, template literal, or expression (e.g. ternary). If the id is conditional, use separate `formatMessage` calls.
+  * Do not use the `defaultMessage` prop if possible
+  * Use the `defaultMessage` prop only when there is a `value` or `values` prop
+    * It that case, the `defaultMessage` should be strictly equal to the `id` prop
+
+  * Never use FormattedMessage or intl.formatMessage in fixture files. (`.fixture.tsx`, `.fixture.ts`)
+
+- When messages are keyed by a union type and looked up dynamically (e.g. `formatMessage(messages[field])`), type the `defineMessages` export so keys stay exhaustive with that union:
+
+  ```tsx
+  import { defineMessages, type MessageDescriptor } from 'react-intl'
+
+  export const myFieldMessages: Record<MyFieldUnion, MessageDescriptor> =
+    defineMessages({
+      firstName: { id: "Le prénom n'est pas défini" }
+    })
+  ```
+
+  * TypeScript then errors if a field is added to the union without a message (or vice versa)
+  * Prefer this typed export over a separate dummy `_typeCheck` variable
+
+## Anti-patterns (CI + review)
+
+- ❌ French UI text as a JSX string literal on text props (`aria-label="Non assigné"`, `unassignedAriaLabelId="Visite non assignée"`)
+- ❌ A prop named `*AriaLabelId` with a French literal — the name suggests a message id, but `pnpm run translate` only collects **static** ids at the call site
+- ❌ `formatMessage({ id: someAriaLabelIdProp })` in a child component — the id must be a **string literal** where `formatMessage` is called, not a prop passed down
+- ✅ Call `intl.formatMessage({ id: 'Non assigné' })` (or `<FormattedMessage id="Non assigné" />`) **at the call site**
+- ✅ Or pass an already translated string: `unassignedAriaLabel={intl.formatMessage({ id: 'Non assigné' })}` and use `aria-label={unassignedAriaLabel}` in the child (no `formatMessage` there)

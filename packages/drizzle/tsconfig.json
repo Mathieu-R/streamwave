@@ -1,0 +1,12 @@
+{
+	"extends": "@streamwave/typescript/tsconfig.node.json",
+	"compilerOptions": {
+		"moduleResolution": "Bundler",
+		"module": "ESNext",
+		"rootDir": "src",
+		"noEmit": true,
+		"types": ["node"]
+	},
+	"include": ["src"],
+	"exclude": ["node_modules/", "dist/"]
+}

@@ -1,0 +1,43 @@
+{
+  "tailwindCSS.rootFontSize": 13,
+  "tailwindCSS.experimental.configFile": {
+    "apps/frontend/tailwind.config.js": [
+      "apps/app/src/**",
+      "packages/ui/kit/src/**"
+    ]
+  },
+
+  "oxc.typeAware": true,
+
+  "js/ts.tsserver.maxMemory": 8192,
+
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "spellright.language": [
+    "fr",
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
+}

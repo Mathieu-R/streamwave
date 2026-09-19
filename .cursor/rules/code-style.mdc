@@ -1,0 +1,17 @@
+---
+description: Core TypeScript and UI language conventions for this repository
+alwaysApply: true
+---
+# Code Style Guide
+
+## General
+- If a module is already imported, extend the existing import line instead of creating a new one.
+- Code and comments should be in English.
+- The UI should be in French.
+
+## TypeScript/Javascript code style
+- Use single quotes for JavaScript strings: `const name = 'John'`
+- Use double quotes for JSX attributes: `<Component name="John" />`
+- Do not use semicolons at the end of statements.
+- Never use trailing commas.
+- Never use `any` if possible.

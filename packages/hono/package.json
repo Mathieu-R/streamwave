@@ -1,0 +1,23 @@
+{
+  "name": "@streamwave/hono",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "hono": "^4.13.3"
+  },
+  "devDependencies": {
+    "@streamwave/typescript": "workspace:*",
+    "typescript": "^7.0.2"
+  }
+}

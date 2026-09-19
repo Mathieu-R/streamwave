@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"ignoreDeprecations": "6.0",
+		"outDir": "build",
+		"target": "ESNext",
+		"module": "Node16",
+		"resolveJsonModule": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"moduleResolution": "NodeNext",
+		"sourceMap": true,
+		"allowJs": true,
+		"types": ["node"]
+	}
+}

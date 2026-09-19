@@ -1,0 +1,6 @@
+{
+	"name": "@streamwave/oxlint",
+	"version": "1.0.0",
+	"description": "shared oxlint configurations",
+	"private": true
+}
