@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@streamwave/typescript": "workspace:*",
-    "drizzle-kit": "^0.31.10"
+    "drizzle-kit": "^0.31.10",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
   }
 }
