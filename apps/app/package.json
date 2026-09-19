@@ -7,7 +7,7 @@
 		"build": "pnpm run typecheck && vite build",
 		"dev": "vite",
 		"preview": "vite preview",
-		"typecheck": "tsgo --noEmit"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@streamwave/ui-kit": "workspace:*",

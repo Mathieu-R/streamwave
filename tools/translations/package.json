@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "translate": "formatjs extract 'src/**/*.js*' --ignore='**/*.d.ts' --out-file lang/en.json --format simple",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

@@ -10,7 +10,7 @@
 	"scripts": {
 		"dev": "cosmos --port 5001",
 		"cosmos:export": "cosmos export",
-		"typecheck": "tsgo --noEmit"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"react": "^19.2.8",
