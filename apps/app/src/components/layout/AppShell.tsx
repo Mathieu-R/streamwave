@@ -3,7 +3,6 @@ import {
   Library,
   ListMusic,
   LogOut,
-  Menu,
   Music2,
   Search,
   Settings,
@@ -14,15 +13,31 @@ import { useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import {
   Avatar,
-  Button,
-  cn,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-  SheetTrigger
-} from '@streamwave/ui-kit'
+  AvatarFallback,
+  AvatarImage
+} from '@streamwave/ui-kit/components/avatar'
+import { Button } from '@streamwave/ui-kit/components/button'
+import { Separator } from '@streamwave/ui-kit/components/separator'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger
+} from '@streamwave/ui-kit/components/sidebar'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@streamwave/ui-kit/components/tooltip'
 import { authClient } from '../../modules/auth/client'
 import { getUserDisplay, type UserDisplayInput } from './userDisplay'
 
@@ -53,42 +68,29 @@ const navigationItems: NavigationItem[] = [
   }
 ]
 
-function Navigation({ onNavigate }: { onNavigate?: () => void }) {
-  const { formatMessage } = useIntl()
+function Navigation() {
   const { pathname } = useLocation()
 
   return (
-    <nav
-      aria-label={formatMessage({ id: 'Navigation principale' })}
-      className="space-y-1"
-    >
-      {navigationItems.map(({ icon: Icon, label, to }) => {
-        const isActive = pathname === to
-
-        return (
-          <Link
-            className={cn(
-              'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-              isActive &&
-                'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground'
-            )}
-            key={to}
-            onClick={onNavigate}
-            to={to}
+    <SidebarMenu>
+      {navigationItems.map(({ icon: Icon, label, to }) => (
+        <SidebarMenuItem key={to}>
+          <SidebarMenuButton
+            isActive={pathname === to}
+            render={<Link to={to} />}
           >
-            <Icon aria-hidden="true" className="size-4" />
-            {label}
-          </Link>
-        )
-      })}
-    </nav>
+            <Icon aria-hidden="true" />
+            <span>{label}</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
   )
 }
 
 export function AppShell({ children, user }: AppShellProps) {
   const { formatMessage } = useIntl()
   const [isSigningOut, setIsSigningOut] = useState(false)
-  const [isNavigationOpen, setIsNavigationOpen] = useState(false)
   const navigate = useNavigate()
   const displayUser = getUserDisplay(user)
 
@@ -99,80 +101,83 @@ export function AppShell({ children, user }: AppShellProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-card/90 px-4 backdrop-blur md:px-6">
-        <div className="flex items-center gap-3">
-          <Sheet onOpenChange={setIsNavigationOpen} open={isNavigationOpen}>
-            <SheetTrigger asChild>
-              <Button
-                aria-label={formatMessage({ id: 'Ouvrir la navigation' })}
-                className="md:hidden"
-                size="icon"
-                variant="ghost"
-              >
-                <Menu aria-hidden="true" className="size-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <div className="mb-8 flex items-center gap-3">
-                <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <Music2 aria-hidden="true" className="size-5" />
-                </div>
-                <div>
-                  <SheetTitle>Streamwave</SheetTitle>
-                  <SheetDescription>
-                    <FormattedMessage id="Votre musique, partout." />
-                  </SheetDescription>
-                </div>
+    <TooltipProvider>
+      <SidebarProvider>
+        <Sidebar collapsible="icon">
+          <SidebarHeader>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton render={<Link to="/" />} size="lg">
+                  <span className="flex size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Music2 aria-hidden="true" className="size-4" />
+                  </span>
+                  <span className="font-semibold">Streamwave</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarHeader>
+          <Separator className="bg-sidebar-border" />
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <Navigation />
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <Separator className="bg-sidebar-border" />
+            <div className="flex items-center gap-2 px-2 py-1 group-data-[collapsible=icon]:justify-center">
+              <Avatar>
+                <AvatarImage
+                  alt={displayUser.name}
+                  src={displayUser.avatarUrl ?? undefined}
+                />
+                <AvatarFallback>
+                  {displayUser.fallback.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
+                <p className="truncate text-sm font-medium">
+                  {displayUser.name}
+                </p>
+                <p className="truncate text-xs text-sidebar-foreground/70">
+                  {user.email}
+                </p>
               </div>
-              <SheetClose asChild>
-                <div>
-                  <Navigation onNavigate={() => setIsNavigationOpen(false)} />
-                </div>
-              </SheetClose>
-            </SheetContent>
-          </Sheet>
-          <Link
-            className="flex items-center gap-2 font-semibold tracking-tight"
-            to="/"
-          >
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Music2 aria-hidden="true" className="size-4" />
-            </span>
-            <span>Streamwave</span>
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="hidden text-right sm:block">
-            <p className="text-sm font-medium">{displayUser.name}</p>
-            <p className="text-xs text-muted-foreground">{user.email}</p>
-          </div>
-          <Avatar
-            alt={displayUser.name}
-            fallback={displayUser.fallback}
-            src={displayUser.avatarUrl}
-          />
-          <Button
-            disabled={isSigningOut}
-            onClick={handleSignOut}
-            size="sm"
-            variant="ghost"
-          >
-            <LogOut aria-hidden="true" className="size-4" />
-            <span className="hidden sm:inline">
-              <FormattedMessage id="Déconnexion" />
-            </span>
-          </Button>
-        </div>
-      </header>
-
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-screen-2xl">
-        <aside className="hidden w-64 shrink-0 border-r bg-card/50 p-4 md:block">
-          <Navigation />
-        </aside>
-        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
-    </div>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      aria-label={formatMessage({ id: 'Déconnexion' })}
+                      disabled={isSigningOut}
+                      onClick={handleSignOut}
+                      size="icon-sm"
+                      variant="ghost"
+                    />
+                  }
+                >
+                  <LogOut aria-hidden="true" />
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <FormattedMessage id="Déconnexion" />
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
+        <SidebarInset>
+          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/90 px-4 backdrop-blur">
+            <SidebarTrigger
+              aria-label={formatMessage({ id: 'Ouvrir la navigation' })}
+              className="md:hidden"
+            />
+            <p className="text-sm text-muted-foreground">
+              <FormattedMessage id="Votre musique, partout." />
+            </p>
+          </header>
+          <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   )
 }

@@ -1,11 +1,20 @@
-export { Avatar, getAvatarFallback } from './components/Avatar'
-export { Button, buttonVariants } from './components/Button'
+export {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage
+} from './components/avatar'
+export { Button, buttonVariants } from './components/button'
 export {
   Sheet,
   SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
+  SheetHeader,
   SheetTitle,
   SheetTrigger
-} from './components/Sheet'
+} from './components/sheet'
 export { cn } from './lib/utils'

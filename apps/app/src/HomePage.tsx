@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from '@/components/Button'
+import { Button } from '@streamwave/ui-kit/components/button'
 
 export const HomePage = () => {
   const [status, _setStatus] = useState<string>('ok')
