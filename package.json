@@ -23,11 +23,13 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
+		"@streamwave/oxlint": "workspace:*",
 		"@types/node": "^26.2.0",
-		"@typescript/native-preview": "7.0.0-dev.20260707.2",
 		"oxfmt": "^0.64.0",
 		"oxlint": "^1.79.0",
+		"oxlint-tsgolint": "^7.0.2002",
 		"turbo": "^2.10.11",
+		"typescript": "7.0.2",
 		"vitest": "^4.1.11"
 	}
 }
