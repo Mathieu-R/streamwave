@@ -1,8 +1,5 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-
 import Album from '#models/album'
-
-// @ts-expect-error
 import colorthief from 'colorthief'
 import { parse } from 'csv-parse/sync'
 import fs from 'node:fs/promises'
@@ -42,7 +39,7 @@ export default class extends BaseSeeder {
 
         // get most dominant color from album cover
         const coverUrl = metadata[0]['cover_url']
-        const [primaryColorR, primaryColorG, primaryColorB] = await colorthief.getColor(
+        const primaryColors = await colorthief.getColor(
           `${basePath}/${coverUrl}`
         )
 
@@ -53,9 +50,9 @@ export default class extends BaseSeeder {
           year: Number.parseInt(metadata[0]['year']),
           genre: metadata[0]['genre'],
           coverUrl: coverUrl,
-          primaryColorR: primaryColorR,
-          primaryColorG: primaryColorG,
-          primaryColorB: primaryColorB,
+          primaryColorR: primaryColors?.[0],
+          primaryColorG: primaryColors?.[1],
+          primaryColorB: primaryColors?.[2],
         })
 
         album.related('tracks').createMany(
