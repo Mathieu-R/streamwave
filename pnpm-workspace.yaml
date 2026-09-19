@@ -3,6 +3,8 @@ packages:
   - '!apps/legacy'
   - 'packages/**/*'
   - 'tools/*'
+minimumReleaseAge: 0
+pmOnFail: ignore
 allowBuilds:
   '@swc/core': true
   esbuild: true
