@@ -1,3 +1,7 @@
 import { Inngest } from 'inngest'
 
-export const inngest = new Inngest({ id: 'streamwave' })
+export { serve } from 'inngest/edge'
+
+export const inngest = new Inngest({
+  id: 'streamwave'
+})

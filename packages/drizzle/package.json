@@ -8,6 +8,21 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./databaseUrl": {
+      "types": "./src/databaseUrl.ts",
+      "import": "./src/databaseUrl.ts",
+      "default": "./src/databaseUrl.ts"
+    },
+    "./drizzle": {
+      "types": "./src/drizzle.ts",
+      "import": "./src/drizzle.ts",
+      "default": "./src/drizzle.ts"
+    },
+    "./schema": {
+      "types": "./src/schema.ts",
+      "import": "./src/schema.ts",
+      "default": "./src/schema.ts"
     }
   },
   "scripts": {
@@ -25,6 +40,7 @@
     "csv-parse": "^5.6.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
+    "kysely": "^0.29.6",
     "postgres": "^3.4.9"
   },
   "devDependencies": {

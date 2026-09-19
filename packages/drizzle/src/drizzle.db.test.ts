@@ -22,26 +22,26 @@ describe('createDb', () => {
     expect(first).toEqual({ ok: 1 })
   })
 
-  it('enforces user provider uniqueness and album color bounds', async () => {
+  it('enforces user email uniqueness and album color bounds', async () => {
     const db = await createTestDb()
     const [createdUser] = await db
       .insert(user)
       .values({
-        firstname: 'Ada',
-        lastname: 'Lovelace',
+        id: 'ada',
+        name: 'Ada Lovelace',
         email: 'ada@example.com',
-        password: 'hashed-password',
-        provider: 'LOCAL'
+        firstname: 'Ada',
+        lastname: 'Lovelace'
       })
       .returning({ id: user.id })
 
     await expect(
       db.insert(user).values({
-        firstname: 'Ada',
-        lastname: 'Lovelace',
+        id: 'ada-duplicate',
+        name: 'Ada Lovelace',
         email: 'ada@example.com',
-        password: 'another-password',
-        provider: 'LOCAL'
+        firstname: 'Ada',
+        lastname: 'Lovelace'
       })
     ).rejects.toThrow()
 
@@ -65,11 +65,11 @@ describe('createDb', () => {
     const [createdUser] = await db
       .insert(user)
       .values({
-        firstname: 'Grace',
-        lastname: 'Hopper',
+        id: 'grace',
+        name: 'Grace Hopper',
         email: 'grace@example.com',
-        password: 'hashed-password',
-        provider: 'GOOGLE'
+        firstname: 'Grace',
+        lastname: 'Hopper'
       })
       .returning({ id: user.id })
     const [createdAlbum] = await db
