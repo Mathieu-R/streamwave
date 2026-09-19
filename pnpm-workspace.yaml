@@ -3,3 +3,8 @@ packages:
   - '!apps/legacy'
   - 'packages/**/*'
   - 'tools/*'
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  protobufjs: true
+  sharp: true
