@@ -7,6 +7,7 @@ import {
   Scripts
 } from '@tanstack/react-router'
 import { IntlProvider } from 'react-intl'
+import globalStylesheet from '../index.css?url'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -21,7 +22,8 @@ export const Route = createRootRoute({
       {
         title: 'Streamwave'
       }
-    ]
+    ],
+    links: [{ rel: 'stylesheet', href: globalStylesheet }]
   }),
   component: RootComponent
 })
