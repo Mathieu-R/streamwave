@@ -1,5 +1,7 @@
 import { Button } from './Button'
 
-export default () => {
+const ButtonFixture = () => {
   return <Button>Click me</Button>
 }
+
+export default ButtonFixture

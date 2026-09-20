@@ -4,6 +4,7 @@
     "jsx": "react-jsx",
     "target": "es2016",
     "lib": ["es2016", "dom"],
+    "resolvePackageJsonImports": true,
     "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["../../packages/ui/kit/src/*"]

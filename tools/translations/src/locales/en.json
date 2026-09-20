@@ -1,4 +1,17 @@
 {
   "API : {status}": "API: {status}",
-  "Bouton": "Button"
+  "Bibliothèque": "Library",
+  "Bouton": "Button",
+  "Chargement de la session": "Loading session",
+  "Connexion à Streamwave": "Sign in to Streamwave",
+  "Importer": "Upload",
+  "L’import de votre musique sera bientôt disponible ici.": "Importing your music will be available here soon.",
+  "La connexion moderne est en cours de migration.": "Modern sign-in is currently being migrated.",
+  "La recherche de musique sera bientôt disponible ici.": "Music search will be available here soon.",
+  "Paramètres": "Settings",
+  "Playlists": "Playlists",
+  "Recherche": "Search",
+  "Vos playlists migreront dans cet espace.": "Your playlists will move into this space.",
+  "Vos préférences Streamwave migreront dans cet espace.": "Your Streamwave preferences will move into this space.",
+  "Votre bibliothèque musicale sera bientôt disponible ici.": "Your music library will be available here soon."
 }

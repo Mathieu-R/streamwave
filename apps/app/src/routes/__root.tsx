@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react'
+import { messages } from '@streamwave/translations'
 import {
   Outlet,
   createRootRoute,
   HeadContent,
   Scripts
 } from '@tanstack/react-router'
+import { IntlProvider } from 'react-intl'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -17,7 +19,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1'
       },
       {
-        title: 'TanStack Start Starter'
+        title: 'Streamwave'
       }
     ]
   }),
@@ -26,9 +28,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <IntlProvider locale="fr" defaultLocale="fr" messages={messages.fr}>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </IntlProvider>
   )
 }
 

@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*"
+    "./components/*": "./src/components/*.tsx",
+    "./globals.css": "./src/styles/globals.css",
+    "./lib/*": "./src/lib/*.ts"
   },
   "scripts": {
     "dev": "cosmos --port 5001",
@@ -13,8 +14,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@base-ui/react": "^1.2.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-intl": "^10.1.22",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@streamwave/typescript": "workspace:*",
@@ -24,6 +31,7 @@
     "@vitejs/plugin-react-swc": "^4.2.2",
     "react-cosmos": "^7.4.0",
     "react-cosmos-plugin-vite": "^7.4.0",
+    "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.2.0"
   }

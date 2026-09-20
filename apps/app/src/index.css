@@ -1,2 +1,1 @@
-@import 'tailwindcss';
-@source '../../../packages/ui/kit/src';
+@import '@streamwave/ui-kit/globals.css';
