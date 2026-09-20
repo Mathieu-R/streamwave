@@ -2,10 +2,10 @@ import type { User } from '@/components/layout/SideNavInfos'
 
 export type UserDisplayInput = {
   email: string
-  firstname?: string | null
-  image?: string | null
-  lastname?: string | null
-  name?: string | null
+  firstname?: string
+  image?: string
+  lastname?: string
+  name?: string
 }
 
 export function getUserDisplay(user: UserDisplayInput): User {

@@ -33,20 +33,20 @@ function AuthenticatedLayout() {
   const firstname =
     'firstname' in user && typeof user.firstname === 'string'
       ? user.firstname
-      : null
+      : undefined
   const lastname =
     'lastname' in user && typeof user.lastname === 'string'
       ? user.lastname
-      : null
+      : undefined
 
   return (
     <AppShell
       user={{
         email: user.email,
         firstname,
-        image: user.image,
+        image: user.image ?? undefined,
         lastname,
-        name: user.name
+        name: user.name ?? undefined
       }}
     >
       <Outlet />
