@@ -1,3 +1,5 @@
+import type { User } from '@/components/layout/SideNavInfos'
+
 export type UserDisplayInput = {
   email: string
   firstname?: string | null
@@ -6,13 +8,7 @@ export type UserDisplayInput = {
   name?: string | null
 }
 
-export type UserDisplay = {
-  avatarUrl: string | null
-  fallback: string
-  name: string
-}
-
-export function getUserDisplay(user: UserDisplayInput): UserDisplay {
+export function getUserDisplay(user: UserDisplayInput): User {
   const fullName = [user.firstname, user.lastname]
     .filter(Boolean)
     .join(' ')
@@ -20,7 +16,8 @@ export function getUserDisplay(user: UserDisplayInput): UserDisplay {
   const name = fullName || user.name?.trim() || user.email
 
   return {
-    avatarUrl: user.image ?? null,
+    avatarUrl: user.image ?? undefined,
+    email: user.email,
     fallback: name,
     name
   }

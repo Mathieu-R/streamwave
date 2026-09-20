@@ -14,7 +14,7 @@
     "components": "#components",
     "hooks": "#hooks",
     "lib": "#lib",
-    "utils": "@streamwave/ui-kit/lib/utils",
-    "ui": "@streamwave/ui-kit/components"
+    "utils": "@/lib/utils",
+    "ui": "@/components"
   }
 }

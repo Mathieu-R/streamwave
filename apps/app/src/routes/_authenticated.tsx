@@ -2,7 +2,7 @@ import { Navigate, Outlet, createFileRoute } from '@tanstack/react-router'
 import { LoaderCircle } from 'lucide-react'
 import { useIntl } from 'react-intl'
 import { AppShell } from '../components/layout/AppShell'
-import { getAuthenticationState } from '../components/layout/authentication'
+import { getAuthenticationState } from '../components/layout/utils/getAuthenticationState'
 import { authClient } from '../modules/auth/client'
 
 export const Route = createFileRoute('/_authenticated')({

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getAuthenticationState } from './authentication'
+import { getAuthenticationState } from './getAuthenticationState'
 
 describe('getAuthenticationState', () => {
   it('keeps the layout in a loading state while the session is resolving', () => {

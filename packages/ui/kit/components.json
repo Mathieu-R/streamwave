@@ -11,10 +11,10 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@streamwave/ui-kit/components",
-    "hooks": "@streamwave/ui-kit/hooks",
-    "lib": "@streamwave/ui-kit/lib",
-    "utils": "@streamwave/ui-kit/lib/utils",
-    "ui": "@streamwave/ui-kit/components"
+    "components": "@/components",
+    "hooks": "@/hooks",
+    "lib": "@/lib",
+    "utils": "@/lib/utils",
+    "ui": "@/components"
   }
 }

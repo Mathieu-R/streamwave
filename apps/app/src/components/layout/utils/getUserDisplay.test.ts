@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getUserDisplay } from './userDisplay'
+import { getUserDisplay } from './getUserDisplay'
 
 describe('getUserDisplay', () => {
   it('prefers the legacy first and last name fields', () => {
