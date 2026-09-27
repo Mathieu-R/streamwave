@@ -1,5 +1,5 @@
 import z from 'zod'
-import { idSchema } from '../../../../libs/zod'
+import { idSchema } from '@streamwave/core/zod'
 
 export const trackSchema = z.object({
   id: idSchema,

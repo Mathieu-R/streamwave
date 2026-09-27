@@ -1,5 +1,5 @@
 import { Navigate, Outlet, createFileRoute } from '@tanstack/react-router'
-import { LoaderCircle } from 'lucide-react'
+import { Center, Spinner } from '@chakra-ui/react'
 import { useIntl } from 'react-intl'
 import { AppShell } from '../components/layout/AppShell'
 import { getAuthenticationState } from '../components/layout/utils/getAuthenticationState'
@@ -16,12 +16,11 @@ function AuthenticatedLayout() {
 
   if (authenticationState === 'loading') {
     return (
-      <main className="grid min-h-screen place-items-center bg-background text-muted-foreground">
-        <LoaderCircle
+      <Center as="main" minH="dvh">
+        <Spinner
           aria-label={formatMessage({ id: 'Chargement de la session' })}
-          className="size-6 animate-spin"
         />
-      </main>
+      </Center>
     )
   }
 

@@ -7,6 +7,7 @@ import {
   Scripts
 } from '@tanstack/react-router'
 import { IntlProvider } from 'react-intl'
+import { UiProvider } from '@/providers/UiProvider'
 import globalStylesheet from '../index.css?url'
 
 export const Route = createRootRoute({
@@ -29,18 +30,21 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  // TODO: get locale from user settings
   return (
-    <IntlProvider locale="fr" defaultLocale="fr" messages={messages.fr}>
-      <RootDocument>
-        <Outlet />
-      </RootDocument>
-    </IntlProvider>
+    <UiProvider>
+      <IntlProvider locale="fr" defaultLocale="fr" messages={messages.fr}>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </IntlProvider>
+    </UiProvider>
   )
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

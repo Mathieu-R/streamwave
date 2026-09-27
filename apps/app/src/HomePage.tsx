@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from '@/components/button/Button'
+import { Button } from '@chakra-ui/react'
 
 export const HomePage = () => {
   const [status, _setStatus] = useState<string>('ok')

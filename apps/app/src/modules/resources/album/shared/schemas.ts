@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { idSchema } from '../../../../libs/zod'
+import { idSchema } from '@streamwave/core/zod'
 import { trackSchema } from '../../track/shared/schemas'
 
 export const albumSummarySchema = z.object({

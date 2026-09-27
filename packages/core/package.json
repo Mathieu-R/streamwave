@@ -1,0 +1,25 @@
+{
+  "name": "@streamwave/core",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./zod": {
+      "import": "./src/zod.ts",
+      "types": "./src/zod.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "react-hook-form": "^7.89.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@streamwave/typescript": "workspace:*",
+    "typescript": "^7.0.2"
+  }
+}

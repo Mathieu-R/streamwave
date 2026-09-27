@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { Separator } from '../separator/Separator'
+import { Box, Separator, Stack } from '@chakra-ui/react'
 import { SideNavInfos, User } from './SideNavInfos'
 
 type SideNavProps = {
@@ -7,12 +7,10 @@ type SideNavProps = {
   navigation: ReactNode
 }
 
-export const SideNav = ({ user, navigation }: SideNavProps) => {
-  return (
-    <aside className="flex w-64 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground">
-      <SideNavInfos user={user} />
-      <Separator className="bg-sidebar-border" />
-      <div className="p-2">{navigation}</div>
-    </aside>
-  )
-}
+export const SideNav = ({ user, navigation }: SideNavProps) => (
+  <Stack as="aside" borderRightWidth="1px" flexShrink="0" gap={0} w="64">
+    <SideNavInfos user={user} />
+    <Separator />
+    <Box p={2}>{navigation}</Box>
+  </Stack>
+)
