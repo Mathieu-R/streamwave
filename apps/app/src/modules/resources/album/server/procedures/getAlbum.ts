@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { albumSchema } from '../../shared/schemas'
-import { idSchema } from '../../../../../libs/zod'
+import { idSchema } from '@streamwave/core/zod'
 import { getAlbum as getAlbumUtils } from '../utils/getAlbum'
 import { defaultProcedure } from '../../../../../libs/orpc/utils'
 

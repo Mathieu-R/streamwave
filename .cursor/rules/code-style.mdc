@@ -15,3 +15,13 @@ alwaysApply: true
 - Do not use semicolons at the end of statements.
 - Never use trailing commas.
 - Never use `any` if possible.
+
+## React components
+
+- Declare React components as `const` arrow functions.
+
+```tsx
+export const UserCard = ({ name }: UserCardProps) => (
+  <article>{name}</article>
+)
+```

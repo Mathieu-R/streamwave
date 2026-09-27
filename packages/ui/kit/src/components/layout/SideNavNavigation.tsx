@@ -1,4 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
+import { HStack, Link as ChakraLink } from '@chakra-ui/react'
 import { Library } from 'lucide-react'
 import { PropsWithChildren } from 'react'
 
@@ -10,7 +11,6 @@ export type SideNavNavigationItem = {
 }
 
 type LinkProps = {
-  className: string
   to: string
 }
 
@@ -28,18 +28,21 @@ export const SideNavNavigation = ({
   return (
     <nav>
       {items.map(({ Icon, label, to }) => (
-        <Link
-          className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-            pathname === to
-              ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-              : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-          }`}
+        <ChakraLink
+          _hover={{ bg: 'bg.muted' }}
+          asChild
+          borderRadius="md"
+          bg={pathname === to ? 'bg.emphasized' : undefined}
+          display="block"
           key={to}
-          to={to}
         >
-          <Icon aria-hidden="true" className="size-4" />
-          <span>{label}</span>
-        </Link>
+          <Link to={to}>
+            <HStack gap={3} px={3} py={2.5}>
+              <Icon aria-hidden="true" />
+              {label}
+            </HStack>
+          </Link>
+        </ChakraLink>
       ))}
     </nav>
   )

@@ -1,6 +1,4 @@
-import { Avatar } from '../avatar/Avatar'
-import { AvatarFallback } from '../avatar/AvatarFallback'
-import { AvatarImage } from '../avatar/AvatarImage'
+import { Avatar, HStack, Stack, Text } from '@chakra-ui/react'
 
 export type User = {
   avatarUrl?: string
@@ -13,23 +11,19 @@ type SideNavInfosProps = {
   user: User
 }
 
-export const SideNavInfos = ({ user }: SideNavInfosProps) => {
-  return (
-    <div className="p-4">
-      <div className="flex items-center gap-2">
-        <Avatar>
-          <AvatarImage alt={user.name} src={user.avatarUrl ?? undefined} />
-          <AvatarFallback>
-            {user.fallback.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">{user.name}</p>
-          <p className="truncate text-xs text-sidebar-foreground/70">
-            {user.email}
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
+export const SideNavInfos = ({ user }: SideNavInfosProps) => (
+  <HStack p={4}>
+    <Avatar.Root>
+      <Avatar.Image alt={user.name} src={user.avatarUrl} />
+      <Avatar.Fallback name={user.fallback} />
+    </Avatar.Root>
+    <Stack gap={0} minW="0">
+      <Text fontSize="sm" fontWeight="medium" truncate>
+        {user.name}
+      </Text>
+      <Text color="fg.muted" fontSize="xs" truncate>
+        {user.email}
+      </Text>
+    </Stack>
+  </HStack>
+)

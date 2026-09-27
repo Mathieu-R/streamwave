@@ -1,20 +1,34 @@
 import type { ReactNode } from 'react'
+import { Box, Card, Container, Heading, Stack, Text } from '@chakra-ui/react'
 
 type PlaceholderPageProps = {
   description: ReactNode
   title: ReactNode
 }
 
-export function PlaceholderPage({ description, title }: PlaceholderPageProps) {
-  return (
-    <section className="mx-auto flex min-h-[calc(100vh-12rem)] max-w-3xl items-center justify-center">
-      <div className="w-full rounded-xl border bg-card p-8 shadow-sm sm:p-12">
-        <p className="mb-3 text-sm font-medium text-primary">Streamwave</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          {title}
-        </h1>
-        <p className="mt-4 max-w-xl text-muted-foreground">{description}</p>
-      </div>
-    </section>
-  )
-}
+export const PlaceholderPage = ({
+  description,
+  title
+}: PlaceholderPageProps) => (
+  <Container
+    as="section"
+    centerContent
+    maxW="3xl"
+    minH="calc(100dvh - 12rem)"
+    py={8}
+  >
+    <Card.Root alignSelf="center" w="full">
+      <Card.Body>
+        <Stack gap={4}>
+          <Text color="colorPalette.fg" fontSize="sm" fontWeight="medium">
+            Streamwave
+          </Text>
+          <Heading as="h1" size="2xl">
+            {title}
+          </Heading>
+          <Box color="fg.muted">{description}</Box>
+        </Stack>
+      </Card.Body>
+    </Card.Root>
+  </Container>
+)
