@@ -40,7 +40,7 @@ importers:
         version: link:../../packages/drizzle
       '@streamwave/hono':
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../../packages/hono
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
